@@ -38,16 +38,21 @@
   --hl-m: rgba(170,125,215,0.44); --hl-m-ink:#2e1448; --hl-m-bar:#8040c0;
   --fs: 18px;
 }
-body.dark {
+html.pre-dark body {
   --desk:        #0a0908;
-  --paper-bg:    #28221c;
-  --margin-rule: rgba(160,55,55,0.15);
-  --ruled-line:  rgba(255,255,255,0.022);
-  --ink:         #e0d8c8; --ink-2:#c8c0b0; --ink-3:#807868; --ink-4:#504840;
-  --stage-c:     #807060;
-  --tb-bg:       #0a0908;
-  --panel-bg:    #151210;
-  --note-bg:     #2e2810;
+  --paper-bg:    #2a2420;
+  --ink:         #e2dace; --ink-2:#cac2b2; --ink-3:#847a6e; --ink-4:#52483e;
+}
+body.dark {
+  --desk:        #080706;
+  --paper-bg:    #2a2420;
+  --margin-rule: rgba(160,55,55,0.14);
+  --ruled-line:  rgba(255,255,255,0.02);
+  --ink:         #e2dace; --ink-2:#cac2b2; --ink-3:#847a6e; --ink-4:#52483e;
+  --stage-c:     #847060;
+  --tb-bg:       #14100c;
+  --panel-bg:    #1c1510;
+  --note-bg:     #302a12;
   --note-border: #a07820;
   --note-ink:    #e8c870;
   --note-label:  #c8a030;
@@ -135,9 +140,7 @@ body {
 }
 .icon-btn:hover { color: var(--tb-on); border-color: rgba(255,255,255,0.22); }
 .icon-btn.on { background: var(--tb-btn-on); color: var(--tb-on); border-color: rgba(255,255,255,0.28); }
-#settingsToggle { display:flex; align-items:center; gap:0.28rem; }
-#settingsToggle .arrow { display:inline-block; font-size:0.48rem; transition:transform 0.2s; opacity:0.5; }
-#settingsToggle.on .arrow { transform:rotate(180deg); }
+#settingsToggle.on { background: var(--tb-btn-on); color: var(--tb-on); border-color: rgba(255,255,255,0.28); }
 
 /* ═══════════════════════
    SETTINGS PANEL
@@ -272,45 +275,202 @@ body {
   pointer-events:none; z-index:0;
 }
 
+/* ── masthead collapsible ── */
 .masthead {
-  position:relative; z-index:2;
-  padding: 2.8rem 2.5rem 1.6rem 5.8rem;
+  position: relative; z-index: 2;
+  padding: 2.2rem 2.5rem 1.4rem 5.8rem;
   border-bottom: 1px solid var(--ink-4);
-  transition: border-color 0.3s;
+  transition: border-color 0.3s, padding 0.3s;
+  overflow: hidden;
 }
+
+.masthead-body {
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  max-height: 200px;
+  opacity: 1;
+  overflow: hidden;
+}
+
+body.masthead-collapsed .masthead-body {
+  max-height: 0;
+  opacity: 0;
+}
+
+body.masthead-collapsed .masthead {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.masthead-toggle {
+  position: absolute;
+  bottom: 0.5rem; right: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.55rem;
+  font-family: 'Noto Sans TC', sans-serif;
+  color: var(--ink-4);
+  letter-spacing: 0.12em;
+  padding: 0.2rem 0.4rem;
+  transition: color 0.15s;
+}
+.masthead-toggle:hover { color: var(--ink-3); }
+
+/* ══ OPENING CEREMONY ══ */
+.opening {
+  position: fixed;
+  inset: 0;
+  background: #0a0806;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  pointer-events: none;
+}
+
+.opening.fade-out {
+  animation: opening-out 0.8s ease forwards;
+}
+
+@keyframes opening-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+.opening-quote {
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 300;
+  font-size: clamp(1rem, 4vw, 1.4rem);
+  color: rgba(240, 234, 220, 0.9);
+  line-height: 1.9;
+  letter-spacing: 0.12em;
+  text-align: center;
+  max-width: 480px;
+  opacity: 0;
+  animation: quote-in 1s ease 0.3s forwards;
+}
+
+.opening-attr {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-weight: 300;
+  font-size: 0.62rem;
+  color: rgba(240, 234, 220, 0.35);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-top: 1.8rem;
+  opacity: 0;
+  animation: quote-in 1s ease 0.8s forwards;
+}
+
+@keyframes quote-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── title letter-spacing expanded ── */
 .eyebrow {
-  font-family:'Noto Sans TC',sans-serif; font-size:0.55rem; font-weight:300;
-  letter-spacing:0.3em; color:var(--ink-3); text-transform:uppercase;
-  margin-bottom:0.65rem; transition:color 0.3s;
+  font-family:'Noto Sans TC',sans-serif; font-size:0.52rem; font-weight:300;
+  letter-spacing:0.28em; color:var(--ink-3); text-transform:uppercase;
+  margin-bottom:0.6rem; transition:color 0.3s;
 }
 .main-title {
-  font-family:'Noto Serif TC',serif; font-weight:500; font-size:2.4rem;
-  color:var(--ink); line-height:1; letter-spacing:0.12em;
-  margin-bottom:1.2rem; transition:color 0.3s;
+  font-family:'Noto Serif TC',serif; font-weight:500; font-size:2.2rem;
+  color:var(--ink); line-height:1; letter-spacing:0.38em;
+  margin-bottom:1.4rem; transition:color 0.3s;
+  text-indent:0.38em;
 }
-.cast-block { display:flex; gap:2rem; flex-wrap:wrap; }
-.cast-item  { display:flex; flex-direction:column; gap:0.1rem; }
+
+/* ── cast quickstart buttons ── */
+.cast-block { display:flex; gap:1.5rem; flex-wrap:wrap; margin-top:0.2rem; }
+.cast-item  { display:flex; flex-direction:column; gap:0.15rem; }
 .cast-role {
-  font-family:'Noto Sans TC',sans-serif; font-size:0.48rem; font-weight:300;
+  font-family:'Noto Sans TC',sans-serif; font-size:0.46rem; font-weight:300;
   letter-spacing:0.2em; color:var(--ink-3); text-transform:uppercase; transition:color 0.3s;
 }
 .cast-name {
-  font-family:'Noto Serif TC',serif; font-weight:400; font-size:0.92rem;
-  color:var(--ink); letter-spacing:0.1em; display:flex; align-items:center; gap:0.3rem; transition:color 0.3s;
+  font-family:'Noto Serif TC',serif; font-weight:400; font-size:0.9rem;
+  color:var(--ink); letter-spacing:0.08em;
+  display:flex; align-items:center; gap:0.4rem; transition:color 0.3s;
 }
 .csw { display:inline-block; width:7px; height:7px; border-radius:2px; opacity:0; transition:opacity 0.2s; flex-shrink:0; }
+
+/* quickstart pill buttons under each character */
+.cast-quickstart {
+  display: flex;
+  gap: 0.3rem;
+  margin-top: 0.3rem;
+}
+.qs-btn {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.52rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  background: transparent;
+  border: 1px solid var(--ink-4);
+  color: var(--ink-3);
+  padding: 0.18rem 0.55rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  white-space: nowrap;
+}
+.qs-btn:hover { background: var(--ink); color: var(--paper-bg); border-color: var(--ink); }
+.qs-btn.active { background: var(--ink); color: var(--paper-bg); border-color: var(--ink); }
+
 .page-num {
-  position:absolute; top:2rem; right:2rem;
-  font-family:'Noto Sans TC',sans-serif; font-size:0.58rem; font-weight:300;
-  color:var(--ink-3); transition:color 0.3s;
+  position:absolute; top:1.5rem; right:1.8rem;
+  font-family:'Noto Sans TC',sans-serif; font-size:0.55rem; font-weight:300;
+  color:var(--ink-4); transition:color 0.3s;
 }
 
-.script-body { position:relative; z-index:2; padding:1.8rem 2rem 3.5rem 5.8rem; }
+/* ── script body: tighter line-height, constrained line-width ── */
+.script-body {
+  position:relative; z-index:2;
+  padding:1.6rem 2.5rem 3.5rem 6rem;
+  max-width: 100%;
+}
+
+.dtxt {
+  flex:1;
+  font-family:'Noto Serif TC',serif;
+  font-weight:300;
+  font-size:var(--fs);
+  color:var(--ink-2);
+  line-height:1.78;
+  max-width: 28em;
+  transition:color 0.13s, text-shadow 0.13s;
+}
+
+/* ── script-end: more ritual ── */
+.script-end {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 4rem 0 3rem;
+}
+.script-end-rule {
+  width: 4rem;
+  height: 1px;
+  background: var(--ink-3);
+  opacity: 0.35;
+}
+.script-end-text {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--ink-3);
+  letter-spacing: 0.55em;
+  text-indent: 0.55em;
+  opacity: 0.7;
+}
 
 /* ── dialogue line ── */
 .dline {
   display:flex; align-items:baseline;
-  padding:0.5rem 0.4rem 0.5rem 0;
+  padding:0.72rem 0.4rem 0.72rem 0;
   transition:background 0.13s, opacity 0.2s;
   animation:up 0.3s ease both;
   border-radius:2px; margin:0 -0.4rem; position:relative;
@@ -337,18 +497,6 @@ body.focus-mode .dline.focus-target { opacity:1; }
 .dline.hl-on[data-c="B"] .spkr,    .dline.hl-on[data-c="B"] .dtxt    { color:var(--hl-y-ink); }
 
 .dline.hl-on[data-c="瑪莉"] .spkr, .dline.hl-on[data-c="瑪莉"] .dtxt { color:var(--hl-m-ink); }
-
-.dline.hl-on::after {
-  content:''; position:absolute; left:0; top:20%; bottom:20%; width:2px; border-radius:2px;
-}
-.dline.hl-on[data-c="結人"]::after, .dline.hl-on[data-c="希煥"]::after,
-.dline.hl-on[data-c="花姐"]::after, .dline.hl-on[data-c="A"]::after    { background:var(--hl-j-bar); }
-
-.dline.hl-on[data-c="葉子"]::after, .dline.hl-on[data-c="美英"]::after,
-.dline.hl-on[data-c="欣潔"]::after, .dline.hl-on[data-c="雨晴"]::after,
-.dline.hl-on[data-c="B"]::after     { background:var(--hl-y-bar); }
-
-.dline.hl-on[data-c="瑪莉"]::after { background:var(--hl-m-bar); }
 
 body.cue-mode .dline.focus-target .dtxt {
   color:transparent;
@@ -379,17 +527,63 @@ body.hide-action .sline { display:none; }
   flex-shrink:0; user-select:none; margin-left:-2rem; transition:color 0.3s;
 }
 .spkr {
-  font-family:'Noto Sans TC',sans-serif; font-weight:500; font-size:0.72rem;
-  color:var(--ink-3); min-width:2.6rem; flex-shrink:0; user-select:none;
-  letter-spacing:0.18em; text-transform:uppercase; transition:color 0.13s;
+  font-family:'Noto Sans TC',sans-serif; font-weight:500; font-size:0.68rem;
+  color:var(--ink-3); min-width:2.8rem; flex-shrink:0; user-select:none;
+  letter-spacing:0.22em; text-transform:uppercase; transition:color 0.13s;
+  padding-top:0.08rem;
 }
 .colon {
-  font-family:'Noto Sans TC',sans-serif; color:var(--ink-3);
-  padding:0 0.42rem 0 0.05rem; flex-shrink:0; font-size:calc(var(--fs)*0.85); transition:color 0.3s;
+  font-family:'Noto Sans TC',sans-serif; color:var(--ink-4);
+  padding:0 0.5rem 0 0.05rem; flex-shrink:0; font-size:calc(var(--fs)*0.8); transition:color 0.3s;
 }
 .dtxt {
   flex:1; font-family:'Noto Serif TC',serif; font-weight:300; font-size:var(--fs);
   color:var(--ink-2); line-height:1.9; transition:color 0.13s, text-shadow 0.13s;
+}
+
+/* ── cue mode: clickable tap-to-reveal ── */
+body.cue-mode .dline.focus-target { cursor: pointer; }
+body.cue-mode .dline.focus-target .dtxt {
+  color: transparent;
+  text-shadow: 0 0 10px rgba(100,80,40,0.5);
+  user-select: none;
+  transition: color 0.2s, text-shadow 0.2s;
+}
+body.cue-mode .dline.focus-target.revealed .dtxt {
+  color: var(--ink-2);
+  text-shadow: none;
+}
+body.cue-mode .dline.focus-target.hl-on .dtxt {
+  text-shadow: 0 0 10px rgba(80,60,20,0.6);
+}
+body.dark.cue-mode .dline.focus-target .dtxt {
+  text-shadow: 0 0 10px rgba(200,180,140,0.4);
+}
+
+/* cue hint — shown once */
+.cue-hint {
+  position: fixed;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--paper-bg);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 300;
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  white-space: nowrap;
+  z-index: 500;
+  opacity: 0;
+  animation: hintpop 3s ease forwards;
+  pointer-events: none;
+}
+@keyframes hintpop {
+  0%   { opacity:0; transform:translateX(-50%) translateY(6px); }
+  15%  { opacity:1; transform:translateX(-50%) translateY(0); }
+  70%  { opacity:1; }
+  100% { opacity:0; }
 }
 
 /* ════════════════════════════════
@@ -680,6 +874,100 @@ body.cue-mode .dline.focus-target.cue-revealed .dtxt {
   opacity: 0.75;
 }
 
+/* jump FAB */
+.jump-fab {
+  position: fixed;
+  right: 1.2rem;
+  bottom: 1.5rem;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper-bg);
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 395;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+  transition: transform 0.15s, opacity 0.15s, background 0.3s, color 0.3s;
+  opacity: 0.7;
+}
+.jump-fab:hover { opacity: 1; transform: scale(1.06); }
+.jump-fab.open  { opacity: 1; }
+body.settings-open .jump-fab { opacity: 0 !important; pointer-events: none !important; }
+body.lecture-mode .jump-fab { display: none; }
+
+/* jump overlay */
+.jump-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.38);
+  z-index: 360;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.jump-overlay.open { opacity: 1; pointer-events: auto; }
+
+/* jump drawer */
+.jump-drawer {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 370;
+  background: var(--panel-bg);
+  border-top: 1px solid var(--tb-border);
+  border-radius: 14px 14px 0 0;
+  transform: translateY(102%);
+  transition: transform 0.26s cubic-bezier(0.32,0.72,0,1), background 0.3s;
+  max-height: 65vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.jump-drawer.open { transform: translateY(0); }
+
+.jump-drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.2rem 0.65rem;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--tb-on);
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--tb-border);
+  flex-shrink: 0;
+}
+
+.jump-drawer .jump-nav {
+  max-height: none;
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.8rem 1.4rem 2rem;
+  gap: 1.2rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.jump-drawer .jump-char {
+  font-size: 0.72rem;
+  opacity: 1;
+  color: var(--tb-on);
+  margin-bottom: 0.4rem;
+}
+
+.jump-drawer .jump-line {
+  font-size: 0.78rem;
+  padding: 0.4rem 0;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  line-height: 1.55;
+  color: rgba(255,255,255,0.5);
+}
+.jump-drawer .jump-line:hover { color: var(--tb-on); }
+
 /* jump nav */
 .jump-row { align-items: flex-start !important; }
 .jump-nav {
@@ -740,7 +1028,25 @@ footer.has-mode {
   border-top-color: var(--tb-border);
 }
 
-/* cue row dimmed unless in cue mode */
+/* settings overlay */
+.settings-overlay {
+  position: fixed; inset: 0;
+  z-index: 380;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.settings-overlay.open { opacity: 1; pointer-events: auto; }
+
+/* ── mode color bar on topbar (via ::after, no layout shift) ── */
+.topbar { transition: background 0.3s, border-color 0.3s; }
+
+/* ── script content fade on switch ── */
+#script, .lecture-body {
+  transition: opacity 0.18s ease;
+}
+#script.fading { opacity: 0; }
+
+/* ── remove old cue-mode dtxt block (moved above) ── */
 #cueRow     { opacity: 0.4; transition: opacity 0.2s; pointer-events: none; }
 #rehearseRow{ opacity: 0.4; transition: opacity 0.2s; pointer-events: none; }
 body.cue-active      #cueRow      { opacity: 1; pointer-events: auto; }
@@ -759,17 +1065,34 @@ body.rehearse-focus .dline.rehearse-target        { opacity: 1; }
   .settings-panel{ top:44px; }
   .paper{ margin:0; box-shadow:0 4px 20px rgba(0,0,0,0.4); border-radius:0; }
   .paper::before{display:none;}
-  .masthead{padding:2rem 1.2rem 1.3rem 1.2rem;}
+  .masthead{padding:1.6rem 1.2rem 1.2rem 1.2rem;}
   .main-title{font-size:1.8rem;}
   .script-body{padding:1.3rem 1.2rem 3rem 1.2rem;}
   .lecture-body{padding:1.3rem 1.2rem 3rem 1.2rem;}
+  .dtxt{ max-width: 100%; }
   .lnum{display:none;}
   .note-wrap{padding-left:0;}
   footer{padding:0.5rem 0.8rem;}
 }
 </style>
+<!-- prevent flash of unstyled theme — run before body renders -->
+<script>
+(function(){
+  try {
+    if(localStorage.getItem('dark')==='1') document.documentElement.classList.add('pre-dark');
+    const fs = localStorage.getItem('fs');
+    if(fs) document.documentElement.style.setProperty('--fs', parseInt(fs)+'px');
+  }catch(e){}
+})();
+</script>
 </head>
 <body>
+
+<!-- ══ OPENING CEREMONY ══ -->
+<div class="opening" id="opening">
+  <div class="opening-quote" id="openingQuote"></div>
+  <div class="opening-attr">陳幼芳　·　果陀劇場大師學堂</div>
+</div>
 
 <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -792,7 +1115,7 @@ body.rehearse-focus .dline.rehearse-target        { opacity: 1; }
       <li><span class="ob-icon">螢光筆</span><span class="ob-desc">勾選角色後，<strong>該角色所有台詞自動上色</strong>，可同時選多人</span></li>
       <li><span class="ob-icon">跳轉台詞</span><span class="ob-desc">設定裡列出每個角色的台詞，<strong>點一下直接跳到該句</strong></span></li>
       <li><span class="ob-icon">老師筆記</span><span class="ob-desc">台詞旁有 <strong>●</strong> 圓點表示有筆記，點黃色便條展開老師強調的表演重點</span></li>
-      <li><span class="ob-icon">🌙</span><span class="ob-desc">切換日間紙稿 / 夜間深色模式</span></li>
+      <li><span class="ob-icon">夜／晝</span><span class="ob-desc">切換日間紙稿 / 夜間深色模式</span></li>
     </ul>
     <button class="ob-close" onclick="closeOnboard()">了解了，開始對戲</button>
   </div>
@@ -803,11 +1126,14 @@ body.rehearse-focus .dline.rehearse-target        { opacity: 1; }
   <select class="script-select" id="scriptSelect" onchange="switchScript(this.value)">
   </select>
   <div class="topbar-right">
-    <button class="icon-btn" id="darkBtn" onclick="toggleDark()">🌙</button>
-    <button class="icon-btn" onclick="openOnboard()">？</button>
-    <button class="icon-btn" id="settingsToggle" onclick="togglePanel()">設定 <span class="arrow">▾</span></button>
+    <button class="icon-btn" id="darkBtn" onclick="toggleDark()" style="font-family:'Noto Serif TC',serif;font-size:0.82rem;letter-spacing:0.05em;font-weight:400;">夜</button>
+    <button class="icon-btn" onclick="openOnboard()" style="font-family:'Noto Serif TC',serif;font-size:0.82rem;letter-spacing:0.05em;font-weight:400;">問</button>
+    <button class="icon-btn" id="settingsToggle" onclick="togglePanel()" title="設定" style="font-family:'Noto Serif TC',serif;font-size:0.82rem;letter-spacing:0.05em;font-weight:400;">設</button>
   </div>
 </div>
+
+<!-- ══ SETTINGS OVERLAY ══ -->
+<div class="settings-overlay" id="settingsOverlay" onclick="togglePanel()"></div>
 
 <!-- ══ SETTINGS PANEL ══ -->
 <div class="settings-panel" id="settingsPanel">
@@ -853,19 +1179,12 @@ body.rehearse-focus .dline.rehearse-target        { opacity: 1; }
 
     <div class="panel-sep"></div>
 
-    <!-- 快速跳轉 -->
-    <div class="setting-row jump-row">
-      <span class="row-label">跳轉台詞</span>
-      <div class="jump-nav" id="jumpNav"></div>
-    </div>
-
-    <div class="panel-sep"></div>
-
     <!-- 其他 -->
     <div class="setting-row">
       <span class="row-label">其他</span>
       <div class="btn-group">
         <button class="pbtn" id="noteBtn" onclick="toggleNotesUI()">隱藏老師筆記</button>
+        <button class="pbtn" id="expandNotesBtn" onclick="toggleExpandAllNotes()">展開全部筆記</button>
       </div>
       <div class="btn-group" style="margin-left:0.4rem;">
         <button class="pbtn" onclick="changeFs(1)">字＋</button>
@@ -880,9 +1199,12 @@ body.rehearse-focus .dline.rehearse-target        { opacity: 1; }
 <div class="paper" id="paper">
   <div class="masthead" id="masthead">
     <div class="page-num" id="pageNum"></div>
-    <div class="eyebrow">劇本 · Script Reading Copy</div>
+    <div class="eyebrow" id="eyebrow">劇本 · Script Reading Copy</div>
     <div class="main-title" id="mainTitle"></div>
-    <div class="cast-block" id="castBlock"></div>
+    <div class="masthead-body" id="mastheadBody">
+      <div class="cast-block" id="castBlock"></div>
+    </div>
+    <button class="masthead-toggle" onclick="toggleMasthead()" id="mastheadToggle">收合 ▴</button>
   </div>
   <div class="script-body" id="script" style="position:relative;z-index:2;"></div>
 </div>
@@ -891,6 +1213,21 @@ body.rehearse-focus .dline.rehearse-target        { opacity: 1; }
 <footer>
   <span id="fmode-text" style="font-family:'Noto Sans TC',sans-serif;font-size:0.52rem;font-weight:300;color:rgba(255,255,255,0.5);letter-spacing:0.08em;"></span>
 </footer>
+
+<!-- ══ JUMP FAB ══ -->
+<button class="jump-fab" id="jumpFab" onclick="toggleJumpDrawer()" title="跳轉台詞">≡</button>
+
+<!-- ══ JUMP DRAWER ══ -->
+<div class="jump-drawer" id="jumpDrawer">
+  <div class="jump-drawer-inner">
+    <div class="jump-drawer-header">
+      <span>跳轉台詞</span>
+      <button onclick="toggleJumpDrawer()" style="background:none;border:none;color:var(--tb-text);font-size:1rem;cursor:pointer;padding:0.2rem 0.4rem;">✕</button>
+    </div>
+    <div class="jump-nav" id="jumpNav"></div>
+  </div>
+</div>
+<div class="jump-overlay" id="jumpOverlay" onclick="toggleJumpDrawer()"></div>
 
 <script>
 // ══════════════════════════════════════
@@ -1133,10 +1470,170 @@ let currentMode = 'read';
 let cueChar = 'off';
 let rehearseChar = 'off';
 
-// font size — restore from localStorage
+// font size — restored in <head> script, just sync the variable
 let fs = 18;
 try { const saved = localStorage.getItem('fs'); if(saved) fs = parseInt(saved); } catch(e){}
-document.documentElement.style.setProperty('--fs', fs+'px');
+
+// ══════════════════════════════════════
+//  OPENING CEREMONY
+// ══════════════════════════════════════
+const OPENING_QUOTES = [
+  '表演是一種在舞台上或透過鏡頭傳達自然又具有創造力的生活',
+  '其目的讓是要觀眾感受到真實的感動',
+  '隨時觀察週遭的人、事、物，豐富記憶盒',
+  '鍛鍊開發聲音、肢體的可能性',
+  '認真的態度、專注力和想像力、創造力',
+  '每一次有觀眾的表演，累積經驗',
+  '客觀的檢查每一次的表演',
+  '內在情緒藉著聲音清楚傳達',
+  '節奏速度幫助情緒的變化，增加表演樣貌',
+  '真正的聆聽，真實的思考，感覺演員之間的互動',
+  '如何在沒有劇本、沒有預設情緒的狀況之下，去尋找最直接最自然的反應',
+  '讓身體接收多種不同的練習，豐富肢體語言',
+  '清楚說話：咬字、嘴型，讓詞意徹底表達',
+  '擴大聲音表情，增加角色趣味性',
+];
+
+function runOpening(){
+  const el = document.getElementById('opening');
+  const qEl = document.getElementById('openingQuote');
+  if(!el || !qEl) return;
+
+  // pick a quote not shown recently
+  let recent = [];
+  try{ recent = JSON.parse(sessionStorage.getItem('recent-quotes')||'[]'); }catch(e){}
+  const pool = OPENING_QUOTES.filter((_,i)=>!recent.includes(i));
+  const candidates = pool.length ? pool : OPENING_QUOTES;
+  const idx = Math.floor(Math.random() * candidates.length);
+  const quote = candidates[idx];
+  // record to avoid repeat
+  const globalIdx = OPENING_QUOTES.indexOf(quote);
+  recent.push(globalIdx);
+  if(recent.length > 4) recent.shift();
+  try{ sessionStorage.setItem('recent-quotes', JSON.stringify(recent)); }catch(e){}
+
+  qEl.textContent = quote;
+
+  // dismiss after 2.8s
+  setTimeout(()=>{
+    el.classList.add('fade-out');
+    setTimeout(()=>{ el.style.display='none'; }, 800);
+  }, 2800);
+}
+
+// ══════════════════════════════════════
+//  MASTHEAD COLLAPSE
+// ══════════════════════════════════════
+function toggleMasthead(){
+  const collapsed = document.body.classList.toggle('masthead-collapsed');
+  const btn = document.getElementById('mastheadToggle');
+  if(btn) btn.textContent = collapsed ? '展開 ▾' : '收合 ▴';
+}
+
+// ══════════════════════════════════════
+//  QUICKSTART BUTTONS
+// ══════════════════════════════════════
+function quickRehearse(char){
+  // close settings if open
+  const panel = document.getElementById('settingsPanel');
+  if(panel && panel.classList.contains('open')) togglePanel();
+  // update rehearse select
+  const rsel = document.getElementById('rehearseSelect');
+  if(rsel) rsel.value = char;
+  setRehearseChar(char);
+  // update button states
+  updateQsButtons(char, 'rehearse');
+  // scroll to first line of that char
+  const first = document.querySelector(`.dline[data-c="${char}"]`);
+  if(first) setTimeout(()=>first.scrollIntoView({behavior:'smooth', block:'center'}), 100);
+}
+
+function quickCue(char){
+  const panel = document.getElementById('settingsPanel');
+  if(panel && panel.classList.contains('open')) togglePanel();
+  const csel = document.getElementById('cueSelect');
+  if(csel) csel.value = char;
+  setCueChar(char);
+  updateQsButtons(char, 'cue');
+  const first = document.querySelector(`.dline[data-c="${char}"]`);
+  if(first) setTimeout(()=>first.scrollIntoView({behavior:'smooth', block:'center'}), 100);
+}
+
+function updateQsButtons(activeChar, activeMode){
+  document.querySelectorAll('.qs-btn').forEach(btn=>btn.classList.remove('active'));
+  const activeBtn = document.getElementById(`qs-${activeMode}-${activeChar}`);
+  if(activeBtn) activeBtn.classList.add('active');
+}
+
+// ══════════════════════════════════════
+//  SCROLL MEMORY  (sessionStorage)
+// ══════════════════════════════════════
+function saveScroll(){
+  try{ sessionStorage.setItem('scroll-'+currentScriptId, window.scrollY); }catch(e){}
+}
+
+function restoreScroll(id){
+  try{
+    const y = sessionStorage.getItem('scroll-'+id);
+    if(y) setTimeout(()=>window.scrollTo(0, parseInt(y)), 50);
+  }catch(e){}
+}
+
+// ══════════════════════════════════════
+//  HL STATE MEMORY  (sessionStorage)
+// ══════════════════════════════════════
+function saveHlState(){
+  try{ sessionStorage.setItem('hl-'+currentScriptId, JSON.stringify([...hlChars])); }catch(e){}
+}
+
+function restoreHlState(id){
+  try{
+    const saved = sessionStorage.getItem('hl-'+id);
+    if(!saved) return;
+    const chars = JSON.parse(saved);
+    chars.forEach(char => {
+      if(!hlChars.has(char)){
+        hlChars.add(char);
+        document.querySelectorAll(`.dline[data-c="${char}"]`).forEach(l=>l.classList.add('hl-on'));
+        const btn = document.querySelector(`#hlBtnGroup .pbtn[data-hl="${char}"]`);
+        if(btn) btn.classList.add('on');
+        const csw = document.getElementById(`csw-${char}`);
+        if(csw) csw.style.opacity='0.8';
+      }
+    });
+  }catch(e){}
+}
+
+// ══════════════════════════════════════
+//  JUMP DRAWER
+// ══════════════════════════════════════
+function toggleJumpDrawer(){
+  // close settings panel if open
+  const panel = document.getElementById('settingsPanel');
+  if(panel && panel.classList.contains('open')) togglePanel();
+
+  const drawer  = document.getElementById('jumpDrawer');
+  const overlay = document.getElementById('jumpOverlay');
+  const fab     = document.getElementById('jumpFab');
+  const open    = drawer.classList.toggle('open');
+  overlay.classList.toggle('open', open);
+  fab.classList.toggle('open', open);
+}
+
+// ══════════════════════════════════════
+//  EXPAND ALL NOTES
+// ══════════════════════════════════════
+let allNotesExpanded = false;
+function toggleExpandAllNotes(){
+  allNotesExpanded = !allNotesExpanded;
+  document.getElementById('expandNotesBtn').classList.toggle('on', allNotesExpanded);
+  document.querySelectorAll('.note-body').forEach(b=>{
+    b.classList.toggle('open', allNotesExpanded);
+  });
+  document.querySelectorAll('.note-toggle').forEach(b=>{
+    b.classList.toggle('open', allNotesExpanded);
+  });
+}
 
 // ══════════════════════════════════════
 //  INIT SELECT  (W1 prefix format)
@@ -1156,23 +1653,29 @@ function initSelect(){
 //  SWITCH SCRIPT
 // ══════════════════════════════════════
 function switchScript(id){
+  saveScroll();
+  saveHlState();
+  const prevId = currentScriptId;
   currentScriptId = id;
   hlChars.clear();
   cueChar = 'off';
   rehearseChar = 'off';
+  allNotesExpanded = false;
+  document.body.classList.remove('masthead-collapsed');
+  const mt = document.getElementById('mastheadToggle');
+  if(mt) mt.textContent = '收合 ▴';
   const wrap = document.getElementById('script');
   const masthead = document.querySelector('.masthead');
-  // fade out
-  if(wrap) { wrap.style.transition='opacity 0.15s'; wrap.style.opacity='0'; }
-  if(masthead) { masthead.style.transition='opacity 0.15s'; masthead.style.opacity='0'; }
+  if(wrap)    { wrap.style.transition='opacity 0.15s'; wrap.style.opacity='0'; }
+  if(masthead){ masthead.style.transition='opacity 0.15s'; masthead.style.opacity='0'; }
   setTimeout(()=>{
     const sc = SCRIPTS.find(s=>s.id===id);
     buildScript(sc);
     buildSettings(sc);
-    window.scrollTo(0,0);
-    // fade in
-    if(wrap) { wrap.style.opacity='1'; }
-    if(masthead) { masthead.style.opacity='1'; }
+    restoreHlState(id);
+    restoreScroll(id);
+    if(wrap)    { wrap.style.opacity='1'; }
+    if(masthead){ masthead.style.opacity='1'; }
   }, 150);
 }
 
@@ -1195,7 +1698,7 @@ function setMode(mode, force){
     'rehearse-focus'
   );
   document.querySelectorAll('.dline').forEach(l=>{
-    l.classList.remove('focus-target','rehearse-target','hl-on');
+    l.classList.remove('focus-target','rehearse-target','hl-on','revealed');
   });
 
   // mode buttons
@@ -1313,6 +1816,16 @@ function toggleHl(char){
 // ══════════════════════════════════════
 //  CUE CHARACTER SELECT
 // ══════════════════════════════════════
+function showCueHint(){
+  try{ if(localStorage.getItem('cue-hint-seen')) return; }catch(e){}
+  const hint = document.createElement('div');
+  hint.className = 'cue-hint';
+  hint.textContent = '點擊台詞可以顯示';
+  document.body.appendChild(hint);
+  setTimeout(()=>hint.remove(), 3200);
+  try{ localStorage.setItem('cue-hint-seen','1'); }catch(e){}
+}
+
 function setCueChar(val){
   cueChar = val;
   const csel = document.getElementById('cueSelect');
@@ -1323,6 +1836,7 @@ function setCueChar(val){
       document.body.classList.add('focus-mode','cue-mode');
       document.querySelectorAll('.dline').forEach(l=>l.classList.toggle('focus-target',l.dataset.c===val));
     }
+    showCueHint();
   } else {
     document.body.classList.remove('cue-mode','focus-mode');
     document.querySelectorAll('.dline').forEach(l=>l.classList.remove('focus-target'));
@@ -1403,7 +1917,7 @@ function buildScript(sc){
   document.getElementById('pageNum').textContent = sc.week;
 
   // eyebrow: subtitle + date
-  const eyebrow = document.querySelector('.eyebrow');
+  const eyebrow = document.getElementById('eyebrow');
   const datePart = sc.week ? sc.week.split('·')[1]?.trim() : '';
   eyebrow.textContent = [sc.subtitle, datePart].filter(Boolean).join('　·　');
 
@@ -1412,16 +1926,28 @@ function buildScript(sc){
   if(sel) sel.value = sc.id;
 
   // cast
+  // toggle FAB visibility for lecture
+  document.body.classList.toggle('lecture-mode', sc.type === 'lecture');
+
   const cb = document.getElementById('castBlock');
   if(sc.type==='lecture' || !sc.chars || sc.chars.length===0){
     cb.innerHTML = sc.author ? `<div class="lec-author">撰寫人：${sc.author}</div>` : '';
+    // hide masthead toggle for lecture
+    const mt = document.getElementById('mastheadToggle');
+    if(mt) mt.style.display = 'none';
   } else {
+    const mt = document.getElementById('mastheadToggle');
+    if(mt) mt.style.display = '';
     cb.innerHTML = sc.chars.map((ch,i)=>{
       const barVar = i===0 ? 'var(--hl-j-bar)' : i===1 ? 'var(--hl-y-bar)' : 'var(--hl-m-bar)';
       return `
       <div class="cast-item">
         <span class="cast-role">${ch.role}</span>
         <span class="cast-name">${ch.name}<span class="csw" id="csw-${ch.name}" style="background:${barVar}"></span></span>
+        <div class="cast-quickstart">
+          <button class="qs-btn" id="qs-rehearse-${ch.name}" onclick="quickRehearse('${ch.name}')">排練</button>
+          <button class="qs-btn" id="qs-cue-${ch.name}" onclick="quickCue('${ch.name}')">背詞</button>
+        </div>
       </div>`;
     }).join('');
   }
@@ -1469,8 +1995,15 @@ function buildScript(sc){
       const el = document.createElement('div');
       el.className='dline';
       el.dataset.c=d.c;
-      el.dataset.idx=i;  // for jump nav
+      el.dataset.idx=i;
       el.style.animationDelay=i*8+'ms';
+      el.addEventListener('click', ()=>{
+        // tap-to-reveal in cue mode
+        if(document.body.classList.contains('cue-mode') && el.classList.contains('focus-target')){
+          el.classList.toggle('revealed');
+          return;
+        }
+      });
 
       el.innerHTML=`
         <div class="dline-main">
@@ -1509,7 +2042,7 @@ function buildScript(sc){
 
   const endEl = document.createElement('div');
   endEl.className = 'script-end';
-  endEl.innerHTML = `<span class="script-end-text">全劇終</span>`;
+  endEl.innerHTML = `<div class="script-end-rule"></div><span class="script-end-text">全劇終</span><div class="script-end-rule"></div>`;
   wrap.appendChild(endEl);
 }
 
@@ -1580,10 +2113,13 @@ function toggleNote(id){
 //  SETTINGS PANEL
 // ══════════════════════════════════════
 function togglePanel(){
-  const panel = document.getElementById('settingsPanel');
-  const btn   = document.getElementById('settingsToggle');
-  const open  = panel.classList.toggle('open');
+  const panel   = document.getElementById('settingsPanel');
+  const btn     = document.getElementById('settingsToggle');
+  const overlay = document.getElementById('settingsOverlay');
+  const open    = panel.classList.toggle('open');
   btn.classList.toggle('on', open);
+  if(overlay) overlay.classList.toggle('open', open);
+  document.body.classList.toggle('settings-open', open);
 }
 
 // ══════════════════════════════════════
@@ -1595,19 +2131,20 @@ function changeFs(d){
   try{ localStorage.setItem('fs', fs); }catch(e){}
 }
 
-// restore dark mode
+// restore dark mode — sync with pre-dark class set in head
 try {
   if(localStorage.getItem('dark')==='1'){
     darkOn = true;
     document.body.classList.add('dark');
-    document.querySelectorAll('#darkBtn').forEach(b=>b.textContent='☀️');
+    document.documentElement.classList.remove('pre-dark');
+    document.querySelectorAll('#darkBtn').forEach(b=>b.textContent='晝');
   }
 }catch(e){}
 
 function toggleDark(){
   darkOn = !darkOn;
   document.body.classList.toggle('dark', darkOn);
-  document.querySelectorAll('#darkBtn').forEach(b=>b.textContent=darkOn?'☀️':'🌙');
+  document.querySelectorAll('#darkBtn').forEach(b=>b.textContent=darkOn?'晝':'夜');
   try{ localStorage.setItem('dark', darkOn?'1':'0'); }catch(e){}
 }
 
@@ -1615,9 +2152,18 @@ function closeOnboard(){ document.getElementById('onboard').classList.add('hidde
 function openOnboard(){ document.getElementById('onboard').classList.remove('hidden'); }
 try{ if(localStorage.getItem('ob-seen')) closeOnboard(); }catch(e){}
 
+// save scroll position periodically
+let scrollTimer;
+window.addEventListener('scroll', ()=>{
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(saveScroll, 300);
+});
+window.addEventListener('beforeunload', ()=>{ saveScroll(); saveHlState(); });
+
 // ══════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════
+runOpening();
 initSelect();
 const sc0 = SCRIPTS.find(s=>s.id===currentScriptId);
 buildScript(sc0);
