@@ -83,7 +83,7 @@ body {
   font-family: 'Noto Serif TC', serif;
   font-weight: 500;
   font-size: 0.82rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: var(--tb-on);
   background: transparent;
   border: none;
@@ -94,10 +94,12 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M0 0l4.5 5 4.5-5z' fill='rgba(255,255,255,0.5)'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0 center;
-  transition: opacity 0.12s;
-  flex-shrink: 1;
+  flex: 1;
   min-width: 0;
-  max-width: 14rem;
+  max-width: calc(100vw - 160px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .script-select:hover { opacity: 0.8; }
 .script-select option { background: #2a2520; color: #e0d8c8; font-family: sans-serif; font-size: 14px; }
@@ -237,8 +239,11 @@ body {
   content:''; display:inline-block; width:6px; height:6px; border-radius:50%;
   margin-right:0.3rem; vertical-align:middle; opacity:0.4; transition:opacity 0.12s;
 }
-.hl-btn-group .pbtn[data-hl="結人"]::before, .hl-btn-group .pbtn[data-hl="希煥"]::before { background:#c88c00; }
-.hl-btn-group .pbtn[data-hl="葉子"]::before, .hl-btn-group .pbtn[data-hl="美英"]::before { background:#2a9050; }
+.hl-btn-group .pbtn[data-hl="結人"]::before, .hl-btn-group .pbtn[data-hl="希煥"]::before,
+.hl-btn-group .pbtn[data-hl="花姐"]::before, .hl-btn-group .pbtn[data-hl="A"]::before { background:#c88c00; }
+.hl-btn-group .pbtn[data-hl="葉子"]::before, .hl-btn-group .pbtn[data-hl="美英"]::before,
+.hl-btn-group .pbtn[data-hl="欣潔"]::before, .hl-btn-group .pbtn[data-hl="雨晴"]::before,
+.hl-btn-group .pbtn[data-hl="B"]::before { background:#2a9050; }
 .hl-btn-group .pbtn[data-hl="瑪莉"]::before { background:#8040c0; }
 .hl-btn-group .pbtn.on::before { opacity:1; }
 .hl-btn-group .pbtn[data-hl="結人"].on, .hl-btn-group .pbtn[data-hl="希煥"].on,
@@ -279,7 +284,7 @@ body {
 .masthead {
   position:relative; z-index:2;
   padding: 2.8rem 2.5rem 1.6rem 5.8rem;
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 1px solid var(--ink-4);
   transition: border-color 0.3s;
 }
 .eyebrow {
@@ -512,14 +517,15 @@ body.hide-notes .note-wrap { display:none; }
 footer {
   position:fixed; bottom:0; left:0; right:0;
   background:var(--tb-bg); border-top:1px solid var(--tb-border);
-  padding:0.5rem 1.2rem; display:flex; align-items:center; gap:0.5rem; z-index:300;
+  padding:0.35rem 1.2rem; display:flex; align-items:center; gap:0.5rem; z-index:300;
   transition:background 0.3s;
+  height: 36px;
 }
 .fmode{display:flex;gap:0.25rem;align-items:center; flex:1;}
 .fmode span {
-  font-family:'Noto Sans TC',sans-serif; font-size:0.47rem; font-weight:300;
-  color:rgba(255,255,255,0.48); padding:0.1rem 0.35rem;
-  border:1px solid rgba(255,255,255,0.12); border-radius:2px;
+  font-family:'Noto Sans TC',sans-serif; font-size:0.55rem; font-weight:400;
+  color:rgba(255,255,255,0.7); padding:0.15rem 0.45rem;
+  border:1px solid rgba(255,255,255,0.2); border-radius:2px;
   opacity:0; transition:opacity 0.18s; white-space:nowrap;
 }
 .fmode span.vis{opacity:1;}
@@ -532,21 +538,22 @@ footer {
 }
 
 .lec-section {
-  margin-bottom: 2rem;
+  margin-bottom: 2.4rem;
   animation: up 0.3s ease both;
 }
 
 .lec-h1 {
   font-family: 'Noto Serif TC', serif;
   font-weight: 500;
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   color: var(--ink);
   letter-spacing: 0.08em;
-  margin-bottom: 0.9rem;
-  padding-bottom: 0.45rem;
-  border-bottom: 1.5px solid var(--ink-3);
-  transition: color 0.3s, border-color 0.3s;
+  margin-top: 2rem;
+  margin-bottom: 0.7rem;
+  transition: color 0.3s;
 }
+
+.lec-h1:first-child { margin-top: 0; }
 
 .lec-h2 {
   font-family: 'Noto Serif TC', serif;
@@ -570,9 +577,8 @@ footer {
 
 .lec-item {
   display: flex;
-  gap: 1rem;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(120,110,90,0.12);
+  gap: 1.2rem;
+  padding: 0.45rem 0;
   align-items: baseline;
 }
 
@@ -598,9 +604,9 @@ footer {
 
 .lec-author {
   font-family: 'Noto Sans TC', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 300;
-  color: var(--ink-3);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--ink-2);
   letter-spacing: 0.15em;
   margin-bottom: 1.2rem;
   transition: color 0.3s;
@@ -609,33 +615,32 @@ footer {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 2.5rem 0 1rem;
-  margin: 0 -0.4rem;
+  padding: 3rem 0 2rem;
+  margin: 0;
 }
 .script-end::before,
 .script-end::after {
   content: '';
   flex: 1;
-  height: 1px;
-  background: var(--ink-4);
-  opacity: 0.4;
+  height: 2px;
+  background: var(--ink-3);
+  opacity: 0.6;
 }
 .script-end-text {
-  font-family: 'Noto Sans TC', sans-serif;
-  font-size: 0.52rem;
-  font-weight: 300;
-  color: var(--ink-4);
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--ink-3);
+  letter-spacing: 0.4em;
   white-space: nowrap;
-  opacity: 0.6;
+  opacity: 1;
 }
 
 .svg-defs{position:absolute;width:0;height:0;overflow:hidden;}
 
 /* mobile */
 @media(max-width:600px){
-  body{padding:0 0 4rem;}
+  body{padding:0 0 36px;}
   .topbar{margin:0;}
   .settings-panel{margin:0; top:44px;}
   .paper{margin-top:0;box-shadow:0 4px 20px rgba(0,0,0,0.4);border-radius:0;}
@@ -1218,7 +1223,10 @@ function closeOnboard(){ document.getElementById('onboard').classList.add('hidde
 function openOnboard(){ document.getElementById('onboard').classList.remove('hidden'); }
 try{ if(localStorage.getItem('ob-seen')) closeOnboard(); }catch(e){}
 
-function setInd(id,on){ const el=document.getElementById(id); if(el) el.classList.toggle('vis',on); }
+function setInd(id,on){
+  const el=document.getElementById(id);
+  if(el) el.classList.toggle('vis',on);
+}
 function setPill(id,on){ const el=document.getElementById(id); if(el) el.classList.toggle('vis',on); }
 
 // init
