@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>幼芳戲劇｜劇本閱讀器</title>
+<meta name="description" content="果陀劇場大師學堂 · 陳幼芳老師表演課專用。螢光筆標記台詞、背詞模式遮住自己的台詞、老師筆記隨時查閱。">
+<meta property="og:title" content="幼芳戲劇｜劇本閱讀器">
+<meta property="og:description" content="果陀劇場大師學堂 · 陳幼芳老師表演課專用。螢光筆標記台詞、背詞模式遮住自己的台詞、老師筆記隨時查閱。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stevenradio.github.io/scripts/">
+<meta name="apple-mobile-web-app-title" content="幼芳戲劇">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--desk:#1e1b17;--paper-bg:#f2ece0;--margin-rule:rgba(185,70,70,0.22);
+--ruled-line:rgba(28,22,14,0.028);--ink:#181410;--ink-2:#302820;
+--ink-3:#7a7060;--ink-4:#b8b0a0;--stage-c:#887060;
+--tb-bg:#1e1b17;--tb-border:rgba(255,255,255,0.08);
+--tb-text:rgba(255,255,255,0.38);--tb-on:rgba(255,255,255,0.88);
+--tb-btn-on:rgba(255,255,255,0.10);--panel-bg:#252118;
+--panel-sep:rgba(255,255,255,0.07);
+--note-bg:#fffbea;--note-border:#e8c84a;--note-ink:#5a4200;--note-label:#b8860b;
+--hl-j:rgba(255,205,50,0.50);--hl-j-ink:#3e2e00;--hl-j-bar:#c88c00;
+--hl-y:rgba(90,200,120,0.46);--hl-y-ink:#153520;--hl-y-bar:#2a9050;
+--hl-m:rgba(170,125,215,0.44);--hl-m-ink:#2e1448;--hl-m-bar:#8040c0;
+--fs:21px;
+}
+html.pre-dark body{--desk:#0a0908;--paper-bg:#2a2420;--ink:#e2dace;--ink-2:#cac2b2;--ink-3:#847a6e;--ink-4:#52483e;}
+body.dark{
+--desk:#080706;--paper-bg:#2a2420;--margin-rule:rgba(160,55,55,0.14);
+--ruled-line:rgba(255,255,255,0.02);--ink:#e2dace;--ink-2:#cac2b2;
+--ink-3:#847a6e;--ink-4:#52483e;--stage-c:#847060;--tb-bg:#14100c;
+--panel-bg:#1c1510;--note-bg:#302a12;--note-border:#a07820;
+--note-ink:#e8c870;--note-label:#c8a030;
+--hl-j:rgba(210,160,20,0.28);--hl-j-ink:#f0d070;--hl-j-bar:#c89000;
+--hl-y:rgba(50,160,90,0.25);--hl-y-ink:#80e0a0;--hl-y-bar:#30a060;
+--hl-m:rgba(140,95,190,0.25);--hl-m-ink:#d0a0f8;--hl-m-bar:#9050d0;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--desk);min-height:100vh;padding:0 0 2rem;transition:background 0.3s;}
+
+.opening{position:fixed;inset:0;background:#0a0806;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+z-index:900;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem;
+pointer-events:auto;cursor:pointer;}
+.opening.fade-out{animation:opening-out 0.8s ease forwards;}
+@keyframes opening-out{from{opacity:1}to{opacity:0}}
+.opening-main{position:relative;display:inline-block;max-width:480px;width:100%;}
+.opening-quote{font-family:'Noto Serif TC',serif;font-weight:300;font-size:clamp(1rem,4vw,1.4rem);color:rgba(240,234,220,0.9);line-height:2;letter-spacing:0.12em;text-align:center;opacity:0;animation:quote-in 1s ease 0.3s forwards;}
+.opening-author{font-family:'Noto Serif TC',serif;font-weight:400;font-size:clamp(0.7rem,2.5vw,0.85rem);color:rgba(240,234,220,0.45);letter-spacing:0.2em;text-align:right;display:block;margin-top:2rem;opacity:0;animation:quote-in 1s ease 0.9s forwards;}
+.opening-godot{position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);font-family:'Noto Sans TC',sans-serif;font-weight:300;font-size:0.58rem;color:rgba(240,234,220,0.22);letter-spacing:0.35em;text-indent:0.35em;white-space:nowrap;opacity:0;animation:quote-in 1s ease 1.1s forwards;}
+@keyframes quote-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.topbar{position:sticky;top:0;z-index:400;background:var(--tb-bg);padding:0 max(1rem,env(safe-area-inset-right)) 0 max(1rem,env(safe-area-inset-left));display:flex;align-items:center;height:44px;gap:0.3rem;isolation:isolate;transition:background 0.3s;}
+.topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:transparent;transition:background 0.25s ease;}
+body.rehearse-active .topbar::after{background:rgba(255,160,50,0.7);}
+body.cue-active .topbar::after{background:rgba(100,160,255,0.7);}
+body.lecture-mode .topbar::after{background:transparent!important;}
+.script-select{font-family:'Noto Serif TC',serif;font-weight:500;font-size:0.82rem;letter-spacing:0.06em;color:var(--tb-on);background:transparent;border:none;cursor:pointer;appearance:none;-webkit-appearance:none;padding-right:1.4rem;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M0 0l4.5 5 4.5-5z' fill='rgba(255,255,255,0.5)'/%3E%3C/svg%3E");
+background-repeat:no-repeat;background-position:right 0 center;flex:1;min-width:0;max-width:calc(100vw - 160px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.script-select option,.cue-select option{background:#2a2520;color:#e0d8c8;font-family:sans-serif;font-size:14px;}
+.topbar-right{display:flex;align-items:center;gap:0.25rem;flex-shrink:0;margin-left:auto;}
+
+.icon-btn{font-family:'Noto Sans TC',sans-serif;font-size:0.6rem;font-weight:400;background:transparent;border:1px solid var(--tb-border);color:var(--tb-text);padding:0.22rem 0.52rem;cursor:pointer;border-radius:3px;transition:color 0.12s,background 0.12s,border-color 0.12s;white-space:nowrap;line-height:1.4;flex-shrink:0;}
+.icon-btn:hover{color:var(--tb-on);border-color:rgba(255,255,255,0.22);}
+.icon-btn.on,#settingsToggle.on{background:var(--tb-btn-on);color:var(--tb-on);border-color:rgba(255,255,255,0.28);}
+
+.settings-overlay{position:fixed;inset:0;z-index:380;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.settings-overlay.open{opacity:1;pointer-events:auto;}
+.settings-panel{position:fixed;top:44px;left:0;right:0;z-index:390;background:var(--panel-bg);border-bottom:0 solid var(--tb-border);overflow:hidden;max-height:0;transition:max-height 0.25s ease,border-width 0.25s;-webkit-overflow-scrolling:touch;}
+.settings-panel.open{max-height:min(560px,75vh);overflow-y:auto;border-bottom-width:1px;}
+.panel-inner{padding:0.7rem 1rem 0.8rem;display:flex;flex-direction:column;gap:0.55rem;}
+.setting-row{display:flex;align-items:center;gap:0.55rem;flex-wrap:wrap;}
+.row-label{font-family:'Noto Sans TC',sans-serif;font-size:0.6rem;color:var(--tb-text);letter-spacing:0.1em;min-width:5rem;flex-shrink:0;}
+.row-note{font-family:'Noto Sans TC',sans-serif;font-size:0.52rem;font-weight:300;color:rgba(255,255,255,0.22);letter-spacing:0.04em;}
+.btn-group,.hl-btn-group{display:flex;gap:0;}
+.btn-group .pbtn{font-family:'Noto Sans TC',sans-serif;font-size:0.63rem;font-weight:400;background:transparent;border:1px solid rgba(255,255,255,0.13);color:var(--tb-text);padding:0.26rem 0.68rem;cursor:pointer;border-radius:0;border-right-width:0;transition:all 0.12s;white-space:nowrap;line-height:1.4;}
+.btn-group .pbtn:first-child{border-radius:3px 0 0 3px;}
+.btn-group .pbtn:last-child{border-radius:0 3px 3px 0;border-right-width:1px;}
+.btn-group .pbtn:hover{color:var(--tb-on);border-color:rgba(255,255,255,0.25);}
+.btn-group .pbtn.on{background:rgba(255,255,255,0.10);color:var(--tb-on);border-color:rgba(255,255,255,0.30);}
+.cue-select{font-family:'Noto Sans TC',sans-serif;font-size:0.63rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.13);color:var(--tb-on);padding:0.26rem 1.8rem 0.26rem 0.68rem;cursor:pointer;border-radius:3px;appearance:none;-webkit-appearance:none;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,0.35)'/%3E%3C/svg%3E");
+background-repeat:no-repeat;background-position:right 0.5rem center;transition:all 0.12s;}
+.cue-select.active-cue{border-color:rgba(255,255,255,0.35);background-color:rgba(255,255,255,0.10);}
+.panel-sep{height:1px;background:var(--panel-sep);margin:0.05rem 0;}
+
+.hl-btn-group .pbtn::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:0.3rem;vertical-align:middle;opacity:0.55;transition:opacity 0.12s;}
+.hl-btn-group .pbtn.on::before{opacity:1;}
+.hl-btn-group .pbtn.on{font-weight:500;}
+.hl-btn-group .pbtn[data-hl="結人"]::before,.hl-btn-group .pbtn[data-hl="希煥"]::before,.hl-btn-group .pbtn[data-hl="花姐"]::before,.hl-btn-group .pbtn[data-hl="A"]::before{background:#c88c00;}
+.hl-btn-group .pbtn[data-hl="葉子"]::before,.hl-btn-group .pbtn[data-hl="美英"]::before,.hl-btn-group .pbtn[data-hl="欣潔"]::before,.hl-btn-group .pbtn[data-hl="雨晴"]::before,.hl-btn-group .pbtn[data-hl="B"]::before{background:#2a9050;}
+.hl-btn-group .pbtn[data-hl="瑪莉"]::before{background:#8040c0;}
+.hl-btn-group .pbtn[data-hl="結人"].on,.hl-btn-group .pbtn[data-hl="希煥"].on,.hl-btn-group .pbtn[data-hl="花姐"].on,.hl-btn-group .pbtn[data-hl="A"].on{background:rgba(200,140,0,0.14);color:#d4a020;border-color:rgba(200,140,0,0.35);}
+.hl-btn-group .pbtn[data-hl="葉子"].on,.hl-btn-group .pbtn[data-hl="美英"].on,.hl-btn-group .pbtn[data-hl="欣潔"].on,.hl-btn-group .pbtn[data-hl="雨晴"].on,.hl-btn-group .pbtn[data-hl="B"].on{background:rgba(42,144,80,0.12);color:#40b868;border-color:rgba(42,144,80,0.35);}
+.hl-btn-group .pbtn[data-hl="瑪莉"].on{background:rgba(128,64,192,0.12);color:#b070e8;border-color:rgba(128,64,192,0.35);}
+
+.paper{max-width:660px;margin:2rem auto 0;background:var(--paper-bg);position:relative;box-shadow:0 2px 4px rgba(0,0,0,0.14),0 8px 24px rgba(0,0,0,0.28),0 28px 70px rgba(0,0,0,0.32);filter:url(#paper-noise);transition:background 0.3s;}
+.paper::before{content:'';position:absolute;left:5.2rem;top:0;bottom:0;width:1px;background:var(--margin-rule);pointer-events:none;z-index:1;}
+.paper::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(180deg,transparent 0,transparent 37px,var(--ruled-line) 37px,var(--ruled-line) 38px);pointer-events:none;z-index:0;}
+
+.masthead{position:relative;z-index:2;padding:2.2rem 2.5rem 1.6rem 5.8rem;transition:padding 0.3s,opacity 0.2s;overflow:hidden;}
+.masthead-body{transition:max-height 0.3s ease,opacity 0.3s ease;max-height:260px;opacity:1;overflow:hidden;}
+body.masthead-collapsed .masthead-body{max-height:0;opacity:0;}
+body.masthead-collapsed .masthead{padding-top:1rem;padding-bottom:1rem;}
+.masthead-toggle{position:absolute;bottom:0.5rem;right:1.5rem;background:none;border:none;cursor:pointer;font-size:0.55rem;font-family:'Noto Sans TC',sans-serif;color:var(--ink-4);letter-spacing:0.12em;padding:0.2rem 0.4rem;transition:color 0.15s;}
+.masthead-toggle:hover{color:var(--ink-3);}
+.masthead-helper{font-family:'Noto Sans TC',sans-serif;font-size:0.58rem;color:var(--ink-3);letter-spacing:0.08em;margin-bottom:0.7rem;opacity:0.75;}
+.eyebrow{font-family:'Noto Sans TC',sans-serif;font-size:0.52rem;font-weight:300;letter-spacing:0.28em;color:var(--ink-3);text-transform:uppercase;margin-bottom:0.6rem;}
+.main-title{font-family:'Noto Serif TC',serif;font-weight:500;font-size:2.2rem;color:var(--ink);line-height:1;letter-spacing:0.38em;margin-bottom:1.4rem;text-indent:0.38em;}
+.page-num{position:absolute;top:1.5rem;right:1.8rem;font-family:'Noto Sans TC',sans-serif;font-size:0.55rem;font-weight:300;color:var(--ink-4);}
+.masthead-mode-badge{display:inline-flex;align-items:center;gap:0.3rem;font-family:'Noto Sans TC',sans-serif;font-size:0.5rem;font-weight:400;letter-spacing:0.12em;padding:0.15rem 0.5rem;border-radius:20px;margin-left:0.6rem;vertical-align:middle;opacity:0;transition:opacity 0.2s;pointer-events:none;}
+.masthead-mode-badge.visible{opacity:1;}
+.masthead-mode-badge.rehearse{color:rgba(220,130,40,0.9);border:1px solid rgba(220,130,40,0.35);background:rgba(220,130,40,0.08);}
+.masthead-mode-badge.cue{color:rgba(100,160,255,0.9);border:1px solid rgba(100,160,255,0.35);background:rgba(100,160,255,0.08);}
+
+.cast-block{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:0.2rem;}
+.cast-item{display:flex;flex-direction:column;gap:0.15rem;}
+.cast-role{font-family:'Noto Sans TC',sans-serif;font-size:0.46rem;font-weight:300;letter-spacing:0.2em;color:var(--ink-3);text-transform:uppercase;}
+.cast-name{font-family:'Noto Serif TC',serif;font-weight:400;font-size:0.9rem;color:var(--ink);letter-spacing:0.08em;display:flex;align-items:center;gap:0.4rem;}
+.csw{display:inline-block;width:7px;height:7px;border-radius:2px;opacity:0;transition:opacity 0.2s;flex-shrink:0;}
+.cast-quickstart{display:flex;gap:0.3rem;margin-top:0.3rem;}
+.qs-btn{font-family:'Noto Sans TC',sans-serif;font-size:0.52rem;font-weight:400;letter-spacing:0.06em;background:transparent;border:1px solid var(--ink-4);color:var(--ink-3);padding:0.18rem 0.55rem;border-radius:20px;cursor:pointer;transition:background 0.12s,color 0.12s,border-color 0.12s;white-space:nowrap;}
+.qs-btn:hover,.qs-btn.active{background:var(--ink);color:var(--paper-bg);border-color:var(--ink);}
+@keyframes qs-pulse{0%{box-shadow:0 0 0 0 rgba(100,82,60,0.4)}70%{box-shadow:0 0 0 5px rgba(100,82,60,0)}100%{box-shadow:0 0 0 0 rgba(100,82,60,0)}}
+.qs-btn.pulse{animation:qs-pulse 0.8s ease 0.5s 2;}
+
+#script,.lecture-body{transition:opacity 0.18s ease;}
+.script-body{position:relative;z-index:2;padding:1.6rem 2.5rem 3.5rem 6rem;max-width:100%;}
+.dline{display:flex;align-items:baseline;padding:0.72rem 0.4rem 0.72rem 0;transition:background 0.13s,opacity 0.2s;animation:up 0.3s ease both;border-radius:2px;margin:0 -0.4rem;position:relative;font-size:var(--fs);flex-wrap:wrap;}
+@keyframes up{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.dline.role-change{padding-top:1.8rem;}
+.dline-main{display:flex;align-items:baseline;width:100%;}
+.lnum{font-family:'Noto Sans TC',sans-serif;font-size:0.5rem;font-weight:300;color:var(--ink-4);min-width:1.8rem;text-align:right;padding-right:0.55rem;flex-shrink:0;user-select:none;margin-left:-2rem;}
+.spkr{font-family:'Noto Sans TC',sans-serif;font-weight:500;font-size:0.72rem;color:var(--ink-3);min-width:3.2rem;flex-shrink:0;user-select:none;letter-spacing:0.14em;text-transform:uppercase;padding-top:0.08rem;transition:color 0.13s;}
+.colon{font-family:'Noto Sans TC',sans-serif;color:var(--ink-4);padding:0 0.5rem 0 0.05rem;flex-shrink:0;font-size:calc(var(--fs)*0.8);}
+.dtxt{flex:1;font-family:'Noto Serif TC',serif;font-weight:300;font-size:var(--fs);color:var(--ink-2);line-height:1.78;max-width:28em;transition:color 0.13s,text-shadow 0.13s;}
+.dline.long-line .dtxt{line-height:1.9;}
+
+.sline{padding:0.22rem 0;animation:up 0.3s ease both;}
+.stxt{font-family:'Noto Sans TC',sans-serif;font-style:italic;font-size:calc(var(--fs)*0.76);font-weight:300;color:var(--stage-c);display:block;padding-left:1.6rem;}
+.stxt::before{content:'（';}.stxt::after{content:'）';}
+body.hide-action .sline{display:none;}
+
+body.focus-mode .dline:not(.focus-target){opacity:0.1;}
+body.focus-mode .dline.focus-target{opacity:1;}
+body.rehearse-focus .dline:not(.rehearse-target){opacity:0.25;transition:opacity 0.2s;}
+body.rehearse-focus .dline.rehearse-target{opacity:1;}
+
+.dline.hl-on[data-c="結人"],.dline.hl-on[data-c="希煥"],.dline.hl-on[data-c="花姐"],.dline.hl-on[data-c="A"]{background:var(--hl-j);}
+.dline.hl-on[data-c="葉子"],.dline.hl-on[data-c="美英"],.dline.hl-on[data-c="欣潔"],.dline.hl-on[data-c="雨晴"],.dline.hl-on[data-c="B"]{background:var(--hl-y);}
+.dline.hl-on[data-c="瑪莉"]{background:var(--hl-m);}
+.dline.hl-on[data-c="結人"] .spkr,.dline.hl-on[data-c="結人"] .dtxt,
+.dline.hl-on[data-c="希煥"] .spkr,.dline.hl-on[data-c="希煥"] .dtxt,
+.dline.hl-on[data-c="花姐"] .spkr,.dline.hl-on[data-c="花姐"] .dtxt,
+.dline.hl-on[data-c="A"] .spkr,.dline.hl-on[data-c="A"] .dtxt{color:var(--hl-j-ink);}
+.dline.hl-on[data-c="葉子"] .spkr,.dline.hl-on[data-c="葉子"] .dtxt,
+.dline.hl-on[data-c="美英"] .spkr,.dline.hl-on[data-c="美英"] .dtxt,
+.dline.hl-on[data-c="欣潔"] .spkr,.dline.hl-on[data-c="欣潔"] .dtxt,
+.dline.hl-on[data-c="雨晴"] .spkr,.dline.hl-on[data-c="雨晴"] .dtxt,
+.dline.hl-on[data-c="B"] .spkr,.dline.hl-on[data-c="B"] .dtxt{color:var(--hl-y-ink);}
+.dline.hl-on[data-c="瑪莉"] .spkr,.dline.hl-on[data-c="瑪莉"] .dtxt{color:var(--hl-m-ink);}
+
+body.cue-mode .dline.focus-target{cursor:pointer;}
+body.cue-mode .dline.focus-target .dtxt{color:transparent;text-shadow:0 0 10px rgba(100,80,40,0.5);user-select:none;transition:color 0.2s,text-shadow 0.2s;}
+body.cue-mode .dline.focus-target.hl-on .dtxt{text-shadow:0 0 10px rgba(80,60,20,0.6);}
+body.dark.cue-mode .dline.focus-target .dtxt{text-shadow:0 0 10px rgba(200,180,140,0.4);}
+body.cue-mode .dline.focus-target.cue-revealed .dtxt{color:var(--ink-2)!important;text-shadow:none!important;}
+
+.note-dot{display:inline-flex;width:7px;height:7px;border-radius:50%;background:var(--note-label);flex-shrink:0;align-self:center;margin-left:0.5rem;opacity:0.75;cursor:pointer;transition:opacity 0.15s;}
+.note-dot:hover{opacity:1;}
+.note-wrap{width:100%;padding:0.4rem 0 0.2rem 4.4rem;animation:up 0.3s ease both;}
+.note-card{background:var(--note-bg);border-left:3px solid var(--note-border);border-radius:0 4px 4px 0;padding:0.55rem 0.8rem 0.55rem 0.75rem;position:relative;box-shadow:0 1px 4px rgba(0,0,0,0.08),inset 0 0 0 1px rgba(200,160,0,0.08);transition:background 0.3s,border-color 0.3s;}
+.note-toggle{background:none;border:none;cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.52rem;color:var(--note-label);padding:0;display:flex;align-items:center;gap:0.2rem;opacity:0.7;transition:opacity 0.12s;}
+.note-toggle:hover{opacity:1;}
+.note-toggle .nt-arrow{transition:transform 0.18s;display:inline-block;}
+.note-toggle.open .nt-arrow{transform:rotate(90deg);}
+.note-body{overflow:hidden;max-height:0;transition:max-height 0.22s ease;}
+.note-body.open{max-height:300px;}
+.note-text{font-family:'Noto Sans TC',sans-serif;font-size:calc(var(--fs)*0.78);font-weight:300;color:var(--note-ink);line-height:1.7;}
+.note-text strong{font-weight:500;}
+body.hide-notes .note-wrap{display:none;}
+
+.lecture-body{position:relative;z-index:2;padding:1.8rem 2rem 3.5rem 2rem;}
+.lec-section{margin-bottom:2.4rem;animation:up 0.3s ease both;}
+.lec-h1{font-family:'Noto Serif TC',serif;font-weight:500;font-size:1.05rem;color:var(--ink);letter-spacing:0.08em;margin-top:2rem;margin-bottom:0.7rem;}
+.lec-h1:first-child{margin-top:0;}
+.lec-p{font-family:'Noto Serif TC',serif;font-weight:300;font-size:1rem;color:var(--ink);line-height:2;margin-bottom:0.6rem;}
+.lec-item{display:flex;gap:1.2rem;padding:0.45rem 0;align-items:baseline;}
+.lec-key{font-family:'Noto Serif TC',serif;font-weight:700;font-size:1rem;color:var(--ink);flex-shrink:0;min-width:3.8rem;letter-spacing:0.04em;}
+.lec-val{font-family:'Noto Serif TC',serif;font-weight:300;font-size:1rem;color:var(--ink);line-height:1.85;}
+.lec-author{font-family:'Noto Sans TC',sans-serif;font-size:0.9rem;font-weight:400;color:var(--ink-2);letter-spacing:0.15em;margin-bottom:1.2rem;}
+
+.script-end{display:flex;flex-direction:column;align-items:center;gap:0.8rem;padding:4rem 0 3rem;}
+.script-end-rule{width:4rem;height:1px;background:var(--ink-3);opacity:0.35;}
+.script-end-text{font-family:'Noto Serif TC',serif;font-size:0.85rem;font-weight:300;color:var(--ink-3);letter-spacing:0.55em;text-indent:0.55em;opacity:0.7;}
+
+.onboard-overlay{position:fixed;inset:0;background:rgba(10,8,6,0.75);z-index:600;display:flex;align-items:center;justify-content:center;padding:1.2rem;backdrop-filter:blur(3px);animation:fadein 0.22s ease;}
+.onboard-overlay.hidden{display:none;}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.onboard-card{background:var(--paper-bg);max-width:400px;width:100%;padding:1.8rem 1.8rem 1.5rem;box-shadow:0 20px 60px rgba(0,0,0,0.5);filter:url(#paper-noise);}
+.onboard-card h2{font-family:'Noto Serif TC',serif;font-weight:500;font-size:1rem;color:var(--ink);letter-spacing:0.1em;margin-bottom:1.1rem;padding-bottom:0.65rem;border-bottom:1px solid var(--ink-4);}
+.onboard-list{list-style:none;display:flex;flex-direction:column;gap:0.65rem;margin-bottom:1.4rem;}
+.onboard-list li{display:flex;gap:0.65rem;align-items:flex-start;}
+.ob-icon{font-family:'Noto Sans TC',sans-serif;font-size:0.56rem;font-weight:500;background:var(--ink);color:var(--paper-bg);padding:0.15rem 0.4rem;border-radius:2px;flex-shrink:0;margin-top:0.12rem;}
+.ob-desc{font-family:'Noto Sans TC',sans-serif;font-size:0.73rem;font-weight:300;color:var(--ink-2);line-height:1.65;}
+.ob-desc strong{font-weight:500;color:var(--ink);}
+.ob-close{width:100%;padding:0.55rem;background:var(--ink);color:var(--paper-bg);border:none;font-family:'Noto Sans TC',sans-serif;font-size:0.75rem;font-weight:400;letter-spacing:0.1em;cursor:pointer;border-radius:2px;transition:opacity 0.12s;}
+.ob-close:hover{opacity:0.8;}
+
+.cue-hint{position:fixed;bottom:3rem;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper-bg);font-family:'Noto Sans TC',sans-serif;font-size:0.68rem;font-weight:300;letter-spacing:0.08em;padding:0.45rem 1rem;border-radius:20px;white-space:nowrap;z-index:520;opacity:0;pointer-events:none;animation:hintpop 3s ease forwards;}
+@keyframes hintpop{0%{opacity:0;transform:translateX(-50%) translateY(6px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}70%{opacity:1}100%{opacity:0}}
+.switch-toast{position:fixed;left:50%;bottom:3.2rem;transform:translateX(-50%) translateY(8px);background:var(--ink);color:var(--paper-bg);font-family:'Noto Sans TC',sans-serif;font-size:0.68rem;font-weight:300;letter-spacing:0.08em;padding:0.45rem 1rem;border-radius:20px;z-index:520;opacity:0;pointer-events:none;transition:opacity 0.22s ease,transform 0.22s ease;}
+.switch-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.ui-tooltip{position:absolute;background:var(--ink);color:var(--paper-bg);font-family:'Noto Sans TC',sans-serif;font-size:0.62rem;font-weight:300;letter-spacing:0.06em;padding:0.35rem 0.7rem;border-radius:4px;white-space:nowrap;z-index:450;pointer-events:none;top:calc(100% + 8px);}
+.ui-tooltip::before{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:8px;height:4px;background:var(--ink);clip-path:polygon(50% 0%,0% 100%,100% 100%);}
+.ui-tooltip.tip-right{left:auto;right:0;}
+.ui-tooltip.tip-right::before{left:auto;right:12px;transform:none;}
+
+footer{position:fixed;bottom:0;left:0;right:0;background:var(--tb-bg);border-top:1px solid transparent;padding:0 max(1.2rem,env(safe-area-inset-right)) env(safe-area-inset-bottom) max(1.2rem,env(safe-area-inset-left));display:flex;align-items:center;height:calc(30px + env(safe-area-inset-bottom));overflow:hidden;z-index:300;transition:height 0.2s ease,border-color 0.2s,background 0.3s;}
+footer.has-mode{border-top-color:var(--tb-border);}
+footer:not(.has-mode){display:none;}
+#cueRow,#rehearseRow{opacity:0.4;transition:opacity 0.2s;pointer-events:none;}
+body.cue-active #cueRow{opacity:1;pointer-events:auto;}
+body.rehearse-active #rehearseRow{opacity:1;pointer-events:auto;}
+.svg-defs{position:absolute;width:0;height:0;overflow:hidden;}
+
+@media(max-width:600px){
+body{padding:0;}
+.topbar{margin:0;}
+.settings-panel{top:44px;}
+#onboardBtn{display:none;}
+.script-select{max-width:calc(100vw - 110px);}
+.paper{margin:0;box-shadow:0 4px 20px rgba(0,0,0,0.4);border-radius:0;}
+.paper::before{display:none;}
+.masthead{padding:1.6rem 1.2rem 1.2rem 1.2rem;}
+.main-title{font-size:1.8rem;}
+.script-body,.lecture-body{padding:1.3rem 1.2rem 3rem 1.2rem;}
+.dtxt{max-width:100%;}
+.lnum{display:none;}
+.note-wrap{padding-left:0;}
+footer{padding:0.5rem 0.8rem;}
+}
+</style>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('dark')==='1') document.documentElement.classList.add('pre-dark');
+    var fs=localStorage.getItem('fs');
+    if(fs) document.documentElement.style.setProperty('--fs',parseInt(fs)+'px');
+  }catch(e){}
+})();
+</script>
+</head>
+<body>
+
+<div class="opening" id="opening">
+  <div class="opening-main">
+    <div class="opening-quote" id="openingQuote"></div>
+    <span class="opening-author">陳幼芳</span>
+  </div>
+  <div class="opening-godot">果陀劇場大師學堂</div>
+</div>
+
+<svg class="svg-defs" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="paper-noise" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.62" numOctaves="3" stitchTiles="stitch" result="n"/>
+      <feColorMatrix type="saturate" values="0" in="n" result="g"/>
+      <feBlend in="SourceGraphic" in2="g" mode="multiply" result="b"/>
+      <feComposite in="b" in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="onboard-overlay" id="onboard">
+  <div class="onboard-card">
+    <h2>表演課劇本　使用說明</h2>
+    <ul class="onboard-list">
+      <li><span class="ob-icon">劇本</span><span class="ob-desc">左上角可以切換不同週的劇本，例如 W1、W2、W7。</span></li>
+      <li><span class="ob-icon">排練</span><span class="ob-desc">在角色名字下方點 <strong>排練</strong> 或 <strong>背詞</strong>，可以快速進入練習模式。</span></li>
+      <li><span class="ob-icon">筆記</span><span class="ob-desc">台詞旁有 <strong>●</strong> 表示有老師筆記，點黃色便條可以展開表演重點。</span></li>
+    </ul>
+    <button class="ob-close" onclick="closeOnboard()">了解了，開始對戲</button>
+  </div>
+</div>
+
+<div class="topbar">
+  <select class="script-select" id="scriptSelect" onchange="switchScript(this.value)"></select>
+  <div class="topbar-right">
+    <button class="icon-btn" id="darkBtn" onclick="toggleDark()" style="font-family:'Noto Serif TC',serif;font-size:0.82rem;letter-spacing:0.05em;font-weight:400;">夜</button>
+    <button class="icon-btn" id="onboardBtn" onclick="openOnboard()" style="font-family:'Noto Serif TC',serif;font-size:0.82rem;letter-spacing:0.05em;font-weight:400;">問</button>
+    <button class="icon-btn" id="settingsToggle" onclick="togglePanel()" title="設定" style="font-family:'Noto Serif TC',serif;font-size:0.82rem;letter-spacing:0.05em;font-weight:400;">設</button>
+  </div>
+</div>
+
+<div class="settings-overlay" id="settingsOverlay" onclick="togglePanel()"></div>
+<div class="settings-panel" id="settingsPanel">
+  <div class="panel-inner">
+    <div class="setting-row">
+      <span class="row-label">模式</span>
+      <div class="btn-group">
+        <button class="pbtn mode-btn on" data-mode="read" onclick="setMode('read')">閱讀</button>
+        <button class="pbtn mode-btn" data-mode="rehearse" onclick="setMode('rehearse')">排練</button>
+        <button class="pbtn mode-btn" data-mode="cue" onclick="setMode('cue')">背詞</button>
+      </div>
+      <span class="row-note" id="modeNote">全部顯示</span>
+    </div>
+    <div class="setting-row" id="rehearseRow">
+      <span class="row-label">排練角色</span>
+      <select class="cue-select" id="rehearseSelect" onchange="setRehearseChar(this.value)"><option value="off">選擇角色</option></select>
+      <span class="row-note">聚焦角色，隱藏動作</span>
+    </div>
+    <div class="setting-row" id="cueRow">
+      <span class="row-label">背詞角色</span>
+      <select class="cue-select" id="cueSelect" onchange="setCueChar(this.value)"><option value="off">選擇角色</option></select>
+      <span class="row-note" id="cueSummary"></span>
+    </div>
+    <div class="panel-sep"></div>
+    <div class="setting-row">
+      <span class="row-label">螢光筆</span>
+      <div class="hl-btn-group btn-group" id="hlBtnGroup"></div>
+      <span class="row-note">勾選角色後台詞上色</span>
+    </div>
+    <div class="panel-sep"></div>
+    <div class="setting-row">
+      <span class="row-label">其他</span>
+      <div class="btn-group">
+        <button class="pbtn" id="noteBtn" onclick="toggleNotesUI()">隱藏老師筆記</button>
+        <button class="pbtn" id="expandNotesBtn" onclick="toggleExpandAllNotes()">展開全部筆記</button>
+      </div>
+      <div class="btn-group" style="margin-left:0.4rem;">
+        <button class="pbtn" onclick="changeFs(1)">字＋</button>
+        <button class="pbtn" onclick="changeFs(-1)">字－</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="paper" id="paper">
+  <div class="masthead" id="masthead">
+    <div class="page-num" id="pageNum"></div>
+    <div class="eyebrow" id="eyebrow">劇本 · Script Reading Copy</div>
+    <div class="main-title" id="mainTitle"></div>
+    <span class="masthead-mode-badge" id="mastheadModeBadge"></span>
+    <div class="masthead-body" id="mastheadBody">
+      <div class="masthead-helper" id="mastheadHelper">選一個角色開始排練，或直接往下閱讀劇本</div>
+      <div class="cast-block" id="castBlock"></div>
+    </div>
+    <button class="masthead-toggle" onclick="toggleMasthead()" id="mastheadToggle">收合 ▴</button>
+  </div>
+  <div class="script-body" id="script" style="position:relative;z-index:2;"></div>
+</div>
+
+<footer>
+  <span id="fmode-text" style="font-family:'Noto Sans TC',sans-serif;font-size:0.52rem;font-weight:300;color:rgba(255,255,255,0.5);letter-spacing:0.08em;"></span>
+</footer>
+<script>
+var SCRIPTS=[
+{id:'lecture1',title:'關於表演',week:'Week 1 · 4/11',subtitle:'課堂講義',type:'lecture',author:'陳幼芳',chars:[],
+sections:[
+{h1:'什麼是表演',p:['表演是一種在舞台上或透過鏡頭傳達自然又具有創造力的生活，其目的讓是要觀眾感受到真實的感動。']},
+{h1:'如何成為一個好的表演者',items:[
+{k:'觀察',v:'隨時觀察週遭的人、事、物，豐富記憶盒。'},
+{k:'學習',v:'鍛鍊開發聲音、肢體的可能性。'},
+{k:'培養',v:'認真的態度、專注力和想像力、創造力。'},
+{k:'把握',v:'每一次有觀眾的表演，累積經驗。'},
+{k:'檢討',v:'客觀的檢查每一次的表演。'}
+]},
+{h1:'聲音練習',items:[
+{k:'腹式呼吸',v:'呼吸氣囊加大，增加聲音的厚實度以利聲音傳達。'},
+{k:'清楚說話',v:'咬字、嘴型，讓詞意徹底表達。'},
+{k:'節奏速度',v:'幫助情緒的變化，增加表演樣貌。'},
+{k:'拉大音域',v:'擴大聲音表情，增加角色趣味性。'},
+{k:'情緒傳遞',v:'內在情緒藉著聲音清楚傳達。'}
+]},
+{h1:'活動肢體練習',p:['讓身體接收多種不同的練習，豐富肢體語言讓不同的角色有不同的身體姿態。']},
+{h1:'即興練習',p:['如何在沒有劇本、沒有預設情緒、沒有先行排演的狀況之下，去尋找最直接最自然的反應。','真正的聆聽，真實的思考，感覺演員之間的互動。']}
+]},
+{id:'qiaoqiao',title:'悄悄佔據你',week:'Week 2 · 4/18',subtitle:'特力家居 2012 微電影　第三話＿填滿',
+chars:[{name:'花姐',role:'主管'},{name:'欣潔',role:'員工'}],
+data:[
+{t:'l',c:'花姐',s:'欣潔阿，還沒走阿？'},
+{t:'s',s:'花姐轉過頭來看像欣潔（音效）。'},
+{t:'s',s:'花姐慢慢後退彎下腰。'},
+{t:'l',c:'花姐',s:'（大聲）關、欣、潔！'},
+{t:'l',c:'欣潔',s:'花姐⋯⋯（淡淡語氣）。'},
+{t:'l',c:'花姐',s:'（關心）怎麼啦，無精打采的？'},
+{t:'l',c:'欣潔',s:'我⋯⋯。'},
+{t:'l',c:'花姐',s:'來，有什麼難言之隱儘管跟花姐說。'},
+{t:'s',s:'花姐越講越陶醉頭微微上揚，突然留職停薪表入鏡，花姐表情轉為錯愕。'},
+{t:'l',c:'花姐',s:'花姐好歹也是過來人，想當年⋯⋯。'},
+{t:'l',c:'欣潔',s:'花姐，'},
+{t:'s',s:'欣潔一手撐頭沒看花姐一手遞出留職停薪表。'},
+{t:'l',c:'欣潔',s:'我想要留職停薪一陣子！'},
+{t:'s',s:'花姐將留職停薪表抽走。'},
+{t:'l',c:'花姐',s:'（驚訝）啊？留職停薪？（連珠炮）唉唷，我的姑奶奶，週年慶快到了，妳竟然在這個時候跟我說要請假？還有，下個月，設計講堂的年度活動也要靠你和立銘撐場，妳突然這樣雙手一攤，妳要我怎麼辦？'},
+{t:'s',s:'欣潔轉過頭面向花姐拉著手臂委屈的訴說，說完又轉回去。'},
+{t:'l',c:'欣潔',s:'對不起，花姐，我最近身體不太舒服，我⋯⋯怕會影響工作。'},
+{t:'s',s:'花姐拉了旁邊的椅子坐下，拿起了申請書、戴起眼鏡、拿起筆，像醫生問診一樣開始問欣潔問題。'},
+{t:'l',c:'花姐',s:'咳⋯⋯咳（清喉嚨的聲音），妳最近會不會覺得，有些無力感，工作沒動力呢？'},
+{t:'s',s:'欣潔對花姐點頭。'},
+{t:'l',c:'欣潔',s:'嗯⋯⋯有點！'},
+{t:'l',c:'花姐',s:'常常失眠，胸口悶悶的？'},
+{t:'s',s:'欣潔又點點頭，更驚訝的看著花姐。'},
+{t:'l',c:'花姐',s:'有時會頭痛、胃痛、心絞痛、全身無力⋯⋯甚至⋯⋯還有點想哭？'},
+{t:'s',s:'欣潔張大眼睛更用力的點頭，覺得花姐很厲害。'},
+{t:'s',s:'花姐露出匪夷所思的笑容。'},
+{t:'l',c:'花姐',s:'好吧，我知道了，去放個假、散散心吧，想回來上班再跟我說！'},
+{t:'l',c:'欣潔',s:'謝謝妳，花姐⋯⋯我其實⋯⋯。'},
+{t:'l',c:'花姐',s:'（慧點的眼神）不必說了，快回去吧，別忘了我是過來人。'}
+]},
+{id:'biaoqing',title:'表演課練習（表情）',week:'Week 6 · 5/16',subtitle:'表演課練習腳本',
+chars:[{name:'雨晴',role:'獨白'}],
+data:[
+{t:'l',c:'雨晴',s:'那好吧，就請你看清楚，合約裡寫得清清楚楚，雙方用的印，必須是含有公司註冊號的公司用章，才算正式的合約，這份合約裡公司章，是個廢章，所以這份合約根本不成立，若你真要追究也只能找我們黨黨經理⋯⋯'},
+{t:'l',c:'雨晴',s:'對了！我聽說可口可樂好像也是貴公司底下長期配合的廠商，我想應該不會是有人在玩什麼雙面設計的手段吧！如果是這樣我們公司也不同意讓人當棋子要，有必要就走法律嘛，我們公司也要討回一個公道！不知道淇總有甚麼看法？'}
+]},
+{id:'movie101',title:'電影演技小教室',week:'Week 6 · 5/16',subtitle:'助教課外教學',
+chars:[{name:'A',role:'角色 A'},{name:'B',role:'角色 B'}],
+data:[
+{t:'l',c:'A',s:'怎樣？'},
+{t:'l',c:'B',s:'我真的不知道該說什麼。'},
+{t:'l',c:'A',s:'你真的是個演員。'},
+{t:'l',c:'B',s:'是嗎？那你呢？你覺得你做了什麼？我去找過爸了，他狀況很差。'},
+{t:'l',c:'A',s:'我等等還有事要去開會，我快遲到了。'},
+{t:'l',c:'B',s:'你就這樣把他帶走，完全不管我們所有人。'},
+{t:'l',c:'A',s:'不然你是想要把他丟在你家嗎？'},
+{t:'l',c:'B',s:'那現在他在這裡會怎樣？你覺得接下來會怎麼樣？'},
+{t:'l',c:'A',s:'他正在接受治療，現在是最好的醫生在照顧他。'},
+{t:'l',c:'B',s:'他會好嗎？你老實說，你覺得他會好嗎？會嗎？'},
+{t:'l',c:'B',s:'你們兩個都一樣，我跟笨蛋一樣夾在你們中間。你覺得我都住在鄉下，我不是台北人，不是文明人我不懂，對吧？我真的受不了你，我也受不了他。你他媽每次都想做什麼就做什麼，不管別人死活。'},
+{t:'l',c:'A',s:'是你自己想要來這裡的，不要拿我當藉口。'},
+{t:'l',c:'B',s:'我不知道欸，我已經不知道我想不想了，我根本沒有時間思考我想不想。太扯了，幹我們不是一家人嗎？我們是一家人，遇到這種事情本來應該要讓我們更團結。'},
+{t:'l',c:'B',s:'你吃那什麼？'},
+{t:'l',c:'A',s:'鎮定劑。'},
+{t:'l',c:'B',s:'阿傑說你是個壞人。'},
+{t:'l',c:'A',s:'抱歉噢，雖然他是你先生，但他就是個白目。'},
+{t:'l',c:'B',s:'對，他也可能說的很對。'},
+{t:'l',c:'A',s:'對，他說的對。'}
+]},
+{id:'qijie',title:'七個朋友',week:'Week 7 · 5/23',subtitle:'對戲閱讀版',
+chars:[{name:'結人',role:'買方 / 作家'},{name:'葉子',role:'房仲朋友'},{name:'瑪莉',role:'經紀人'}],
+data:[
+{t:'l',c:'結人',s:'我去找你簽約就可以了，還麻煩妳跑這一趟。'},
+{t:'l',c:'葉子',s:'本來，就應該是我主動找你才對，你幹嘛比我還積極⋯⋯而且，我也想再確認一下，你真的要買回原本你租的那間房子啊？'},
+{t:'l',c:'結人',s:'對啊！'},
+{t:'l',c:'葉子',s:'那間的屋齡很舊了喔。不再多考慮一下？我上次推薦給你的那間新屋嗎？要買屋的話，還是新房子比較好吧！'},
+{t:'s',s:'葉子說完，又把手中準備的新屋資料堆給結人看。'},
+{t:'l',c:'結人',s:'不用了啦！都住了那麼久，那屋子裝的是我滿滿的回憶，任何新屋都比不上我的那間小狗窩，你自己不是也住過一陣子，應該很清楚吧！'},
+{t:'s',s:'葉子也認同地點了點頭，但是是善盡朋友的提醒。'},
+{t:'l',c:'葉子',s:'不過、買房子這麼大的事，你一定要仔細考慮清楚，千萬不要受我影響。'},
+{t:'l',c:'結人',s:'如果你要問我的話，我坦白說，我還蠻喜歡那棟房子的，就跟寫作一樣，我做什麼事都憑感覺，第一眼的感覺最重要！你也知道，我這個人最念舊了。'},
+{t:'s',s:'瑪莉仔細翻閱合約，提出一連串的質疑。'},
+{t:'l',c:'瑪莉',s:'合約上只寫明，房屋主結構保固十五年，那漏水保固呢？你們保固幾年？另外，凶宅查證保固也要註明上去。萬一、買屋後發現有這些問題，你們得負責賠償我們的損失。'},
+{t:'l',c:'葉子',s:'你放心啦！結人是我的好朋友，我不會騙他的啦！更何況，我和結人都住過，保證絕對沒有鬧鬼！憑良心說，除了屋齡有點老以外，屋況維持的都還不錯，而且，我都說不抽佣金了。'},
+{t:'s',s:'瑪莉懷疑的眼光盯著葉子。'},
+{t:'l',c:'瑪莉',s:'不抽更可疑，感覺這房子好像有什麼問題⋯⋯'},
+{t:'s',s:'葉子一副受不了的模樣。'},
+{t:'l',c:'葉子',s:'厚、你的疑心病真的很重耶！'},
+{t:'l',c:'瑪莉',s:'你也知道，我們這位大作家粗心得很，要是沒有我這個經紀人幫他嚴格把關，就怕他會上當受騙！'},
+{t:'l',c:'葉子',s:'你在暗示，我這個老朋友會騙他嗎？'},
+{t:'l',c:'瑪莉',s:'現在詐騙集團這麼多，這個世界上，什麼不可能發生的事情都有可能會發生。'},
+{t:'s',s:'眼看葉子和瑪莉彼此針鋒相對，都是為了結人在爭執，結人只好跳出來緩頰。'},
+{t:'l',c:'結人',s:'你們別這樣嘛！'},
+{t:'s',s:'結人轉頭對葉子解釋。'},
+{t:'l',c:'結人',s:'瑪莉做事一向很仔細、很謹慎，他是對事不對人，絕對不是故意在針對你！'},
+{t:'l',c:'葉子',s:'哼！'},
+{t:'s',s:'結人隨即又轉向瑪莉解釋。'},
+{t:'l',c:'結人',s:'葉子說話就是心直口快，雖然不一定中聽，但肯定句句都是實話。'},
+{t:'l',c:'瑪莉',s:'你和她到底是什麼關係？怎麼處處偏袒她？你們兩個是不是有什麼曖昧？為什麼以前住在一起？'},
+{t:'s',s:'結人一聽，尷尬地結結巴巴⋯⋯'},
+{t:'l',c:'結人',s:'才⋯⋯才沒有呢！'},
+{t:'l',c:'瑪莉',s:'要是有的話，可得先告訴我這個經紀人，假如，以後被媒體踢爆，我也好有個準備。'},
+{t:'s',s:'結人怕葉子和瑪莉再起衝突，趕緊打發瑪莉。'},
+{t:'l',c:'結人',s:'那個⋯⋯你先幫我影印一下合約，回去再幫我研究看看。'},
+{t:'s',s:'瑪莉看結人拜託的樣子，只好心不甘情不願地先離開。'},
+{t:'l',c:'葉子',s:'我跟他合不來，我看、你換個經紀人吧！不然，就乾脆換掉我這個朋友算了。'},
+{t:'l',c:'結人',s:'啊？'}
+]},
+{id:'fengtan',title:'翻糖花園',week:'Week 9 · 6/6',subtitle:'表演練習',
+chars:[{name:'希煥',role:'男主角'},{name:'美英',role:'閨蜜'}],
+data:[
+{t:'l',c:'希煥',s:'怎麼是你在做蛋糕？米恩呢？'},
+{t:'l',c:'美英',s:'米恩不做蛋糕了。'},
+{t:'l',c:'希煥',s:'什麼意思？'},
+{t:'l',c:'美英',s:'米恩現在連蛋糕都做不出來了！全都是因為你，這明明是她最擅長的事，可是現在因為你整天心不在焉的連蛋糕都做不好！你知道那是什麼心情嗎？'},
+{t:'l',c:'美英',s:'（話說從頭）自從米恩答應她爸爸守護這間店以來，從來沒想到要休息，不管遇到什麼挫折也都沒放棄做蛋糕，就連跟顏瀚祥那傢伙分手她都還是堅持下去！',note:{label:'老師筆記',text:'<strong>抬頭看天花板</strong>，像在回憶米恩的過去，不是對著希煥說，是說給自己聽的感覺。'}},
+{t:'l',c:'美英',s:'（越說越激動）可是因為你，她做的蛋糕第一次被客人嫌難吃，因為你，她第一次丟下蛋糕店，因為你，她被迫對不起她爸爸，你怎麼還有臉來找她？',note:{label:'老師筆記',text:'<strong>這一段越來越激動，要用斷句製造爆發感：</strong><br>「可是因為你（呼吸）她做的蛋糕第一次被客人嫌難吃因為你（呼吸）她第一次丟下蛋糕店因為你（呼吸）她被迫對不起她爸爸你怎麼還有臉來找她呀！」<br><br>每一個「因為你」之後都要換氣，像控訴一樣，節奏越來越快越來越緊。'}},
+{t:'l',c:'希煥',s:'對不起！'},
+{t:'l',c:'美英',s:'（失望）我們大家是那麼的喜歡你信任你……你簡直比顏瀚祥那傢伙還可惡，假裝是我們的朋友，卻笑嘻嘻的背叛我們！（傷心）本來還以為可以把米恩交給你……沒想到你卻……（哽咽說不下去）我廖美英真的是瞎了狗眼看錯了你！（下定決心）這一次我不會再給你機會傷害米恩（冷漠），現在請你離開。',note:{label:'老師筆記',text:'「我廖美英真的是瞎了狗眼看錯了你」——<strong>自嘲的笑，帶一點點</strong>，不是崩潰大哭，是那種咬著牙、帶著苦笑的感覺。<br><br><strong>帶咬牙切齒的感覺</strong>，像是在嘲笑自己當初太蠢，情緒是複雜的，不是單純憤怒。'}}
+]}
+];
+
+var currentScriptId=SCRIPTS[0].id;
+try{var last=localStorage.getItem('last-script');if(last&&SCRIPTS.find(function(s){return s.id===last;}))currentScriptId=last;}catch(e){}
+var darkOn=false,hlChars=new Set(),currentMode='read',cueChar='off',rehearseChar='off',fs=21,allNotesExpanded=false;
+try{var savedFs=localStorage.getItem('fs');if(savedFs)fs=parseInt(savedFs);}catch(e){}
+
+var OPENING_QUOTES=['表演是一種在舞台上或透過鏡頭傳達自然又具有創造力的生活','其目的讓是要觀眾感受到真實的感動','隨時觀察週遭的人、事、物，豐富記憶盒','鍛鍊開發聲音、肢體的可能性','認真的態度、專注力和想像力、創造力','每一次有觀眾的表演，累積經驗','客觀的檢查每一次的表演','內在情緒藉著聲音清楚傳達','節奏速度幫助情緒的變化，增加表演樣貌','真正的聆聽，真實的思考，感覺演員之間的互動','如何在沒有劇本、沒有預設情緒的狀況之下，去尋找最直接最自然的反應','讓身體接收多種不同的練習，豐富肢體語言','清楚說話：咬字、嘴型，讓詞意徹底表達','擴大聲音表情，增加角色趣味性'];
+
+function dismissOpening(){var el=document.getElementById('opening');if(!el||el.classList.contains('fade-out'))return;el.classList.add('fade-out');setTimeout(function(){el.style.display='none';showInterfaceTips();try{localStorage.setItem('opening-seen','1');}catch(e){}},800);}
+function runOpening(){var el=document.getElementById('opening'),qEl=document.getElementById('openingQuote');if(!el||!qEl)return;var recent=[];try{recent=JSON.parse(sessionStorage.getItem('recent-quotes')||'[]');}catch(e){}var pool=OPENING_QUOTES.filter(function(_,i){return!recent.includes(i);});var candidates=pool.length?pool:OPENING_QUOTES;var idx=Math.floor(Math.random()*candidates.length);var quote=candidates[idx];var globalIdx=OPENING_QUOTES.indexOf(quote);recent.push(globalIdx);if(recent.length>4)recent.shift();try{sessionStorage.setItem('recent-quotes',JSON.stringify(recent));}catch(e){}var parts=quote.split('，');if(parts.length>1){qEl.innerHTML=parts.map(function(p){return'<span style="display:block">'+p+'</span>';}).join('');}else{qEl.textContent=quote;}el.addEventListener('click',dismissOpening);var duration=4800;try{if(localStorage.getItem('opening-seen'))duration=1800;}catch(e){}setTimeout(dismissOpening,duration);}
+
+function showInterfaceTips(){try{if(localStorage.getItem('tips-v2'))return;}catch(e){}var tips=[{anchorId:'scriptSelect',text:'點此切換劇本',cls:''},{anchorId:'darkBtn',text:'切換深色模式',cls:'tip-right'},{anchorId:'onboardBtn',text:'查看使用說明',cls:'tip-right'},{anchorId:'settingsToggle',text:'開啟功能設定',cls:'tip-right'}];var SD=1800,FD=400,GAP=300,delay=0;tips.forEach(function(t){var anchor=document.getElementById(t.anchorId);if(!anchor)return;setTimeout(function(){var tip=document.createElement('div');tip.className='ui-tooltip'+(t.cls?' '+t.cls:'');tip.textContent=t.text;tip.style.cssText='opacity:0;transition:opacity '+FD+'ms ease,transform '+FD+'ms ease;transform:translateY(-4px);';anchor.style.position='relative';anchor.appendChild(tip);requestAnimationFrame(function(){requestAnimationFrame(function(){tip.style.opacity='1';tip.style.transform='translateY(0)';});});setTimeout(function(){tip.style.opacity='0';tip.style.transform='translateY(-4px)';setTimeout(function(){tip.remove();},FD);},SD);},delay);delay+=SD+GAP;});setTimeout(function(){try{localStorage.setItem('tips-v2','1');}catch(e){}},delay+FD);}
+
+function initSelect(){var sel=document.getElementById('scriptSelect');sel.innerHTML=SCRIPTS.map(function(sc,i){var raw=sc.week||'';var wMatch=raw.match(/Week\s*(\d+)/i);var wNum=wMatch?'W'+wMatch[1]:'W'+(i+1);return'<option value="'+sc.id+'"'+(sc.id===currentScriptId?' selected':'')+'>'+wNum+' '+sc.title+'</option>';}).join('');}
+
+function showSwitchToast(text){var toast=document.getElementById('switchToast');if(!toast){toast=document.createElement('div');toast.id='switchToast';toast.className='switch-toast';document.body.appendChild(toast);}toast.textContent=text;toast.classList.add('show');clearTimeout(toast._timer);toast._timer=setTimeout(function(){toast.classList.remove('show');},1600);}
+
+function switchScript(id){saveScroll();saveHlState();var sc=SCRIPTS.find(function(s){return s.id===id;});if(!sc){console.warn('找不到劇本 id:',id);var wrap=document.getElementById('script');var mh=document.querySelector('.masthead');if(wrap){wrap.style.opacity='1';wrap.className='script-body';wrap.innerHTML='<div style="font-family:sans-serif;color:var(--ink-3);padding:2rem 0;">找不到這份劇本，請重新選擇。</div>';}if(mh)mh.style.opacity='1';return;}currentScriptId=id;try{localStorage.setItem('last-script',id);}catch(e){}hlChars.clear();cueChar='off';rehearseChar='off';allNotesExpanded=false;currentMode='read';document.body.classList.remove('masthead-collapsed','cue-mode','focus-mode','hide-action','cue-active','rehearse-active','rehearse-focus','lecture-mode','hide-notes');document.querySelectorAll('.dline').forEach(function(l){l.classList.remove('focus-target','rehearse-target','hl-on','cue-revealed');});var mt=document.getElementById('mastheadToggle');if(mt){mt.textContent='收合 ▴';mt.style.display='';}var nb=document.getElementById('noteBtn');if(nb)nb.classList.remove('on');var eb=document.getElementById('expandNotesBtn');if(eb)eb.classList.remove('on');var cs=document.getElementById('cueSelect');if(cs){cs.value='off';cs.classList.remove('active-cue');}var rs=document.getElementById('rehearseSelect');if(rs)rs.value='off';var wrap=document.getElementById('script');var masthead=document.querySelector('.masthead');if(wrap){wrap.style.transition='opacity 0.15s';wrap.style.opacity='0';}if(masthead){masthead.style.transition='opacity 0.15s';masthead.style.opacity='0';}setTimeout(function(){buildScript(sc);buildSettings(sc);restoreHlState(id);restoreScroll(id);updateFooter();showSwitchToast('已切換至 '+sc.title);if(wrap)wrap.style.opacity='1';if(masthead)masthead.style.opacity='1';},150);}
+
+function buildScript(sc){if(!sc){console.warn('buildScript: sc is undefined');return;}var wrap=document.getElementById('script');var mhead=document.querySelector('.masthead');requestAnimationFrame(function(){if(wrap){wrap.style.opacity='1';wrap.style.transition='opacity 0.2s';}if(mhead){mhead.style.opacity='1';mhead.style.transition='opacity 0.2s';}});document.getElementById('mainTitle').textContent=sc.title;document.getElementById('pageNum').textContent=sc.week;var eyebrow=document.getElementById('eyebrow');var datePart=sc.week?(sc.week.split('·')[1]||'').trim():'';eyebrow.textContent=[sc.subtitle,datePart].filter(Boolean).join('\u3000·\u3000');var sel=document.getElementById('scriptSelect');if(sel)sel.value=sc.id;document.body.classList.toggle('lecture-mode',sc.type==='lecture');var cb=document.getElementById('castBlock');var helper=document.getElementById('mastheadHelper');if(sc.type==='lecture'||!sc.chars||sc.chars.length===0){cb.innerHTML=sc.author?'<div class="lec-author">撰寫人：'+sc.author+'</div>':'';var mt=document.getElementById('mastheadToggle');if(mt)mt.style.display='none';if(helper)helper.style.display='none';}else{var mt=document.getElementById('mastheadToggle');if(mt)mt.style.display='';if(helper)helper.style.display='';cb.innerHTML=sc.chars.map(function(ch,i){var barVar=i===0?'var(--hl-j-bar)':i===1?'var(--hl-y-bar)':'var(--hl-m-bar)';return'<div class="cast-item"><span class="cast-role">'+ch.role+'</span><span class="cast-name">'+ch.name+'<span class="csw" id="csw-'+ch.name+'" style="background:'+barVar+'"></span></span><div class="cast-quickstart"><button class="qs-btn" id="qs-rehearse-'+ch.name+'" onclick="quickRehearse(\''+ch.name+'\')">排練</button><button class="qs-btn" id="qs-cue-'+ch.name+'" onclick="quickCue(\''+ch.name+'\')">背詞</button></div></div>';}).join('');try{if(!localStorage.getItem('qs-v2')){setTimeout(function(){document.querySelectorAll('.qs-btn').forEach(function(b){b.classList.add('pulse');});setTimeout(function(){document.querySelectorAll('.qs-btn').forEach(function(b){b.classList.remove('pulse');});},2500);localStorage.setItem('qs-v2','1');},800);}}catch(e){}}var scriptWrap=document.getElementById('script');scriptWrap.innerHTML='';if(sc.type==='lecture'){scriptWrap.className='lecture-body';sc.sections.forEach(function(sec,i){var div=document.createElement('div');div.className='lec-section';div.style.animationDelay=i*30+'ms';var html='';if(sec.h1)html+='<div class="lec-h1">'+sec.h1+'</div>';if(sec.h2)html+='<div class="lec-h2">'+sec.h2+'</div>';if(sec.p)html+=sec.p.map(function(t){return'<div class="lec-p">'+t+'</div>';}).join('');if(sec.items)html+=sec.items.map(function(it){return'<div class="lec-item"><span class="lec-key">'+it.k+'</span><span class="lec-val">'+it.v+'</span></div>';}).join('');div.innerHTML=html;scriptWrap.appendChild(div);});var endEl=document.createElement('div');endEl.className='script-end';endEl.innerHTML='<span class="script-end-text">講義結束</span>';scriptWrap.appendChild(endEl);return;}scriptWrap.className='script-body';var n=0,prevChar=null;sc.data.forEach(function(d,i){if(d.t==='s'){var el=document.createElement('div');el.className='sline';el.style.animationDelay=i*8+'ms';el.innerHTML='<span class="stxt">'+d.s+'</span>';scriptWrap.appendChild(el);}else{n++;var wrapper=document.createElement('div');var el=document.createElement('div');el.className='dline';if(prevChar!==null&&d.c!==prevChar)el.classList.add('role-change');if(d.s&&d.s.length>80)el.classList.add('long-line');prevChar=d.c;el.dataset.c=d.c;el.dataset.idx=i;el.style.animationDelay=i*8+'ms';el.addEventListener('click',function(){if(currentMode==='cue'&&el.classList.contains('focus-target')){el.classList.add('cue-revealed');clearTimeout(el._cueTimer);el._cueTimer=setTimeout(function(){el.classList.remove('cue-revealed');},2000);}});var noteId='note-'+i;el.innerHTML='<div class="dline-main"><span class="lnum">'+String(n).padStart(2,'0')+'</span><span class="spkr">'+d.c+'</span><span class="colon">：</span><span class="dtxt">'+d.s+'</span></div>'+(d.note?'<span class="note-dot" data-note-id="'+noteId+'"></span>':'');wrapper.appendChild(el);if(d.note){var dot=el.querySelector('.note-dot');if(dot){dot.addEventListener('click',function(e){e.stopPropagation();toggleNote(noteId);});}var nw=document.createElement('div');nw.className='note-wrap';nw.style.animationDelay=i*8+'ms';nw.innerHTML='<div class="note-card"><button class="note-toggle" onclick="toggleNote(\''+noteId+'\')" id="ntbtn-'+noteId+'"><span class="nt-arrow">▶</span> '+d.note.label+'</button><div class="note-body" id="'+noteId+'"><div class="note-text" style="margin-top:0.4rem">'+d.note.text+'</div></div></div>';wrapper.appendChild(nw);}scriptWrap.appendChild(wrapper);}});var endEl=document.createElement('div');endEl.className='script-end';endEl.innerHTML='<div class="script-end-rule"></div><span class="script-end-text">全劇終</span><div class="script-end-rule"></div>';scriptWrap.appendChild(endEl);}
+
+function buildSettings(sc){if(!sc)return;var isScript=sc.type!=='lecture'&&sc.chars&&sc.chars.length>0;var chars=isScript?sc.chars:[];var rsel=document.getElementById('rehearseSelect');rsel.innerHTML='<option value="off">選擇角色</option>'+chars.map(function(ch){return'<option value="'+ch.name+'">'+ch.name+'</option>';}).join('');rsel.value='off';var csel=document.getElementById('cueSelect');csel.innerHTML='<option value="off">選擇角色</option>'+chars.map(function(ch){return'<option value="'+ch.name+'">'+ch.name+'</option>';}).join('');csel.value='off';csel.classList.remove('active-cue');var hlg=document.getElementById('hlBtnGroup');hlg.innerHTML=chars.length?chars.map(function(ch){return'<button class="pbtn" data-hl="'+ch.name+'" onclick="toggleHl(\''+ch.name+'\')">'+ch.name+'</button>';}).join(''):'<span style="font-size:0.58rem;color:var(--tb-text);letter-spacing:0.06em;">講義模式不適用</span>';rehearseChar='off';cueChar='off';setMode('read',true);updateCueSummary();}
+
+function setMode(mode,force){if(mode===currentMode&&!force)return;currentMode=mode;document.body.classList.remove('cue-mode','focus-mode','hide-action','cue-active','rehearse-active','rehearse-focus');document.querySelectorAll('.dline').forEach(function(l){l.classList.remove('focus-target','rehearse-target','hl-on','cue-revealed');});document.querySelectorAll('.mode-btn').forEach(function(b){b.classList.toggle('on',b.dataset.mode===mode);});document.body.classList.toggle('cue-active',mode==='cue');document.body.classList.toggle('rehearse-active',mode==='rehearse');var notes={read:'全部顯示',rehearse:'聚焦角色，隱藏動作',cue:'遮住自己的台詞'};var mn=document.getElementById('modeNote');if(mn)mn.textContent=notes[mode]||'';if(mode==='read'){applyHlChars();}else if(mode==='rehearse'){document.body.classList.add('hide-action');applyHlChars();if(rehearseChar!=='off')applyRehearseChar(rehearseChar);}else if(mode==='cue'){document.body.classList.add('hide-action');applyHlChars();if(cueChar!=='off'){document.body.classList.add('focus-mode','cue-mode');document.querySelectorAll('.dline').forEach(function(l){l.classList.toggle('focus-target',l.dataset.c===cueChar);});}}updateCueSummary();updateFooter();}
+
+function applyHlChars(){document.querySelectorAll('.dline').forEach(function(l){l.classList.toggle('hl-on',hlChars.has(l.dataset.c));});}
+function toggleHl(char){var btn=document.querySelector('#hlBtnGroup .pbtn[data-hl="'+char+'"]');if(!btn)return;if(hlChars.has(char)){hlChars.delete(char);btn.classList.remove('on');}else{hlChars.add(char);btn.classList.add('on');}applyHlChars();var csw=document.getElementById('csw-'+char);if(csw)csw.style.opacity=hlChars.has(char)?'0.8':'0';updateCueSummary();updateFooter();}
+
+function applyRehearseChar(char){document.querySelectorAll('.dline').forEach(function(l){l.classList.remove('rehearse-target');});if(char==='off'){document.body.classList.remove('rehearse-focus');return;}document.body.classList.add('rehearse-focus');document.querySelectorAll('.dline[data-c="'+char+'"]').forEach(function(l){l.classList.add('rehearse-target');});if(!hlChars.has(char)){hlChars.add(char);applyHlChars();var btn=document.querySelector('#hlBtnGroup .pbtn[data-hl="'+char+'"]');if(btn)btn.classList.add('on');var csw=document.getElementById('csw-'+char);if(csw)csw.style.opacity='0.8';}}
+function setRehearseChar(val){rehearseChar=val;if(currentMode!=='rehearse')setMode('rehearse',true);applyRehearseChar(val);updateFooter();}
+
+function setCueChar(val){cueChar=val;var csel=document.getElementById('cueSelect');if(csel)csel.classList.toggle('active-cue',val!=='off');if(val!=='off'){if(currentMode!=='cue')setMode('cue',true);else{document.body.classList.add('focus-mode','cue-mode');document.querySelectorAll('.dline').forEach(function(l){l.classList.toggle('focus-target',l.dataset.c===val);});}showCueHint();}else{document.body.classList.remove('cue-mode','focus-mode');document.querySelectorAll('.dline').forEach(function(l){l.classList.remove('focus-target');});}updateCueSummary();updateFooter();}
+function updateCueSummary(){var el=document.getElementById('cueSummary');if(!el)return;if(cueChar==='off'||currentMode!=='cue'){el.textContent='';return;}var total=document.querySelectorAll('.dline[data-c="'+cueChar+'"]').length;var marked=document.querySelectorAll('.dline[data-c="'+cueChar+'"].hl-on').length;el.textContent=marked>0?'已螢光標記 '+marked+' / '+total+' 句':'共 '+total+' 句台詞';}
+function showCueHint(){try{if(localStorage.getItem('cue-hint-seen'))return;}catch(e){}var hint=document.createElement('div');hint.className='cue-hint';hint.textContent='點擊台詞可以短暫顯示';document.body.appendChild(hint);setTimeout(function(){hint.remove();},3200);try{localStorage.setItem('cue-hint-seen','1');}catch(e){}}
+
+function quickRehearse(char){var panel=document.getElementById('settingsPanel');if(panel&&panel.classList.contains('open'))togglePanel();var rsel=document.getElementById('rehearseSelect');if(rsel)rsel.value=char;setRehearseChar(char);updateQsButtons(char,'rehearse');var first=document.querySelector('.dline[data-c="'+char+'"]');if(first)setTimeout(function(){first.scrollIntoView({behavior:'smooth',block:'center'});},100);}
+function quickCue(char){var panel=document.getElementById('settingsPanel');if(panel&&panel.classList.contains('open'))togglePanel();var csel=document.getElementById('cueSelect');if(csel)csel.value=char;setCueChar(char);updateQsButtons(char,'cue');var first=document.querySelector('.dline[data-c="'+char+'"]');if(first)setTimeout(function(){first.scrollIntoView({behavior:'smooth',block:'center'});},100);}
+function updateQsButtons(activeChar,activeMode){document.querySelectorAll('.qs-btn').forEach(function(btn){btn.classList.remove('active');});var activeBtn=document.getElementById('qs-'+activeMode+'-'+activeChar);if(activeBtn)activeBtn.classList.add('active');}
+
+function updateFooter(){var pills=[];if(currentMode==='rehearse')pills.push(rehearseChar!=='off'?'排練\u3000'+rehearseChar:'排練模式');else if(currentMode==='cue')pills.push(cueChar!=='off'?'背詞\u3000'+cueChar:'背詞模式');if(hlChars.size>0)pills.push('螢光筆\u3000'+Array.from(hlChars).join('·'));var fmode=document.getElementById('fmode-text');if(fmode)fmode.textContent=pills.join('\u3000／\u3000');var footer=document.querySelector('footer');if(footer)footer.classList.toggle('has-mode',pills.length>0);var badge=document.getElementById('mastheadModeBadge');if(badge){if(currentMode==='rehearse'){badge.textContent=rehearseChar!=='off'?'排練中\u3000'+rehearseChar:'排練模式';badge.className='masthead-mode-badge rehearse visible';}else if(currentMode==='cue'){badge.textContent=cueChar!=='off'?'背詞中\u3000'+cueChar:'背詞模式';badge.className='masthead-mode-badge cue visible';}else{badge.className='masthead-mode-badge';}}}
+
+function toggleMasthead(){var collapsed=document.body.classList.toggle('masthead-collapsed');var btn=document.getElementById('mastheadToggle');if(btn)btn.textContent=collapsed?'展開 ▾':'收合 ▴';}
+function toggleExpandAllNotes(){allNotesExpanded=!allNotesExpanded;document.getElementById('expandNotesBtn').classList.toggle('on',allNotesExpanded);document.querySelectorAll('.note-body').forEach(function(b){b.classList.toggle('open',allNotesExpanded);});document.querySelectorAll('.note-toggle').forEach(function(b){b.classList.toggle('open',allNotesExpanded);});}
+function toggleNote(id){var body=document.getElementById(id);var btn=document.getElementById('ntbtn-'+id);if(!body||!btn)return;var open=body.classList.toggle('open');btn.classList.toggle('open',open);}
+function toggleNotesUI(){var on=document.body.classList.toggle('hide-notes');document.getElementById('noteBtn').classList.toggle('on',on);}
+function togglePanel(){var panel=document.getElementById('settingsPanel');var btn=document.getElementById('settingsToggle');var overlay=document.getElementById('settingsOverlay');var open=panel.classList.toggle('open');btn.classList.toggle('on',open);if(overlay)overlay.classList.toggle('open',open);document.body.classList.toggle('settings-open',open);}
+function changeFs(d){fs=Math.min(26,Math.max(12,fs+d*2));document.documentElement.style.setProperty('--fs',fs+'px');try{localStorage.setItem('fs',fs);}catch(e){}}
+
+try{if(localStorage.getItem('dark')==='1'){darkOn=true;document.body.classList.add('dark');document.documentElement.classList.remove('pre-dark');document.querySelectorAll('#darkBtn').forEach(function(b){b.textContent='晝';});}}catch(e){}
+function toggleDark(){darkOn=!darkOn;document.body.classList.toggle('dark',darkOn);document.querySelectorAll('#darkBtn').forEach(function(b){b.textContent=darkOn?'晝':'夜';});try{localStorage.setItem('dark',darkOn?'1':'0');}catch(e){}}
+
+function closeOnboard(){document.getElementById('onboard').classList.add('hidden');try{localStorage.setItem('ob-seen','1');}catch(e){}}
+function openOnboard(){document.getElementById('onboard').classList.remove('hidden');}
+try{if(localStorage.getItem('ob-seen'))closeOnboard();}catch(e){}
+
+function saveScroll(){try{sessionStorage.setItem('scroll-'+currentScriptId,window.scrollY);}catch(e){}}
+function restoreScroll(id){try{var y=sessionStorage.getItem('scroll-'+id);if(y)setTimeout(function(){window.scrollTo(0,parseInt(y));},50);else setTimeout(function(){window.scrollTo(0,0);},50);}catch(e){}}
+function saveHlState(){try{sessionStorage.setItem('hl-'+currentScriptId,JSON.stringify(Array.from(hlChars)));}catch(e){}}
+function restoreHlState(id){try{var saved=sessionStorage.getItem('hl-'+id);if(!saved)return;var chars=JSON.parse(saved);chars.forEach(function(char){if(!hlChars.has(char)){hlChars.add(char);document.querySelectorAll('.dline[data-c="'+char+'"]').forEach(function(l){l.classList.add('hl-on');});var btn=document.querySelector('#hlBtnGroup .pbtn[data-hl="'+char+'"]');if(btn)btn.classList.add('on');var csw=document.getElementById('csw-'+char);if(csw)csw.style.opacity='0.8';}});updateFooter();}catch(e){}}
+
+var scrollTimer;
+window.addEventListener('scroll',function(){clearTimeout(scrollTimer);scrollTimer=setTimeout(saveScroll,300);});
+window.addEventListener('beforeunload',function(){saveScroll();saveHlState();});
+
+runOpening();
+initSelect();
+var sc0=SCRIPTS.find(function(s){return s.id===currentScriptId;})||SCRIPTS[0];
+currentScriptId=sc0.id;
+buildScript(sc0);
+buildSettings(sc0);
+updateFooter();
+</script>
+</body>
+</html>
