@@ -128,19 +128,19 @@ body.masthead-collapsed .masthead{padding-top:1rem;padding-bottom:1rem;}
 .qs-btn.pulse{animation:qs-pulse 0.8s ease 0.5s 2;}
 
 #script,.lecture-body{transition:opacity 0.18s ease;}
-.script-body{position:relative;z-index:2;padding:1.6rem 2.5rem 3.5rem 6rem;max-width:100%;}
-.dline{display:flex;align-items:baseline;padding:0.35rem 0.4rem 0.35rem 0;transition:background 0.13s,opacity 0.2s;animation:up 0.4s ease both;border-radius:2px;margin:0 -0.4rem;position:relative;font-size:var(--fs);flex-wrap:wrap;}
+.script-body{position:relative;z-index:2;padding:38px 2.5rem 3.5rem 6rem;max-width:100%;}
+.dline{display:flex;align-items:baseline;padding:0;transition:background 0.13s,opacity 0.2s,transform 0.4s ease;border-radius:2px;margin:0 -0.4rem;position:relative;font-size:var(--fs);flex-wrap:wrap;opacity:0;transform:translateY(6px);}
 @keyframes up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.dline.role-change{padding-top:2rem;}
+.dline.role-change{margin-top:38px;}
 .dline-main{display:flex;align-items:baseline;width:100%;}
 .lnum{font-family:'Noto Sans TC',sans-serif;font-size:0.5rem;font-weight:300;color:var(--ink-4);min-width:1.8rem;text-align:right;padding-right:0.55rem;flex-shrink:0;user-select:none;margin-left:-2rem;}
 .spkr{font-family:'Noto Sans TC',sans-serif;font-weight:500;font-size:0.72rem;color:var(--ink-3);min-width:3.2rem;flex-shrink:0;user-select:none;letter-spacing:0.14em;text-transform:uppercase;padding-top:0.08rem;transition:color 0.13s;padding-left:0.35rem;}
 .colon{font-family:'Noto Sans TC',sans-serif;color:var(--ink-4);padding:0 0.5rem 0 0.05rem;flex-shrink:0;font-size:calc(var(--fs)*0.8);}
 .acting-hint{font-size:0.88em;opacity:0.55;font-style:italic;}
-.dtxt{flex:1;font-family:'Noto Serif TC',serif;font-weight:300;font-size:var(--fs);color:var(--ink-2);line-height:1.78;max-width:28em;transition:color 0.13s,text-shadow 0.13s;}
-.dline.long-line .dtxt{line-height:1.9;}
+.dtxt{flex:1;font-family:'Noto Serif TC',serif;font-weight:400;font-size:var(--fs);color:var(--ink-2);line-height:38px;max-width:28em;transition:color 0.13s,text-shadow 0.13s;}
+.dline.long-line .dtxt{line-height:38px;}
 
-.sline{padding:0.6rem 0;margin:0.3rem 0;animation:up 0.4s ease both;}
+.sline{min-height:38px;display:flex;align-items:center;margin:0;opacity:0;transform:translateY(6px);transition:opacity 0.4s ease,transform 0.4s ease;}
 .stxt{font-family:'Noto Sans TC',sans-serif;font-style:italic;font-size:calc(var(--fs)*0.76);font-weight:300;color:var(--stage-c);display:block;padding-left:1.6rem;}
 .stxt::before{content:'（';}.stxt::after{content:'）';}
 body.hide-action .sline{display:none;}
@@ -164,6 +164,10 @@ body.rehearse-focus .dline.rehearse-target{opacity:1;}
 .dline.hl-on[data-c="B"] .spkr,.dline.hl-on[data-c="B"] .dtxt{color:var(--hl-y-ink);}
 .dline.hl-on[data-c="瑪莉"] .spkr,.dline.hl-on[data-c="瑪莉"] .dtxt{color:var(--hl-m-ink);}
 
+
+.cue-tail{transition:color 0.2s,font-weight 0.2s;}
+body.cue-mode .dline:not(.focus-target) .cue-tail{color:var(--ink);font-weight:500;}
+body.cue-mode .dline.focus-target .cue-tail{color:inherit;}
 body.cue-mode .dline.focus-target{cursor:pointer;}
 body.cue-mode .dline.focus-target .dtxt{color:transparent;text-shadow:0 0 10px rgba(100,80,40,0.5);user-select:none;transition:color 0.4s cubic-bezier(0.4,0,0.2,1),text-shadow 0.4s cubic-bezier(0.4,0,0.2,1);}
 body.cue-mode .dline.focus-target.hl-on .dtxt{text-shadow:0 0 10px rgba(80,60,20,0.6);}
@@ -172,7 +176,7 @@ body.cue-mode .dline.focus-target.cue-revealed .dtxt{color:var(--ink-2)!importan
 
 .note-dot{display:inline-flex;width:7px;height:7px;border-radius:50%;background:var(--note-label);flex-shrink:0;align-self:center;margin-left:0.5rem;opacity:0.75;cursor:pointer;transition:opacity 0.15s;}
 .note-dot:hover{opacity:1;}
-.note-wrap{width:100%;padding:0.4rem 0 0.2rem 4.4rem;animation:up 0.4s ease both;}
+.note-wrap{width:100%;padding:0.4rem 0 0.2rem 4.4rem;opacity:0;transform:translateY(6px);transition:opacity 0.4s ease,transform 0.4s ease;}
 .note-card{background:var(--note-bg);border-left:2px solid var(--note-border);border-radius:0;padding:0.5rem 0.8rem;position:relative;transform:rotate(-0.3deg);transition:background 0.3s,border-color 0.3s;}
 .note-toggle{background:none;border:none;cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.52rem;color:var(--note-label);padding:0;display:flex;align-items:center;gap:0.2rem;opacity:0.7;transition:opacity 0.12s;}
 .note-toggle:hover{opacity:1;}
@@ -185,7 +189,7 @@ body.cue-mode .dline.focus-target.cue-revealed .dtxt{color:var(--ink-2)!importan
 body.hide-notes .note-wrap{display:none;}
 
 .lecture-body{position:relative;z-index:2;padding:1.8rem 2rem 3.5rem 2rem;}
-.lec-section{margin-bottom:2.4rem;animation:up 0.4s ease both;}
+.lec-section{margin-bottom:2.4rem;opacity:0;transform:translateY(6px);transition:opacity 0.4s ease,transform 0.4s ease;}
 .lec-h1{font-family:'Noto Serif TC',serif;font-weight:500;font-size:1.05rem;color:var(--ink);letter-spacing:0.08em;margin-top:2rem;margin-bottom:0.7rem;}
 .lec-h1:first-child{margin-top:0;}
 .lec-p{font-family:'Noto Serif TC',serif;font-weight:300;font-size:1rem;color:var(--ink);line-height:2;margin-bottom:0.6rem;}
@@ -194,6 +198,7 @@ body.hide-notes .note-wrap{display:none;}
 .lec-val{font-family:'Noto Serif TC',serif;font-weight:300;font-size:1rem;color:var(--ink);line-height:1.85;}
 .lec-author{font-family:'Noto Sans TC',sans-serif;font-size:0.9rem;font-weight:400;color:var(--ink-2);letter-spacing:0.15em;margin-bottom:1.2rem;}
 
+.line-visible{opacity:1!important;transform:translateY(0)!important;}
 .script-end{display:flex;flex-direction:column;align-items:center;gap:0.8rem;padding:6rem 0 5rem;opacity:0;animation:curtain-down 1.2s ease 0.3s forwards;}
 @keyframes curtain-down{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 .script-end-rule{width:4rem;height:1px;background:var(--ink-3);opacity:0.35;}
@@ -229,6 +234,11 @@ body.cue-active #cueRow{opacity:1;pointer-events:auto;}
 body.rehearse-active #rehearseRow{opacity:1;pointer-events:auto;}
 .svg-defs{position:absolute;width:0;height:0;overflow:hidden;}
 
+
+@media(prefers-reduced-motion:reduce){
+*{animation-duration:0.01ms!important;animation-delay:0ms!important;transition-duration:0.01ms!important;}
+.opening{display:none!important;}
+}
 @media(max-width:600px){
 body{padding:0;}
 .topbar{margin:0;}
@@ -525,14 +535,34 @@ function showSwitchToast(text){var toast=document.getElementById('switchToast');
 
 function switchScript(id){saveScroll();saveHlState();var sc=SCRIPTS.find(function(s){return s.id===id;});if(!sc){console.warn('找不到劇本 id:',id);var wrap=document.getElementById('script');var mh=document.querySelector('.masthead');if(wrap){wrap.style.opacity='1';wrap.className='script-body';wrap.innerHTML='<div style="font-family:sans-serif;color:var(--ink-3);padding:2rem 0;">找不到這份劇本，請重新選擇。</div>';}if(mh)mh.style.opacity='1';return;}currentScriptId=id;try{localStorage.setItem('last-script',id);}catch(e){}hlChars.clear();cueChar='off';rehearseChar='off';allNotesExpanded=false;currentMode='read';document.body.classList.remove('masthead-collapsed','cue-mode','focus-mode','hide-action','cue-active','rehearse-active','rehearse-focus','lecture-mode','hide-notes');document.querySelectorAll('.dline').forEach(function(l){l.classList.remove('focus-target','rehearse-target','hl-on','cue-revealed');});var mt=document.getElementById('mastheadToggle');if(mt){mt.textContent='收合 ▴';mt.style.display='';}var nb=document.getElementById('noteBtn');if(nb)nb.classList.remove('on');var eb=document.getElementById('expandNotesBtn');if(eb)eb.classList.remove('on');var cs=document.getElementById('cueSelect');if(cs){cs.value='off';cs.classList.remove('active-cue');}var rs=document.getElementById('rehearseSelect');if(rs)rs.value='off';var wrap=document.getElementById('script');var masthead=document.querySelector('.masthead');if(wrap){wrap.style.transition='opacity 0.15s';wrap.style.opacity='0';}if(masthead){masthead.style.transition='opacity 0.15s';masthead.style.opacity='0';}setTimeout(function(){buildScript(sc);buildSettings(sc);restoreHlState(id);restoreScroll(id);updateFooter();showSwitchToast('已切換至 '+sc.title);if(wrap)wrap.style.opacity='1';if(masthead)masthead.style.opacity='1';},150);}
 
-function buildScript(sc){if(!sc){console.warn('buildScript: sc is undefined');return;}var wrap=document.getElementById('script');var mhead=document.querySelector('.masthead');requestAnimationFrame(function(){if(wrap){wrap.style.opacity='1';wrap.style.transition='opacity 0.2s';}if(mhead){mhead.style.opacity='1';mhead.style.transition='opacity 0.2s';}});document.getElementById('mainTitle').textContent=sc.title;document.getElementById('pageNum').textContent=sc.week;var eyebrow=document.getElementById('eyebrow');var datePart=sc.week?(sc.week.split('·')[1]||'').trim():'';eyebrow.textContent=[sc.subtitle,datePart].filter(Boolean).join('\u3000·\u3000');var sel=document.getElementById('scriptSelect');if(sel)sel.value=sc.id;document.body.classList.toggle('lecture-mode',sc.type==='lecture');var cb=document.getElementById('castBlock');var helper=document.getElementById('mastheadHelper');if(sc.type==='lecture'||!sc.chars||sc.chars.length===0){cb.innerHTML=sc.author?'<div class="lec-author">撰寫人：'+sc.author+'</div>':'';var mt=document.getElementById('mastheadToggle');if(mt)mt.style.display='none';if(helper)helper.style.display='none';}else{var mt=document.getElementById('mastheadToggle');if(mt)mt.style.display='';if(helper)helper.style.display='';cb.innerHTML=sc.chars.map(function(ch,i){var barVar=i===0?'var(--hl-j-bar)':i===1?'var(--hl-y-bar)':'var(--hl-m-bar)';return'<div class="cast-item"><span class="cast-role">'+ch.role+'</span><span class="cast-name">'+ch.name+'<span class="csw" id="csw-'+ch.name+'" style="background:'+barVar+'"></span></span><div class="cast-quickstart"><button class="qs-btn" id="qs-rehearse-'+ch.name+'" onclick="quickRehearse(\''+ch.name+'\')">排練</button><button class="qs-btn" id="qs-cue-'+ch.name+'" onclick="quickCue(\''+ch.name+'\')">背詞</button></div></div>';}).join('');try{if(!localStorage.getItem('qs-v2')){setTimeout(function(){document.querySelectorAll('.qs-btn').forEach(function(b){b.classList.add('pulse');});setTimeout(function(){document.querySelectorAll('.qs-btn').forEach(function(b){b.classList.remove('pulse');});},2500);localStorage.setItem('qs-v2','1');},800);}}catch(e){}}var scriptWrap=document.getElementById('script');scriptWrap.innerHTML='';if(sc.type==='lecture'){scriptWrap.className='lecture-body';sc.sections.forEach(function(sec,i){var div=document.createElement('div');div.className='lec-section';div.style.animationDelay=i*30+'ms';var html='';if(sec.h1)html+='<div class="lec-h1">'+sec.h1+'</div>';if(sec.h2)html+='<div class="lec-h2">'+sec.h2+'</div>';if(sec.p)html+=sec.p.map(function(t){return'<div class="lec-p">'+t+'</div>';}).join('');if(sec.items)html+=sec.items.map(function(it){return'<div class="lec-item"><span class="lec-key">'+it.k+'</span><span class="lec-val">'+it.v+'</span></div>';}).join('');div.innerHTML=html;scriptWrap.appendChild(div);});var endEl=document.createElement('div');endEl.className='script-end';endEl.innerHTML='<span class="script-end-text">講義結束</span>';scriptWrap.appendChild(endEl);return;}scriptWrap.className='script-body';var n=0,prevChar=null;sc.data.forEach(function(d,i){if(d.t==='s'){var el=document.createElement('div');el.className='sline';el.style.animationDelay=i*8+'ms';el.innerHTML='<span class="stxt">'+d.s+'</span>';scriptWrap.appendChild(el);}else{n++;var wrapper=document.createElement('div');var el=document.createElement('div');el.className='dline';if(prevChar!==null&&d.c!==prevChar)el.classList.add('role-change');if(d.s&&d.s.length>80)el.classList.add('long-line');prevChar=d.c;el.dataset.c=d.c;el.dataset.idx=i;el.style.animationDelay=i*8+'ms';el.addEventListener('click',function(){if(currentMode==='cue'&&el.classList.contains('focus-target')){el.classList.add('cue-revealed');if(navigator.vibrate)navigator.vibrate(12);clearTimeout(el._cueTimer);el._cueTimer=setTimeout(function(){el.classList.remove('cue-revealed');},2000);}});var noteId='note-'+i;el.innerHTML='<div class="dline-main"><span class="lnum">'+String(n).padStart(2,'0')+'</span><span class="spkr">'+d.c+'</span><span class="colon">：</span><span class="dtxt">'+d.s+'</span></div>'+(d.note?'<span class="note-dot" data-note-id="'+noteId+'"></span>':'');wrapper.appendChild(el);if(d.note){var dot=el.querySelector('.note-dot');if(dot){dot.addEventListener('click',function(e){e.stopPropagation();toggleNote(noteId);});}var nw=document.createElement('div');nw.className='note-wrap';nw.style.animationDelay=i*8+'ms';nw.innerHTML='<div class="note-card"><button class="note-toggle" onclick="toggleNote(\''+noteId+'\')" id="ntbtn-'+noteId+'"><span class="nt-arrow">▶</span> '+d.note.label+'</button><div class="note-body" id="'+noteId+'"><div class="note-text" style="margin-top:0.4rem">'+d.note.text+'</div></div></div>';wrapper.appendChild(nw);}scriptWrap.appendChild(wrapper);}});var endEl=document.createElement('div');endEl.className='script-end';endEl.innerHTML='<div class="script-end-rule"></div><span class="script-end-text">全劇終</span><div class="script-end-rule"></div>';scriptWrap.appendChild(endEl);}
+function wrapCueTail(html){
+  // 取最後 3-4 個中文/英文字（不含 span 標籤內容）作為接話點
+  // 在純文字尾端插入 cue-tail span
+  var tmp=document.createElement('div');tmp.innerHTML=html;
+  var walker=document.createTreeWalker(tmp,NodeFilter.SHOW_TEXT,null,false);
+  var lastNode=null;
+  while(walker.nextNode())lastNode=walker.currentNode;
+  if(!lastNode||!lastNode.nodeValue.trim())return html;
+  var txt=lastNode.nodeValue;
+  var cutAt=Math.max(0,txt.length-4);
+  var tail=txt.slice(cutAt);
+  var head=txt.slice(0,cutAt);
+  if(!tail)return html;
+  lastNode.nodeValue=head;
+  var span=document.createElement('span');
+  span.className='cue-tail';
+  span.textContent=tail;
+  lastNode.parentNode.insertBefore(span,lastNode.nextSibling);
+  return tmp.innerHTML;
+}
+function buildScript(sc){if(!sc){console.warn('buildScript: sc is undefined');return;}var wrap=document.getElementById('script');var mhead=document.querySelector('.masthead');requestAnimationFrame(function(){if(wrap){wrap.style.opacity='1';wrap.style.transition='opacity 0.2s';}if(mhead){mhead.style.opacity='1';mhead.style.transition='opacity 0.2s';}});document.getElementById('mainTitle').textContent=sc.title;document.getElementById('pageNum').textContent=sc.week;var eyebrow=document.getElementById('eyebrow');var datePart=sc.week?(sc.week.split('·')[1]||'').trim():'';eyebrow.textContent=[sc.subtitle,datePart].filter(Boolean).join('\u3000·\u3000');var sel=document.getElementById('scriptSelect');if(sel)sel.value=sc.id;document.body.classList.toggle('lecture-mode',sc.type==='lecture');var cb=document.getElementById('castBlock');var helper=document.getElementById('mastheadHelper');if(sc.type==='lecture'||!sc.chars||sc.chars.length===0){cb.innerHTML=sc.author?'<div class="lec-author">撰寫人：'+sc.author+'</div>':'';var mt=document.getElementById('mastheadToggle');if(mt)mt.style.display='none';if(helper)helper.style.display='none';}else{var mt=document.getElementById('mastheadToggle');if(mt)mt.style.display='';if(helper)helper.style.display='';cb.innerHTML=sc.chars.map(function(ch,i){var barVar=i===0?'var(--hl-j-bar)':i===1?'var(--hl-y-bar)':'var(--hl-m-bar)';return'<div class="cast-item"><span class="cast-role">'+ch.role+'</span><span class="cast-name">'+ch.name+'<span class="csw" id="csw-'+ch.name+'" style="background:'+barVar+'"></span></span><div class="cast-quickstart"><button class="qs-btn" id="qs-rehearse-'+ch.name+'" onclick="quickRehearse(\''+ch.name+'\')">排練</button><button class="qs-btn" id="qs-cue-'+ch.name+'" onclick="quickCue(\''+ch.name+'\')">背詞</button></div></div>';}).join('');try{if(!localStorage.getItem('qs-v2')){setTimeout(function(){document.querySelectorAll('.qs-btn').forEach(function(b){b.classList.add('pulse');});setTimeout(function(){document.querySelectorAll('.qs-btn').forEach(function(b){b.classList.remove('pulse');});},2500);localStorage.setItem('qs-v2','1');},800);}}catch(e){}}var scriptWrap=document.getElementById('script');scriptWrap.innerHTML='';if(sc.type==='lecture'){scriptWrap.className='lecture-body';sc.sections.forEach(function(sec,i){var div=document.createElement('div');div.className='lec-section';var html='';if(sec.h1)html+='<div class="lec-h1">'+sec.h1+'</div>';if(sec.h2)html+='<div class="lec-h2">'+sec.h2+'</div>';if(sec.p)html+=sec.p.map(function(t){return'<div class="lec-p">'+t+'</div>';}).join('');if(sec.items)html+=sec.items.map(function(it){return'<div class="lec-item"><span class="lec-key">'+it.k+'</span><span class="lec-val">'+it.v+'</span></div>';}).join('');div.innerHTML=html;scriptWrap.appendChild(div);});var endEl=document.createElement('div');endEl.className='script-end';endEl.innerHTML='<span class="script-end-text">講義結束</span>';scriptWrap.appendChild(endEl);refreshLineObserver();return;}scriptWrap.className='script-body';var n=0,prevChar=null;sc.data.forEach(function(d,i){if(d.t==='s'){var el=document.createElement('div');el.className='sline';el.innerHTML='<span class="stxt">'+d.s+'</span>';scriptWrap.appendChild(el);}else{n++;var wrapper=document.createElement('div');var el=document.createElement('div');el.className='dline';if(prevChar!==null&&d.c!==prevChar)el.classList.add('role-change');if(d.s&&d.s.length>80)el.classList.add('long-line');prevChar=d.c;el.dataset.c=d.c;el.dataset.idx=i;el.addEventListener('click',function(){if(currentMode==='cue'&&el.classList.contains('focus-target')){el.classList.add('cue-revealed');if(navigator.vibrate)navigator.vibrate(12);clearTimeout(el._cueTimer);el._cueTimer=setTimeout(function(){el.classList.remove('cue-revealed');},2000);}});var noteId='note-'+i;var rawTxt=d.s.replace(/（([^）]+)）/g,'<span class="acting-hint">（$1）</span>');var cueTailHtml=wrapCueTail(rawTxt);el.innerHTML='<div class="dline-main"><span class="lnum">'+String(n).padStart(2,'0')+'</span><span class="spkr">'+d.c+'</span><span class="colon">：</span><span class="dtxt">'+cueTailHtml+'</span></div>'+(d.note?'<span class="note-dot" data-note-id="'+noteId+'"></span>':'');wrapper.appendChild(el);if(d.note){var dot=el.querySelector('.note-dot');if(dot){dot.addEventListener('click',function(e){e.stopPropagation();toggleNote(noteId);});}var nw=document.createElement('div');nw.className='note-wrap';nw.innerHTML='<div class="note-card"><button class="note-toggle" onclick="toggleNote(\''+noteId+'\')" id="ntbtn-'+noteId+'"><span class="nt-arrow">▶</span> '+d.note.label+'</button><div class="note-body" id="'+noteId+'"><div class="note-text" style="margin-top:0.4rem">'+d.note.text+'</div></div></div>';wrapper.appendChild(nw);}scriptWrap.appendChild(wrapper);}});var endEl=document.createElement('div');endEl.className='script-end';endEl.innerHTML='<div class="script-end-rule"></div><span class="script-end-text">全劇終</span><div class="script-end-rule"></div>';scriptWrap.appendChild(endEl);refreshLineObserver();}
 
 function buildSettings(sc){if(!sc)return;var isScript=sc.type!=='lecture'&&sc.chars&&sc.chars.length>0;var chars=isScript?sc.chars:[];var rsel=document.getElementById('rehearseSelect');rsel.innerHTML='<option value="off">選擇角色</option>'+chars.map(function(ch){return'<option value="'+ch.name+'">'+ch.name+'</option>';}).join('');rsel.value='off';var csel=document.getElementById('cueSelect');csel.innerHTML='<option value="off">選擇角色</option>'+chars.map(function(ch){return'<option value="'+ch.name+'">'+ch.name+'</option>';}).join('');csel.value='off';csel.classList.remove('active-cue');var hlg=document.getElementById('hlBtnGroup');hlg.innerHTML=chars.length?chars.map(function(ch){return'<button class="pbtn" data-hl="'+ch.name+'" onclick="toggleHl(\''+ch.name+'\')">'+ch.name+'</button>';}).join(''):'<span style="font-size:0.58rem;color:var(--tb-text);letter-spacing:0.06em;">講義模式不適用</span>';rehearseChar='off';cueChar='off';setMode('read',true);updateCueSummary();}
 
 function setMode(mode,force){if(mode===currentMode&&!force)return;currentMode=mode;document.body.classList.remove('cue-mode','focus-mode','hide-action','cue-active','rehearse-active','rehearse-focus');document.querySelectorAll('.dline').forEach(function(l){l.classList.remove('focus-target','rehearse-target','hl-on','cue-revealed');});document.querySelectorAll('.mode-btn').forEach(function(b){b.classList.toggle('on',b.dataset.mode===mode);});document.body.classList.toggle('cue-active',mode==='cue');document.body.classList.toggle('rehearse-active',mode==='rehearse');var notes={read:'全部顯示',rehearse:'聚焦角色，隱藏動作',cue:'遮住自己的台詞'};var mn=document.getElementById('modeNote');if(mn)mn.textContent=notes[mode]||'';if(mode==='read'){applyHlChars();}else if(mode==='rehearse'){document.body.classList.add('hide-action');applyHlChars();if(rehearseChar!=='off')applyRehearseChar(rehearseChar);}else if(mode==='cue'){document.body.classList.add('hide-action');applyHlChars();if(cueChar!=='off'){document.body.classList.add('focus-mode','cue-mode');document.querySelectorAll('.dline').forEach(function(l){l.classList.toggle('focus-target',l.dataset.c===cueChar);});}}updateCueSummary();updateFooter();}
 
 function applyHlChars(){document.querySelectorAll('.dline').forEach(function(l){l.classList.toggle('hl-on',hlChars.has(l.dataset.c));});}
-function toggleHl(char){if(navigator.vibrate)navigator.vibrate(8);var btn=document.querySelector('#hlBtnGroup .pbtn[data-hl="'+char+'"]');if(!btn)return;if(hlChars.has(char)){hlChars.delete(char);btn.classList.remove('on');}else{hlChars.add(char);btn.classList.add('on');}applyHlChars();var csw=document.getElementById('csw-'+char);if(csw)csw.style.opacity=hlChars.has(char)?'0.8':'0';updateCueSummary();updateFooter();}
+function toggleHl(char){var btn=document.querySelector('#hlBtnGroup .pbtn[data-hl="'+char+'"]');if(!btn)return;if(hlChars.has(char)){hlChars.delete(char);btn.classList.remove('on');}else{hlChars.add(char);btn.classList.add('on');}applyHlChars();var csw=document.getElementById('csw-'+char);if(csw)csw.style.opacity=hlChars.has(char)?'0.8':'0';updateCueSummary();updateFooter();}
 
 function applyRehearseChar(char){document.querySelectorAll('.dline').forEach(function(l){l.classList.remove('rehearse-target');});if(char==='off'){document.body.classList.remove('rehearse-focus');return;}document.body.classList.add('rehearse-focus');document.querySelectorAll('.dline[data-c="'+char+'"]').forEach(function(l){l.classList.add('rehearse-target');});if(!hlChars.has(char)){hlChars.add(char);applyHlChars();var btn=document.querySelector('#hlBtnGroup .pbtn[data-hl="'+char+'"]');if(btn)btn.classList.add('on');var csw=document.getElementById('csw-'+char);if(csw)csw.style.opacity='0.8';}}
 function setRehearseChar(val){rehearseChar=val;if(currentMode!=='rehearse')setMode('rehearse',true);applyRehearseChar(val);updateFooter();}
@@ -570,6 +600,28 @@ var scrollTimer;
 window.addEventListener('scroll',function(){clearTimeout(scrollTimer);scrollTimer=setTimeout(saveScroll,300);});
 window.addEventListener('beforeunload',function(){saveScroll();saveHlState();});
 
+
+function initLineObserver(){
+  if(!('IntersectionObserver' in window)){
+    document.querySelectorAll('.dline,.sline,.note-wrap,.lec-section').forEach(function(el){el.classList.add('line-visible');});
+    return;
+  }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('line-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  },{rootMargin:'0px 0px -40px 0px',threshold:0.05});
+  document.querySelectorAll('.dline,.sline,.note-wrap,.lec-section').forEach(function(el){io.observe(el);});
+  return io;
+}
+var lineObserver=null;
+function refreshLineObserver(){
+  if(lineObserver)lineObserver.disconnect();
+  lineObserver=initLineObserver();
+}
 runOpening();
 initSelect();
 var sc0=SCRIPTS.find(function(s){return s.id===currentScriptId;})||SCRIPTS[0];
