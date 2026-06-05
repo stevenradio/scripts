@@ -16,7 +16,7 @@
   --desk:        #1e1b17;
   --paper-bg:    #f2ece0;
   --margin-rule: rgba(185,70,70,0.22);
-  --ruled-line:  rgba(28,22,14,0.055);
+  --ruled-line:  rgba(28,22,14,0.028);
   --ink:         #181410;
   --ink-2:       #302820;
   --ink-3:       #7a7060;
@@ -36,7 +36,7 @@
   --hl-j: rgba(255,205,50, 0.50); --hl-j-ink:#3e2e00; --hl-j-bar:#c88c00;
   --hl-y: rgba(90,200,120, 0.46); --hl-y-ink:#153520; --hl-y-bar:#2a9050;
   --hl-m: rgba(170,125,215,0.44); --hl-m-ink:#2e1448; --hl-m-bar:#8040c0;
-  --fs: 18px;
+  --fs: 21px;
 }
 html.pre-dark body {
   --desk:        #0a0908;
@@ -79,12 +79,11 @@ body {
   top: 0;
   z-index: 400;
   background: var(--tb-bg);
-  border-bottom: 1px solid var(--tb-border);
   padding: 0 max(1rem, env(safe-area-inset-right)) 0 max(1rem, env(safe-area-inset-left));
   display: flex;
   align-items: center;
   height: 44px;
-  transition: background 0.3s, border-color 0.3s;
+  transition: background 0.3s;
   gap: 0.3rem;
   isolation: isolate;
 }
@@ -152,15 +151,16 @@ body {
   right: 0;
   z-index: 390;
   background: var(--panel-bg);
-  border-bottom: 1px solid var(--tb-border);
+  border-bottom: 0px solid var(--tb-border);
   overflow: hidden;
   max-height: 0;
-  transition: max-height 0.25s ease, border-color 0.3s;
+  transition: max-height 0.25s ease, border-width 0.25s;
   -webkit-overflow-scrolling: touch;
 }
 .settings-panel.open {
   max-height: min(560px, 75vh);
   overflow-y: auto;
+  border-bottom-width: 1px;
 }
 
 .panel-inner {
@@ -278,11 +278,11 @@ body {
 /* ── masthead collapsible ── */
 .masthead {
   position: relative; z-index: 2;
-  padding: 2.2rem 2.5rem 1.4rem 5.8rem;
-  border-bottom: 1px solid var(--ink-4);
-  transition: border-color 0.3s, padding 0.3s;
+  padding: 2.2rem 2.5rem 1.6rem 5.8rem;
+  transition: padding 0.3s;
   overflow: hidden;
 }
+body.dark .masthead { border-bottom-color: transparent; }
 
 .masthead-body {
   transition: max-height 0.3s ease, opacity 0.3s ease;
@@ -321,6 +321,7 @@ body.masthead-collapsed .masthead {
   position: fixed;
   inset: 0;
   background: #0a0806;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
   z-index: 900;
   display: flex;
   flex-direction: column;
@@ -339,29 +340,52 @@ body.masthead-collapsed .masthead {
   to   { opacity: 0; }
 }
 
+.opening-main {
+  position: relative;
+  display: inline-block;
+  max-width: 480px;
+  width: 100%;
+}
+
 .opening-quote {
   font-family: 'Noto Serif TC', serif;
   font-weight: 300;
   font-size: clamp(1rem, 4vw, 1.4rem);
   color: rgba(240, 234, 220, 0.9);
-  line-height: 1.9;
+  line-height: 2.0;
   letter-spacing: 0.12em;
   text-align: center;
-  max-width: 480px;
   opacity: 0;
   animation: quote-in 1s ease 0.3s forwards;
 }
 
-.opening-attr {
+.opening-author {
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 400;
+  font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+  color: rgba(240, 234, 220, 0.45);
+  letter-spacing: 0.2em;
+  text-align: right;
+  display: block;
+  margin-top: 2rem;
+  opacity: 0;
+  animation: quote-in 1s ease 0.9s forwards;
+}
+
+.opening-godot {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: 'Noto Sans TC', sans-serif;
   font-weight: 300;
-  font-size: 0.62rem;
-  color: rgba(240, 234, 220, 0.35);
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  margin-top: 1.8rem;
+  font-size: 0.58rem;
+  color: rgba(240, 234, 220, 0.22);
+  letter-spacing: 0.35em;
+  text-indent: 0.35em;
+  white-space: nowrap;
   opacity: 0;
-  animation: quote-in 1s ease 0.8s forwards;
+  animation: quote-in 1s ease 1.1s forwards;
 }
 
 @keyframes quote-in {
@@ -478,6 +502,11 @@ body.masthead-collapsed .masthead {
 }
 @keyframes up { from{opacity:0;transform:translateY(3px);}to{opacity:1;transform:translateY(0);} }
 
+/* role-change spacing — more breathing room when speaker changes */
+.dline.role-change {
+  padding-top: 1.8rem;
+}
+
 body.focus-mode .dline:not(.focus-target) { opacity:0.1; }
 body.focus-mode .dline.focus-target { opacity:1; }
 
@@ -498,17 +527,7 @@ body.focus-mode .dline.focus-target { opacity:1; }
 
 .dline.hl-on[data-c="瑪莉"] .spkr, .dline.hl-on[data-c="瑪莉"] .dtxt { color:var(--hl-m-ink); }
 
-body.cue-mode .dline.focus-target .dtxt {
-  color:transparent;
-  text-shadow:0 0 10px rgba(100,80,40,0.5);
-  user-select:none;
-}
-body.cue-mode .dline.focus-target.hl-on .dtxt {
-  text-shadow:0 0 10px rgba(80,60,20,0.6);
-}
-body.dark.cue-mode .dline.focus-target .dtxt {
-  text-shadow:0 0 10px rgba(200,180,140,0.4);
-}
+
 
 /* ── stage direction ── */
 .sline { padding:0.22rem 0; animation:up 0.3s ease both; }
@@ -528,7 +547,7 @@ body.hide-action .sline { display:none; }
 }
 .spkr {
   font-family:'Noto Sans TC',sans-serif; font-weight:500; font-size:0.68rem;
-  color:var(--ink-3); min-width:2.8rem; flex-shrink:0; user-select:none;
+  color:var(--ink-3); min-width:3.4rem; flex-shrink:0; user-select:none;
   letter-spacing:0.22em; text-transform:uppercase; transition:color 0.13s;
   padding-top:0.08rem;
 }
@@ -536,10 +555,7 @@ body.hide-action .sline { display:none; }
   font-family:'Noto Sans TC',sans-serif; color:var(--ink-4);
   padding:0 0.5rem 0 0.05rem; flex-shrink:0; font-size:calc(var(--fs)*0.8); transition:color 0.3s;
 }
-.dtxt {
-  flex:1; font-family:'Noto Serif TC',serif; font-weight:300; font-size:var(--fs);
-  color:var(--ink-2); line-height:1.9; transition:color 0.13s, text-shadow 0.13s;
-}
+
 
 /* ── cue mode: clickable tap-to-reveal ── */
 body.cue-mode .dline.focus-target { cursor: pointer; }
@@ -548,10 +564,6 @@ body.cue-mode .dline.focus-target .dtxt {
   text-shadow: 0 0 10px rgba(100,80,40,0.5);
   user-select: none;
   transition: color 0.2s, text-shadow 0.2s;
-}
-body.cue-mode .dline.focus-target.revealed .dtxt {
-  color: var(--ink-2);
-  text-shadow: none;
 }
 body.cue-mode .dline.focus-target.hl-on .dtxt {
   text-shadow: 0 0 10px rgba(80,60,20,0.6);
@@ -706,21 +718,7 @@ body.hide-notes .note-wrap { display:none; }
 /* ═══════════════════════
    FOOTER
 ═══════════════════════ */
-footer {
-  position:fixed; bottom:0; left:0; right:0;
-  background:var(--tb-bg); border-top:1px solid var(--tb-border);
-  padding:0.35rem 1.2rem; display:flex; align-items:center; gap:0.5rem; z-index:300;
-  transition:background 0.3s;
-  height: 36px;
-}
-.fmode{display:flex;gap:0.25rem;align-items:center; flex:1;}
-.fmode span {
-  font-family:'Noto Sans TC',sans-serif; font-size:0.55rem; font-weight:400;
-  color:rgba(255,255,255,0.7); padding:0.15rem 0.45rem;
-  border:1px solid rgba(255,255,255,0.2); border-radius:2px;
-  opacity:0; transition:opacity 0.18s; white-space:nowrap;
-}
-.fmode span.vis{opacity:1;}
+
 
 /* ── lecture (非劇本) ── */
 .lecture-body {
@@ -796,37 +794,14 @@ footer {
 
 .lec-author {
   font-family: 'Noto Sans TC', sans-serif;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 400;
   color: var(--ink-2);
   letter-spacing: 0.15em;
   margin-bottom: 1.2rem;
   transition: color 0.3s;
 }
-.script-end {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 3rem 0 2rem;
-  margin: 0;
-}
-.script-end::before,
-.script-end::after {
-  content: '';
-  flex: 1;
-  height: 2px;
-  background: var(--ink-3);
-  opacity: 0.6;
-}
-.script-end-text {
-  font-family: 'Noto Serif TC', serif;
-  font-size: 0.9rem;
-  font-weight: 400;
-  color: var(--ink-3);
-  letter-spacing: 0.4em;
-  white-space: nowrap;
-  opacity: 1;
-}
+
 
 /* ── mode indicator bar ── */
 .topbar::after {
@@ -839,30 +814,14 @@ footer {
 }
 body.rehearse-active .topbar::after { background: rgba(255,160,50,0.7); }
 body.cue-active      .topbar::after { background: rgba(100,160,255,0.7); }
+body.lecture-mode    .topbar::after { background: transparent !important; }
 
 /* ── cue tap to reveal ── */
-body.cue-mode .dline.focus-target .dtxt {
-  cursor: pointer;
-}
 body.cue-mode .dline.focus-target.cue-revealed .dtxt {
   color: var(--ink-2) !important;
   text-shadow: none !important;
 }
-.cue-hint {
-  font-family: 'Noto Sans TC', sans-serif;
-  font-size: 0.58rem;
-  font-weight: 300;
-  color: var(--ink-4);
-  letter-spacing: 0.1em;
-  padding: 0.2rem 0 0 4.4rem;
-  opacity: 0;
-  animation: fadein-hint 0.4s ease 1.2s both;
-  pointer-events: none;
-}
-@keyframes fadein-hint {
-  from { opacity:0; transform:translateY(-4px); }
-  to   { opacity:0.6; transform:translateY(0); }
-}
+
 .note-dot {
   display: inline-flex;
   width: 7px; height: 7px;
@@ -873,147 +832,6 @@ body.cue-mode .dline.focus-target.cue-revealed .dtxt {
   margin-left: 0.5rem;
   opacity: 0.75;
 }
-
-/* jump FAB */
-.jump-fab {
-  position: fixed;
-  right: 1.2rem;
-  bottom: 1.5rem;
-  width: 44px; height: 44px;
-  border-radius: 50%;
-  background: var(--ink);
-  color: var(--paper-bg);
-  border: none;
-  font-size: 1.1rem;
-  cursor: pointer;
-  z-index: 395;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 3px 14px rgba(0,0,0,0.4);
-  transition: transform 0.15s, opacity 0.15s, background 0.3s, color 0.3s;
-  opacity: 0.7;
-}
-.jump-fab:hover { opacity: 1; transform: scale(1.06); }
-.jump-fab.open  { opacity: 1; }
-body.settings-open .jump-fab { opacity: 0 !important; pointer-events: none !important; }
-body.lecture-mode .jump-fab { display: none; }
-
-/* jump overlay */
-.jump-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.38);
-  z-index: 360;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.2s;
-}
-.jump-overlay.open { opacity: 1; pointer-events: auto; }
-
-/* jump drawer */
-.jump-drawer {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  z-index: 370;
-  background: var(--panel-bg);
-  border-top: 1px solid var(--tb-border);
-  border-radius: 14px 14px 0 0;
-  transform: translateY(102%);
-  transition: transform 0.26s cubic-bezier(0.32,0.72,0,1), background 0.3s;
-  max-height: 65vh;
-  display: flex;
-  flex-direction: column;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-.jump-drawer.open { transform: translateY(0); }
-
-.jump-drawer-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.2rem 0.65rem;
-  font-family: 'Noto Serif TC', serif;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--tb-on);
-  letter-spacing: 0.08em;
-  border-bottom: 1px solid var(--tb-border);
-  flex-shrink: 0;
-}
-
-.jump-drawer .jump-nav {
-  max-height: none;
-  flex: 1;
-  overflow-y: auto;
-  padding: 0.8rem 1.4rem 2rem;
-  gap: 1.2rem;
-  -webkit-overflow-scrolling: touch;
-}
-
-.jump-drawer .jump-char {
-  font-size: 0.72rem;
-  opacity: 1;
-  color: var(--tb-on);
-  margin-bottom: 0.4rem;
-}
-
-.jump-drawer .jump-line {
-  font-size: 0.78rem;
-  padding: 0.4rem 0;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  line-height: 1.55;
-  color: rgba(255,255,255,0.5);
-}
-.jump-drawer .jump-line:hover { color: var(--tb-on); }
-
-/* jump nav */
-.jump-row { align-items: flex-start !important; }
-.jump-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  max-height: 200px;
-  overflow-y: auto;
-  flex: 1;
-  -webkit-overflow-scrolling: touch;
-}
-.jump-char {
-  font-family: 'Noto Serif TC', serif;
-  font-size: 0.62rem;
-  font-weight: 500;
-  color: var(--tb-on);
-  letter-spacing: 0.1em;
-  margin-bottom: 0.25rem;
-  opacity: 0.7;
-}
-.jump-line {
-  display: block;
-  width: 100%;
-  text-align: left;
-  font-family: 'Noto Sans TC', sans-serif;
-  font-size: 0.6rem;
-  font-weight: 300;
-  color: var(--tb-text);
-  background: transparent;
-  border: none;
-  padding: 0.2rem 0;
-  cursor: pointer;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: color 0.12s;
-  line-height: 1.5;
-}
-.jump-line:hover { color: var(--tb-on); }
-
-@keyframes jumpflash {
-  0%   { background: rgba(200,140,0,0.28); }
-  100% { background: transparent; }
-}
-.jump-flash { animation: jumpflash 1s ease; }
 
 footer {
   position:fixed; bottom:0; left:0; right:0;
@@ -1028,6 +846,35 @@ footer.has-mode {
   border-top-color: var(--tb-border);
 }
 
+/* ── interface tooltips ── */
+.ui-tooltip {
+  position: absolute;
+  background: var(--ink);
+  color: var(--paper-bg);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  padding: 0.35rem 0.7rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 450;
+  pointer-events: none;
+  top: calc(100% + 8px);
+}
+.ui-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -4px; left: 50%;
+  transform: translateX(-50%);
+  width: 8px; height: 4px;
+  background: var(--ink);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+.ui-tooltip.tip-right { left: auto; right: 0; }
+.ui-tooltip.tip-right::before { left: auto; right: 12px; transform: none; }
+
+
 /* settings overlay */
 .settings-overlay {
   position: fixed; inset: 0;
@@ -1037,8 +884,42 @@ footer.has-mode {
 }
 .settings-overlay.open { opacity: 1; pointer-events: auto; }
 
-/* ── mode color bar on topbar (via ::after, no layout shift) ── */
-.topbar { transition: background 0.3s, border-color 0.3s; }
+/* ── masthead mode badge ── */
+.masthead-mode-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.5rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 20px;
+  margin-left: 0.6rem;
+  vertical-align: middle;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.masthead-mode-badge.visible { opacity: 1; }
+.masthead-mode-badge.rehearse {
+  color: rgba(220,130,40,0.9);
+  border: 1px solid rgba(220,130,40,0.35);
+  background: rgba(220,130,40,0.08);
+}
+.masthead-mode-badge.cue {
+  color: rgba(100,160,255,0.9);
+  border: 1px solid rgba(100,160,255,0.35);
+  background: rgba(100,160,255,0.08);
+}
+
+/* ── qs-btn affordance pulse ── */
+@keyframes qs-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(100,82,60,0.4); }
+  70%  { box-shadow: 0 0 0 5px rgba(100,82,60,0); }
+  100% { box-shadow: 0 0 0 0 rgba(100,82,60,0); }
+}
+.qs-btn.pulse { animation: qs-pulse 0.8s ease 0.5s 2; }
 
 /* ── script content fade on switch ── */
 #script, .lecture-body {
@@ -1081,8 +962,7 @@ body.rehearse-focus .dline.rehearse-target        { opacity: 1; }
   try {
     if(localStorage.getItem('dark')==='1') document.documentElement.classList.add('pre-dark');
     const fs = localStorage.getItem('fs');
-    if(fs) document.documentElement.style.setProperty('--fs', parseInt(fs)+'px');
-  }catch(e){}
+    if(fs) document.documentElement.style.setProperty('--fs', parseInt(fs)+'px');  }catch(e){}
 })();
 </script>
 </head>
@@ -1090,8 +970,11 @@ body.rehearse-focus .dline.rehearse-target        { opacity: 1; }
 
 <!-- ══ OPENING CEREMONY ══ -->
 <div class="opening" id="opening">
-  <div class="opening-quote" id="openingQuote"></div>
-  <div class="opening-attr">陳幼芳　·　果陀劇場大師學堂</div>
+  <div class="opening-main">
+    <div class="opening-quote" id="openingQuote"></div>
+    <span class="opening-author">陳幼芳</span>
+  </div>
+  <div class="opening-godot">果陀劇場大師學堂</div>
 </div>
 
 <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg">
@@ -1127,7 +1010,7 @@ body.rehearse-focus .dline.rehearse-target        { opacity: 1; }
   </select>
   <div class="topbar-right">
     <button class="icon-btn" id="darkBtn" onclick="toggleDark()" style="font-family:'Noto Serif TC',serif;font-size:0.82rem;letter-spacing:0.05em;font-weight:400;">夜</button>
-    <button class="icon-btn" onclick="openOnboard()" style="font-family:'Noto Serif TC',serif;font-size:0.82rem;letter-spacing:0.05em;font-weight:400;">問</button>
+    <button class="icon-btn" id="onboardBtn" onclick="openOnboard()" style="font-family:'Noto Serif TC',serif;font-size:0.82rem;letter-spacing:0.05em;font-weight:400;">問</button>
     <button class="icon-btn" id="settingsToggle" onclick="togglePanel()" title="設定" style="font-family:'Noto Serif TC',serif;font-size:0.82rem;letter-spacing:0.05em;font-weight:400;">設</button>
   </div>
 </div>
@@ -1201,6 +1084,7 @@ body.rehearse-focus .dline.rehearse-target        { opacity: 1; }
     <div class="page-num" id="pageNum"></div>
     <div class="eyebrow" id="eyebrow">劇本 · Script Reading Copy</div>
     <div class="main-title" id="mainTitle"></div>
+    <span class="masthead-mode-badge" id="mastheadModeBadge"></span>
     <div class="masthead-body" id="mastheadBody">
       <div class="cast-block" id="castBlock"></div>
     </div>
@@ -1214,20 +1098,7 @@ body.rehearse-focus .dline.rehearse-target        { opacity: 1; }
   <span id="fmode-text" style="font-family:'Noto Sans TC',sans-serif;font-size:0.52rem;font-weight:300;color:rgba(255,255,255,0.5);letter-spacing:0.08em;"></span>
 </footer>
 
-<!-- ══ JUMP FAB ══ -->
-<button class="jump-fab" id="jumpFab" onclick="toggleJumpDrawer()" title="跳轉台詞">≡</button>
 
-<!-- ══ JUMP DRAWER ══ -->
-<div class="jump-drawer" id="jumpDrawer">
-  <div class="jump-drawer-inner">
-    <div class="jump-drawer-header">
-      <span>跳轉台詞</span>
-      <button onclick="toggleJumpDrawer()" style="background:none;border:none;color:var(--tb-text);font-size:1rem;cursor:pointer;padding:0.2rem 0.4rem;">✕</button>
-    </div>
-    <div class="jump-nav" id="jumpNav"></div>
-  </div>
-</div>
-<div class="jump-overlay" id="jumpOverlay" onclick="toggleJumpDrawer()"></div>
 
 <script>
 // ══════════════════════════════════════
@@ -1464,6 +1335,11 @@ const SCRIPTS = [
 //  STATE
 // ══════════════════════════════════════
 let currentScriptId = SCRIPTS[0].id;
+// restore last viewed script
+try {
+  const last = localStorage.getItem('last-script');
+  if(last && SCRIPTS.find(s=>s.id===last)) currentScriptId = last;
+} catch(e){}
 let darkOn = false;
 let hlChars = new Set();
 let currentMode = 'read';
@@ -1471,8 +1347,64 @@ let cueChar = 'off';
 let rehearseChar = 'off';
 
 // font size — restored in <head> script, just sync the variable
-let fs = 18;
+let fs = 21;
 try { const saved = localStorage.getItem('fs'); if(saved) fs = parseInt(saved); } catch(e){}
+
+// ══════════════════════════════════════
+//  INTERFACE TOOLTIPS (first visit only)
+// ══════════════════════════════════════
+function showInterfaceTips(){
+  try{ if(localStorage.getItem('tips-v2')) return; }catch(e){}
+
+  const tips = [
+    { anchorId: 'scriptSelect',   text: '點此切換劇本',   cls: '' },
+    { anchorId: 'darkBtn',        text: '切換深色模式',   cls: 'tip-right' },
+    { anchorId: 'onboardBtn',     text: '查看使用說明',   cls: 'tip-right' },
+    { anchorId: 'settingsToggle', text: '開啟功能設定',   cls: 'tip-right' },
+  ];
+
+  const SHOW_DURATION = 1800; // ms each tip is visible
+  const FADE_DURATION = 400;  // ms fade in/out
+  const GAP = 300;            // ms gap between tips
+
+  let delay = 0;
+  tips.forEach(({ anchorId, text, cls }) => {
+    const anchor = document.getElementById(anchorId);
+    if(!anchor) return;
+
+    setTimeout(()=>{
+      const tip = document.createElement('div');
+      tip.className = 'ui-tooltip' + (cls ? ' '+cls : '');
+      tip.textContent = text;
+      tip.style.cssText = `opacity:0; transition:opacity ${FADE_DURATION}ms ease, transform ${FADE_DURATION}ms ease; transform:translateY(-4px);`;
+      anchor.style.position = 'relative';
+      anchor.appendChild(tip);
+
+      // fade in
+      requestAnimationFrame(()=>{
+        requestAnimationFrame(()=>{
+          tip.style.opacity = '1';
+          tip.style.transform = 'translateY(0)';
+        });
+      });
+
+      // fade out
+      setTimeout(()=>{
+        tip.style.opacity = '0';
+        tip.style.transform = 'translateY(-4px)';
+        setTimeout(()=>tip.remove(), FADE_DURATION);
+      }, SHOW_DURATION);
+
+    }, delay);
+
+    delay += SHOW_DURATION + GAP;
+  });
+
+  // mark as seen after all tips finish
+  setTimeout(()=>{
+    try{ localStorage.setItem('tips-v2','1'); }catch(e){}
+  }, delay + FADE_DURATION);
+}
 
 // ══════════════════════════════════════
 //  OPENING CEREMONY
@@ -1512,13 +1444,26 @@ function runOpening(){
   if(recent.length > 4) recent.shift();
   try{ sessionStorage.setItem('recent-quotes', JSON.stringify(recent)); }catch(e){}
 
-  qEl.textContent = quote;
+  // format quote: break at commas, remove comma at break point
+  const parts = quote.split('，');
+  if(parts.length > 1){
+    qEl.innerHTML = parts.map((p, i) =>
+      i < parts.length - 1
+        ? `<span style="display:block">${p}</span>`
+        : `<span style="display:block">${p}</span>`
+    ).join('');
+  } else {
+    qEl.textContent = quote;
+  }
 
-  // dismiss after 2.8s
+  // dismiss after 4.8s then show interface tips
   setTimeout(()=>{
     el.classList.add('fade-out');
-    setTimeout(()=>{ el.style.display='none'; }, 800);
-  }, 2800);
+    setTimeout(()=>{
+      el.style.display='none';
+      showInterfaceTips();
+    }, 800);
+  }, 4800);
 }
 
 // ══════════════════════════════════════
@@ -1605,22 +1550,6 @@ function restoreHlState(id){
 }
 
 // ══════════════════════════════════════
-//  JUMP DRAWER
-// ══════════════════════════════════════
-function toggleJumpDrawer(){
-  // close settings panel if open
-  const panel = document.getElementById('settingsPanel');
-  if(panel && panel.classList.contains('open')) togglePanel();
-
-  const drawer  = document.getElementById('jumpDrawer');
-  const overlay = document.getElementById('jumpOverlay');
-  const fab     = document.getElementById('jumpFab');
-  const open    = drawer.classList.toggle('open');
-  overlay.classList.toggle('open', open);
-  fab.classList.toggle('open', open);
-}
-
-// ══════════════════════════════════════
 //  EXPAND ALL NOTES
 // ══════════════════════════════════════
 let allNotesExpanded = false;
@@ -1657,6 +1586,7 @@ function switchScript(id){
   saveHlState();
   const prevId = currentScriptId;
   currentScriptId = id;
+  try{ localStorage.setItem('last-script', id); }catch(e){}
   hlChars.clear();
   cueChar = 'off';
   rehearseChar = 'off';
@@ -1670,12 +1600,10 @@ function switchScript(id){
   if(masthead){ masthead.style.transition='opacity 0.15s'; masthead.style.opacity='0'; }
   setTimeout(()=>{
     const sc = SCRIPTS.find(s=>s.id===id);
-    buildScript(sc);
+    buildScript(sc);  // opacity restored inside buildScript
     buildSettings(sc);
     restoreHlState(id);
     restoreScroll(id);
-    if(wrap)    { wrap.style.opacity='1'; }
-    if(masthead){ masthead.style.opacity='1'; }
   }, 150);
 }
 
@@ -1862,63 +1790,28 @@ function updateCueSummary(){
     : `共 ${total} 句台詞`;
 }
 
-// ══════════════════════════════════════
-//  JUMP NAV
-// ══════════════════════════════════════
-function buildJumpNav(sc){
-  const nav = document.getElementById('jumpNav');
-  if(!nav) return;
-  nav.innerHTML = '';
-  if(!sc.data || sc.type==='lecture'){ nav.innerHTML='<span style="font-size:0.6rem;color:var(--tb-text)">講義無跳轉</span>'; return; }
-
-  sc.chars.forEach(ch => {
-    const lines = [];
-    sc.data.forEach((d,i)=>{ if(d.t==='l' && d.c===ch.name) lines.push({idx:i, s:d.s}); });
-    if(!lines.length) return;
-
-    const section = document.createElement('div');
-    section.className = 'jump-section';
-
-    const header = document.createElement('div');
-    header.className = 'jump-char';
-    header.textContent = ch.name;
-    section.appendChild(header);
-
-    lines.forEach((ln, li) => {
-      const btn = document.createElement('button');
-      btn.className = 'jump-line';
-      btn.textContent = `${String(li+1).padStart(2,'0')}  ${ln.s.slice(0,18)}${ln.s.length>18?'⋯':''}`;
-      btn.onclick = () => {
-        const target = document.querySelector(`.dline[data-idx="${ln.idx}"]`);
-        if(target){
-          // iOS Safari smooth scroll fallback
-          try {
-            target.scrollIntoView({behavior:'smooth', block:'center'});
-          } catch(e) {
-            target.scrollIntoView(true);
-          }
-          target.classList.add('jump-flash');
-          setTimeout(()=>target.classList.remove('jump-flash'),1000);
-        }
-        if(window.innerWidth < 600) togglePanel();
-      };
-      section.appendChild(btn);
-    });
-    nav.appendChild(section);
-  });
-}
 
 // ══════════════════════════════════════
 //  BUILD SCRIPT
 // ══════════════════════════════════════
 function buildScript(sc){
+  if(!sc){ console.warn('buildScript: sc is undefined'); return; }
+
+  // restore opacity after DOM update
+  const wrap = document.getElementById('script');
+  const mhead = document.querySelector('.masthead');
+  requestAnimationFrame(()=>{
+    if(wrap)  { wrap.style.opacity='1'; wrap.style.transition='opacity 0.2s'; }
+    if(mhead) { mhead.style.opacity='1'; mhead.style.transition='opacity 0.2s'; }
+  });
+
   // masthead
   document.getElementById('mainTitle').textContent = sc.title;
   document.getElementById('pageNum').textContent = sc.week;
 
   // eyebrow: subtitle + date
   const eyebrow = document.getElementById('eyebrow');
-  const datePart = sc.week ? sc.week.split('·')[1]?.trim() : '';
+  const datePart = sc.week ? (sc.week.split('·')[1] || '').trim() : '';
   eyebrow.textContent = [sc.subtitle, datePart].filter(Boolean).join('　·　');
 
   // sync select
@@ -1950,14 +1843,25 @@ function buildScript(sc){
         </div>
       </div>`;
     }).join('');
+
+    // pulse qs buttons on first visit to hint affordance
+    try{
+      if(!localStorage.getItem('qs-v2')){
+        setTimeout(()=>{
+          document.querySelectorAll('.qs-btn').forEach(b=>b.classList.add('pulse'));
+          setTimeout(()=>document.querySelectorAll('.qs-btn').forEach(b=>b.classList.remove('pulse')), 2500);
+          localStorage.setItem('qs-v2','1');
+        }, 800);
+      }
+    }catch(e){}
   }
 
-  const wrap = document.getElementById('script');
-  wrap.innerHTML = '';
+  const scriptWrap = document.getElementById('script');
+  scriptWrap.innerHTML = '';
 
   // ── LECTURE ──
   if(sc.type==='lecture'){
-    wrap.className = 'lecture-body';
+    scriptWrap.className = 'lecture-body';
     sc.sections.forEach((sec,i)=>{
       const div = document.createElement('div');
       div.className = 'lec-section';
@@ -1970,41 +1874,43 @@ function buildScript(sc){
         `<div class="lec-item"><span class="lec-key">${it.k}</span><span class="lec-val">${it.v}</span></div>`
       ).join('');
       div.innerHTML = html;
-      wrap.appendChild(div);
+      scriptWrap.appendChild(div);
     });
     const endEl = document.createElement('div');
     endEl.className = 'script-end';
     endEl.innerHTML = `<span class="script-end-text">講義結束</span>`;
-    wrap.appendChild(endEl);
+    scriptWrap.appendChild(endEl);
     return;
   }
 
   // ── SCRIPT ──
-  wrap.className = 'script-body';
+  scriptWrap.className = 'script-body';
   let n = 0;
+  let prevChar = null;
   sc.data.forEach((d,i)=>{
     if(d.t==='s'){
       const el = document.createElement('div');
       el.className='sline';
       el.style.animationDelay=i*8+'ms';
       el.innerHTML=`<span class="stxt">${d.s}</span>`;
-      wrap.appendChild(el);
+      scriptWrap.appendChild(el);
     } else {
       n++;
       const wrapper = document.createElement('div');
       const el = document.createElement('div');
       el.className='dline';
+      // add role-change divider if speaker changed
+      if(prevChar !== null && d.c !== prevChar) el.classList.add('role-change');
+      prevChar = d.c;
       el.dataset.c=d.c;
       el.dataset.idx=i;
       el.style.animationDelay=i*8+'ms';
+      // tap-to-reveal in cue mode
       el.addEventListener('click', ()=>{
-        // tap-to-reveal in cue mode
-        if(document.body.classList.contains('cue-mode') && el.classList.contains('focus-target')){
-          el.classList.toggle('revealed');
-          return;
+        if(currentMode === 'cue' && el.classList.contains('focus-target')){
+          el.classList.toggle('cue-revealed');
         }
       });
-
       el.innerHTML=`
         <div class="dline-main">
           <span class="lnum">${String(n).padStart(2,'0')}</span>
@@ -2012,12 +1918,6 @@ function buildScript(sc){
           <span class="colon">：</span>
           <span class="dtxt">${d.s}</span>
         </div>${d.note ? '<span class="note-dot"></span>' : ''}`;
-      // tap to reveal in cue mode
-      el.addEventListener('click', ()=>{
-        if(currentMode === 'cue' && el.classList.contains('focus-target')){
-          el.classList.toggle('cue-revealed');
-        }
-      });
       wrapper.appendChild(el);
 
       if(d.note){
@@ -2036,20 +1936,21 @@ function buildScript(sc){
           </div>`;
         wrapper.appendChild(nw);
       }
-      wrap.appendChild(wrapper);
+      scriptWrap.appendChild(wrapper);
     }
   });
 
   const endEl = document.createElement('div');
   endEl.className = 'script-end';
   endEl.innerHTML = `<div class="script-end-rule"></div><span class="script-end-text">全劇終</span><div class="script-end-rule"></div>`;
-  wrap.appendChild(endEl);
+  scriptWrap.appendChild(endEl);
 }
 
 // ══════════════════════════════════════
 //  BUILD SETTINGS
 // ══════════════════════════════════════
 function buildSettings(sc){
+  if(!sc) return;
   const isScript = sc.type !== 'lecture' && sc.chars && sc.chars.length > 0;
   const chars = isScript ? sc.chars : [];
 
@@ -2071,9 +1972,6 @@ function buildSettings(sc){
   hlg.innerHTML = chars.length
     ? chars.map(ch=>`<button class="pbtn" data-hl="${ch.name}" onclick="toggleHl('${ch.name}')">${ch.name}</button>`).join('')
     : '<span style="font-size:0.58rem;color:var(--tb-text);letter-spacing:0.06em;">講義模式不適用</span>';
-
-  // jump nav
-  buildJumpNav(sc);
 
   // reset mode
   rehearseChar = 'off';
@@ -2097,6 +1995,20 @@ function updateFooter(){
   if(fmode) fmode.textContent = pills.join('　／　');
   const footer = document.querySelector('footer');
   if(footer) footer.classList.toggle('has-mode', pills.length > 0);
+
+  // update masthead mode badge
+  const badge = document.getElementById('mastheadModeBadge');
+  if(badge){
+    if(currentMode === 'rehearse'){
+      badge.textContent = rehearseChar !== 'off' ? `排練中　${rehearseChar}` : '排練模式';
+      badge.className = 'masthead-mode-badge rehearse visible';
+    } else if(currentMode === 'cue'){
+      badge.textContent = cueChar !== 'off' ? `背詞中　${cueChar}` : '背詞模式';
+      badge.className = 'masthead-mode-badge cue visible';
+    } else {
+      badge.className = 'masthead-mode-badge';
+    }
+  }
 }
 
 // ══════════════════════════════════════
@@ -2126,7 +2038,7 @@ function togglePanel(){
 //  MISC
 // ══════════════════════════════════════
 function changeFs(d){
-  fs = Math.min(24, Math.max(12, fs+d));
+  fs = Math.min(26, Math.max(12, fs + d*2));
   document.documentElement.style.setProperty('--fs', fs+'px');
   try{ localStorage.setItem('fs', fs); }catch(e){}
 }
@@ -2148,8 +2060,12 @@ function toggleDark(){
   try{ localStorage.setItem('dark', darkOn?'1':'0'); }catch(e){}
 }
 
-function closeOnboard(){ document.getElementById('onboard').classList.add('hidden'); try{localStorage.setItem('ob-seen','1');}catch(e){} }
+function closeOnboard(){
+  document.getElementById('onboard').classList.add('hidden');
+  try{ localStorage.setItem('ob-seen','1'); }catch(e){}
+}
 function openOnboard(){ document.getElementById('onboard').classList.remove('hidden'); }
+// hide onboarding on return visits automatically
 try{ if(localStorage.getItem('ob-seen')) closeOnboard(); }catch(e){}
 
 // save scroll position periodically
