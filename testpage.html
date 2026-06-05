@@ -507,8 +507,19 @@ function runOpening(){var el=document.getElementById('opening'),qEl=document.get
 
 function showInterfaceTips(){try{if(localStorage.getItem('tips-v2'))return;}catch(e){}var tips=[{anchorId:'scriptSelect',text:'點此切換劇本',cls:''},{anchorId:'darkBtn',text:'切換深色模式',cls:'tip-right'},{anchorId:'onboardBtn',text:'查看使用說明',cls:'tip-right'},{anchorId:'settingsToggle',text:'開啟功能設定',cls:'tip-right'}];var SD=1800,FD=400,GAP=300,delay=0;tips.forEach(function(t){var anchor=document.getElementById(t.anchorId);if(!anchor)return;setTimeout(function(){var tip=document.createElement('div');tip.className='ui-tooltip'+(t.cls?' '+t.cls:'');tip.textContent=t.text;tip.style.cssText='opacity:0;transition:opacity '+FD+'ms ease,transform '+FD+'ms ease;transform:translateY(-4px);';anchor.style.position='relative';anchor.appendChild(tip);requestAnimationFrame(function(){requestAnimationFrame(function(){tip.style.opacity='1';tip.style.transform='translateY(0)';});});setTimeout(function(){tip.style.opacity='0';tip.style.transform='translateY(-4px)';setTimeout(function(){tip.remove();},FD);},SD);},delay);delay+=SD+GAP;});setTimeout(function(){try{localStorage.setItem('tips-v2','1');}catch(e){}},delay+FD);}
 
-function initSelect(){var sel=document.getElementById('scriptSelect');sel.innerHTML=SCRIPTS.map(function(sc,i){var raw=sc.week||'';var wMatch=raw.match(/Week\s*(\d+)/i);var wNum=wMatch?'W'+wMatch[1]:'W'+(i+1);return'<option value="'+sc.id+'"'+(sc.id===currentScriptId?' selected':'')+'>'+wNum+' '+sc.title+'</option>';}).join('');}
-
+function initSelect(){
+  var sel = document.getElementById('scriptSelect');
+  var options = '';
+  for (var i = 0; i < SCRIPTS.length; i++) {
+    var sc = SCRIPTS[i];
+    var raw = sc.week || '';
+    var wMatch = raw.match(/Week\s*(\d+)/i);
+    var wNum = 'W' + (wMatch ? wMatch[1] : (i + 1));
+    var selected = (sc.id === currentScriptId) ? ' selected' : '';
+    options += '<option value="' + sc.id + '"' + selected + '>' + wNum + ' ' + sc.title + '</option>';
+  }
+  sel.innerHTML = options;
+}
 function showSwitchToast(text){var toast=document.getElementById('switchToast');if(!toast){toast=document.createElement('div');toast.id='switchToast';toast.className='switch-toast';document.body.appendChild(toast);}toast.textContent=text;toast.classList.add('show');clearTimeout(toast._timer);toast._timer=setTimeout(function(){toast.classList.remove('show');},1600);}
 
 function switchScript(id){saveScroll();saveHlState();var sc=SCRIPTS.find(function(s){return s.id===id;});if(!sc){console.warn('找不到劇本 id:',id);var wrap=document.getElementById('script');var mh=document.querySelector('.masthead');if(wrap){wrap.style.opacity='1';wrap.className='script-body';wrap.innerHTML='<div style="font-family:sans-serif;color:var(--ink-3);padding:2rem 0;">找不到這份劇本，請重新選擇。</div>';}if(mh)mh.style.opacity='1';return;}currentScriptId=id;try{localStorage.setItem('last-script',id);}catch(e){}hlChars.clear();cueChar='off';rehearseChar='off';allNotesExpanded=false;currentMode='read';document.body.classList.remove('masthead-collapsed','cue-mode','focus-mode','hide-action','cue-active','rehearse-active','rehearse-focus','lecture-mode','hide-notes');document.querySelectorAll('.dline').forEach(function(l){l.classList.remove('focus-target','rehearse-target','hl-on','cue-revealed');});var mt=document.getElementById('mastheadToggle');if(mt){mt.textContent='收合 ▴';mt.style.display='';}var nb=document.getElementById('noteBtn');if(nb)nb.classList.remove('on');var eb=document.getElementById('expandNotesBtn');if(eb)eb.classList.remove('on');var cs=document.getElementById('cueSelect');if(cs){cs.value='off';cs.classList.remove('active-cue');}var rs=document.getElementById('rehearseSelect');if(rs)rs.value='off';var wrap=document.getElementById('script');var masthead=document.querySelector('.masthead');if(wrap){wrap.style.transition='opacity 0.15s';wrap.style.opacity='0';}if(masthead){masthead.style.transition='opacity 0.15s';masthead.style.opacity='0';}setTimeout(function(){buildScript(sc);buildSettings(sc);restoreHlState(id);restoreScroll(id);updateFooter();showSwitchToast('已切換至 '+sc.title);if(wrap)wrap.style.opacity='1';if(masthead)masthead.style.opacity='1';},150);}
