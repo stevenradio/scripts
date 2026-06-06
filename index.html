@@ -114,7 +114,7 @@ body.masthead-collapsed .masthead{padding-top:1rem;padding-bottom:1rem;}
 .masthead-helper{font-family:'Noto Sans TC',sans-serif;font-size:0.58rem;color:var(--ink-3);letter-spacing:0.08em;margin-bottom:0.7rem;opacity:0.75;}
 .eyebrow{font-family:'Noto Sans TC',sans-serif;font-size:0.52rem;font-weight:300;letter-spacing:0.28em;color:var(--ink-3);text-transform:uppercase;margin-bottom:1rem;}
 .main-title{font-family:'Noto Serif TC',serif;font-weight:500;font-size:2.2rem;color:var(--ink);line-height:1;letter-spacing:0.38em;margin-bottom:0;text-indent:0.38em;}
-.page-num{position:absolute;top:1.5rem;right:1.8rem;font-family:'Noto Sans TC',sans-serif;font-size:0.55rem;font-weight:300;color:var(--ink-4);}
+.page-num{position:absolute;top:1.5rem;right:1.8rem;font-family:'Noto Sans TC',sans-serif;font-size:0.58rem;font-weight:400;color:var(--ink-3);}
 .masthead-mode-badge{display:inline-flex;align-items:center;gap:0.3rem;font-family:'Noto Sans TC',sans-serif;font-size:0.5rem;font-weight:400;letter-spacing:0.12em;padding:0.15rem 0.5rem;border-radius:20px;margin-left:0.6rem;vertical-align:middle;opacity:0;transition:opacity 0.2s;pointer-events:none;}
 .masthead-mode-badge.visible{opacity:1;}
 .masthead-mode-badge.rehearse{color:rgba(220,130,40,0.9);border:1px solid rgba(220,130,40,0.35);background:rgba(220,130,40,0.08);}
@@ -750,38 +750,6 @@ function getPracticeEndText(){
   return '又進步了，再來一次！'; // 10-15分鐘的中間區間
 }
 
-
-var cdTestMode=false;
-function testCdState(state){
-  cdTestMode=true;
-  var box=document.getElementById('countdownBox');
-  var labelEl=box.querySelector('.countdown-label');
-  var timeEl=document.getElementById('countdownTime');
-  box.style.display='flex';
-  box.dataset.cdState='__test__';
-  box.classList.remove('cd-blue','cd-red','cd-onair','cd-ended');
-  box.style.background='';
-  if(state==='normal'){
-    labelEl.textContent='錄影倒計時';timeEl.textContent='03:15:22';timeEl.style.fontSize='1rem';
-  }else if(state==='blue'){
-    labelEl.textContent='錄影倒計時';timeEl.textContent='01:45:22';
-    box.classList.add('cd-blue');
-    box.style.background='#1e3a4a';
-  }else if(state==='red'){
-    labelEl.textContent='錄影倒計時';timeEl.textContent='00:45:22';timeEl.style.fontSize='1.1rem';
-    box.classList.add('cd-red');
-    box.style.background='#4a1a1a';
-  }else if(state==='onair'){
-    labelEl.textContent='';timeEl.textContent='錄影中 · On Air';
-    box.classList.add('cd-onair');
-    box.style.background='#4a1a1a';
-  }else if(state==='ended'){
-    labelEl.textContent='';timeEl.textContent='錄影已結束';
-    box.classList.add('cd-ended');
-    box.style.background='#1e3a4a';
-  }
-}
-
 runOpening();
 initSelect();
 var sc0=SCRIPTS.find(function(s){return s.id===currentScriptId;})||SCRIPTS[0];
@@ -790,13 +758,5 @@ buildScript(sc0);
 buildSettings(sc0);
 updateFooter();
 </script>
-<div id="cdTestBar" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1714;border-radius:8px;padding:0.4rem 0.6rem;display:flex;gap:0.4rem;z-index:999;box-shadow:0 2px 12px rgba(0,0,0,0.4);">
-<span style="font-family:'Noto Sans TC',sans-serif;font-size:0.45rem;color:#7a7060;align-self:center;margin-right:0.2rem;letter-spacing:0.1em;">測試</span>
-<button onclick="testCdState('normal')" style="font-size:0.55rem;padding:0.3rem 0.6rem;background:#2a2520;color:#c8c0b0;border:none;border-radius:4px;cursor:pointer;">一般</button>
-<button onclick="testCdState('blue')" style="font-size:0.55rem;padding:0.3rem 0.6rem;background:#1e3a4a;color:#c8c0b0;border:none;border-radius:4px;cursor:pointer;">2hr</button>
-<button onclick="testCdState('red')" style="font-size:0.55rem;padding:0.3rem 0.6rem;background:#4a1a1a;color:#c8c0b0;border:none;border-radius:4px;cursor:pointer;">1hr</button>
-<button onclick="testCdState('onair')" style="font-size:0.55rem;padding:0.3rem 0.6rem;background:#4a1a1a;color:#c8c0b0;border:none;border-radius:4px;cursor:pointer;">OnAir</button>
-<button onclick="testCdState('ended')" style="font-size:0.55rem;padding:0.3rem 0.6rem;background:#1e3a4a;color:#c8c0b0;border:none;border-radius:4px;cursor:pointer;">結束</button>
-</div>
 </body>
 </html>
