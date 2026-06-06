@@ -273,15 +273,19 @@ footer{padding:0.5rem 0.8rem;}
 }
 
 .main-title-wrap{display:flex;align-items:flex-end;gap:1.2rem;flex-wrap:nowrap;margin-bottom:2rem;width:100%;}
-.countdown-box{display:none;flex-direction:column;align-items:flex-end;gap:0.12rem;margin-left:auto;}
+.countdown-box{display:none;flex-direction:column;align-items:center;gap:0.15rem;margin-left:auto;background:#1a1714;border-radius:6px;padding:0.4rem 0.7rem;min-width:4.5rem;transition:background 0.6s ease;}
 .countdown-box.show{display:flex;}
-.countdown-label{font-family:'Noto Sans TC',sans-serif;font-size:0.52rem;font-weight:300;letter-spacing:0.28em;color:var(--ink-4);white-space:nowrap;transition:color 0.8s ease,font-size 0.4s ease;}
-.countdown-time{font-family:'Special Elite',monospace;font-size:0.9rem;letter-spacing:0.06em;color:var(--ink-3);transition:color 0.8s ease,font-size 0.4s ease;}
+.countdown-label{font-family:'Noto Sans TC',sans-serif;font-size:0.46rem;font-weight:300;letter-spacing:0.22em;color:#7a7060;white-space:nowrap;transition:color 0.6s ease;}
+.countdown-time{font-family:'Special Elite',monospace;font-size:1rem;letter-spacing:0.08em;color:#c8c0b0;transition:color 0.6s ease,font-size 0.3s ease;}
 .countdown-sep{display:none;}
-.countdown-box.cd-blue .countdown-label,.countdown-box.cd-blue .countdown-time{color:#4a7fa5!important;}
-.countdown-box.cd-orange .countdown-label,.countdown-box.cd-orange .countdown-time{color:#c8722a!important;}
-.countdown-box.cd-red .countdown-label,.countdown-box.cd-red .countdown-time{color:#b94040!important;font-size:1.08rem!important;}
-.countdown-box.cd-red .countdown-label{font-size:0.62rem;}
+.countdown-box.cd-blue{background:#1e3a4a!important;}
+.countdown-box.cd-red{background:#4a1a1a!important;}
+.countdown-box.cd-onair{background:#4a1a1a!important;}
+.countdown-box.cd-ended{background:#1e3a4a!important;}
+
+
+
+
 </style>
 <script>
 (function(){
@@ -382,7 +386,7 @@ footer{padding:0.5rem 0.8rem;}
   <div class="masthead" id="masthead">
     <div class="page-num" id="pageNum"></div>
     <div class="eyebrow" id="eyebrow">劇本 · Script Reading Copy</div>
-    <div class="main-title-wrap"><div class="main-title" id="mainTitle"></div><div class="countdown-box" id="countdownBox"><span class="countdown-label">排練倒數</span><span class="countdown-sep"></span><span class="countdown-time" id="countdownTime">--:--:--</span></div></div>
+    <div class="main-title-wrap"><div class="main-title" id="mainTitle"></div><div class="countdown-box" id="countdownBox"><span class="countdown-label">錄影倒計時</span><span class="countdown-sep"></span><span class="countdown-time" id="countdownTime">--:--:--</span></div></div>
     <span class="masthead-mode-badge" id="mastheadModeBadge"></span>
     <div class="masthead-body" id="mastheadBody">
       <div class="masthead-helper" id="mastheadHelper"></div>
@@ -651,40 +655,69 @@ window.addEventListener('scroll',function(){clearTimeout(scrollTimer);scrollTime
 window.addEventListener('beforeunload',function(){saveScroll();saveHlState();});
 
 
-// ===== 倒數計時器 (翻糖花園專屬, 目標 6/6 19:30) =====
-var CLASS_TIME=new Date(2026,5,13,19,0,0).getTime(); // 月份0-indexed: 5=June
+// ===== 錄影倒計時 (翻糖花園專屬) =====
+var CLASS_START=new Date(2026,5,13,19,0,0).getTime();  // 6/13 19:00
+var CLASS_END=new Date(2026,5,13,21,30,0).getTime();   // 6/13 21:30
 var countdownTimer=null;
 function startCountdown(){
   var box=document.getElementById('countdownBox');
   if(!box)return;
   if(countdownTimer){clearInterval(countdownTimer);countdownTimer=null;}
-  // 只在翻糖花園顯示
   if(currentScriptId!=='fengtan'){box.classList.remove('show');return;}
+  function pad(n){return n<10?'0'+n:''+n;}
   function tick(){
     var now=Date.now();
-    var diff=CLASS_TIME-now;
+    var labelEl=box.querySelector('.countdown-label');
     var timeEl=document.getElementById('countdownTime');
-    if(diff<=0){
-      if(diff>-3*3600*1000){
-        timeEl.textContent='上課了';
-        box.classList.add('show');
-      }else{
-        box.classList.remove('show');
-        if(countdownTimer){clearInterval(countdownTimer);countdownTimer=null;}
-      }
-      return;
+    var newState;
+    if(now>=CLASS_START && now<CLASS_END){newState='onair';}
+    else if(now>=CLASS_END){newState='ended';}
+    else{
+      var diff=CLASS_START-now;
+      if(diff<=60*60*1000)newState='red';
+      else if(diff<=2*60*60*1000)newState='blue';
+      else newState='normal';
     }
+
+    // 只在狀態改變時更新 DOM 和 class
+    if(box.dataset.cdState!==newState){
+      box.dataset.cdState=newState;
+      box.classList.remove('cd-blue','cd-red','cd-onair','cd-ended');
+      if(newState==='onair'){
+        labelEl.textContent='';
+        timeEl.textContent='錄影中 · On Air';
+        timeEl.style.fontSize='1rem';
+        box.classList.add('cd-onair');
+        box.classList.add('show');return;
+      }else if(newState==='ended'){
+        labelEl.textContent='';
+        timeEl.textContent='錄影已結束';
+        timeEl.style.fontSize='1rem';
+        box.classList.add('cd-ended');
+        box.classList.add('show');
+        if(countdownTimer){clearInterval(countdownTimer);countdownTimer=null;}
+        return;
+      }else if(newState==='red'){
+        labelEl.textContent='錄影倒計時';
+        timeEl.style.fontSize='1.1rem';
+        box.classList.add('cd-red');
+      }else if(newState==='blue'){
+        labelEl.textContent='錄影倒計時';
+        timeEl.style.fontSize='1rem';
+        box.classList.add('cd-blue');
+      }else{
+        labelEl.textContent='錄影倒計時';
+        timeEl.style.fontSize='1rem';
+      }
+    }
+    if(newState==='onair'||newState==='ended')return;
+    // 只更新時間數字
+    var diff=CLASS_START-now;
     var h=Math.floor(diff/3600000);
     var m=Math.floor((diff%3600000)/60000);
     var s=Math.floor((diff%60000)/1000);
-    function pad(n){return n<10?'0'+n:''+n;}
     timeEl.textContent=pad(h)+':'+pad(m)+':'+pad(s);
     box.classList.add('show');
-    // 顏色 + 大小
-    box.classList.remove('cd-blue','cd-orange','cd-red');
-    if(diff<=30*60*1000){box.classList.add('cd-red');}
-    else if(diff<=60*60*1000){box.classList.add('cd-orange');}
-    else if(diff<=2*60*60*1000){box.classList.add('cd-blue');}
   }
   tick();
   countdownTimer=setInterval(tick,1000);
@@ -717,6 +750,38 @@ function getPracticeEndText(){
   return '又進步了，再來一次！'; // 10-15分鐘的中間區間
 }
 
+
+var cdTestMode=false;
+function testCdState(state){
+  cdTestMode=true;
+  var box=document.getElementById('countdownBox');
+  var labelEl=box.querySelector('.countdown-label');
+  var timeEl=document.getElementById('countdownTime');
+  box.style.display='flex';
+  box.dataset.cdState='__test__';
+  box.classList.remove('cd-blue','cd-red','cd-onair','cd-ended');
+  box.style.background='';
+  if(state==='normal'){
+    labelEl.textContent='錄影倒計時';timeEl.textContent='03:15:22';timeEl.style.fontSize='1rem';
+  }else if(state==='blue'){
+    labelEl.textContent='錄影倒計時';timeEl.textContent='01:45:22';
+    box.classList.add('cd-blue');
+    box.style.background='#1e3a4a';
+  }else if(state==='red'){
+    labelEl.textContent='錄影倒計時';timeEl.textContent='00:45:22';timeEl.style.fontSize='1.1rem';
+    box.classList.add('cd-red');
+    box.style.background='#4a1a1a';
+  }else if(state==='onair'){
+    labelEl.textContent='';timeEl.textContent='錄影中 · On Air';
+    box.classList.add('cd-onair');
+    box.style.background='#4a1a1a';
+  }else if(state==='ended'){
+    labelEl.textContent='';timeEl.textContent='錄影已結束';
+    box.classList.add('cd-ended');
+    box.style.background='#1e3a4a';
+  }
+}
+
 runOpening();
 initSelect();
 var sc0=SCRIPTS.find(function(s){return s.id===currentScriptId;})||SCRIPTS[0];
@@ -725,5 +790,13 @@ buildScript(sc0);
 buildSettings(sc0);
 updateFooter();
 </script>
+<div id="cdTestBar" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1714;border-radius:8px;padding:0.4rem 0.6rem;display:flex;gap:0.4rem;z-index:999;box-shadow:0 2px 12px rgba(0,0,0,0.4);">
+<span style="font-family:'Noto Sans TC',sans-serif;font-size:0.45rem;color:#7a7060;align-self:center;margin-right:0.2rem;letter-spacing:0.1em;">測試</span>
+<button onclick="testCdState('normal')" style="font-size:0.55rem;padding:0.3rem 0.6rem;background:#2a2520;color:#c8c0b0;border:none;border-radius:4px;cursor:pointer;">一般</button>
+<button onclick="testCdState('blue')" style="font-size:0.55rem;padding:0.3rem 0.6rem;background:#1e3a4a;color:#c8c0b0;border:none;border-radius:4px;cursor:pointer;">2hr</button>
+<button onclick="testCdState('red')" style="font-size:0.55rem;padding:0.3rem 0.6rem;background:#4a1a1a;color:#c8c0b0;border:none;border-radius:4px;cursor:pointer;">1hr</button>
+<button onclick="testCdState('onair')" style="font-size:0.55rem;padding:0.3rem 0.6rem;background:#4a1a1a;color:#c8c0b0;border:none;border-radius:4px;cursor:pointer;">OnAir</button>
+<button onclick="testCdState('ended')" style="font-size:0.55rem;padding:0.3rem 0.6rem;background:#1e3a4a;color:#c8c0b0;border:none;border-radius:4px;cursor:pointer;">結束</button>
+</div>
 </body>
 </html>
