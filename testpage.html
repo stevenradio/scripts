@@ -100,9 +100,11 @@ background-repeat:no-repeat;background-position:right 0.5rem center;transition:a
 .hl-btn-group .pbtn[data-hl="瑪莉"].on{background:rgba(128,64,192,0.12);color:#b070e8;border-color:rgba(128,64,192,0.35);}
 
 .paper{
-max-width:660px;margin:2rem auto 0;background:var(--paper-bg);position:relative;box-shadow:0 2px 4px rgba(0,0,0,0.14),0 8px 24px rgba(0,0,0,0.28),0 28px 70px rgba(0,0,0,0.32);transition:background 0.6s cubic-bezier(0.4,0,0.2,1);}
+max-width:660px;margin:2rem auto 0;background:var(--paper-bg);position:relative;box-shadow:0 2px 4px rgba(0,0,0,0.14),0 8px 24px rgba(0,0,0,0.28),0 28px 70px rgba(0,0,0,0.32);transition:background 0.6s cubic-bezier(0.4,0,0.2,1);overflow:hidden;}
 .paper::before{content:'';position:absolute;left:5.2rem;top:0;bottom:0;width:1px;background:var(--margin-rule);pointer-events:none;z-index:1;}
-.paper::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(180deg,transparent 0,transparent 37px,var(--ruled-line) 37px,var(--ruled-line) 38px);pointer-events:none;z-index:0;}
+.paper::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(180deg,transparent 0,transparent 37px,var(--ruled-line) 37px,var(--ruled-line) 38px);pointer-events:none;z-index:1;}
+.paper-texture{position:absolute;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(115deg,rgba(90,70,45,0.035) 0%,rgba(255,255,255,0) 18%,rgba(90,70,45,0.025) 35%,rgba(255,255,255,0) 55%,rgba(90,70,45,0.018) 100%),radial-gradient(ellipse at 20% 15%,rgba(80,55,25,0.045) 0%,rgba(80,55,25,0.018) 28%,transparent 58%),radial-gradient(ellipse at 78% 72%,rgba(255,255,255,0.28) 0%,rgba(255,255,255,0.08) 32%,transparent 62%),repeating-linear-gradient(96deg,rgba(70,48,24,0.022) 0px,rgba(70,48,24,0.022) 1px,transparent 1px,transparent 5px);opacity:0.72;mix-blend-mode:multiply;}
+body.dark .paper-texture{background-image:linear-gradient(115deg,rgba(255,230,190,0.035) 0%,rgba(255,255,255,0) 18%,rgba(255,230,190,0.025) 35%,rgba(255,255,255,0) 55%,rgba(255,230,190,0.018) 100%),radial-gradient(ellipse at 20% 15%,rgba(255,220,150,0.035) 0%,rgba(255,220,150,0.012) 28%,transparent 58%),radial-gradient(ellipse at 78% 72%,rgba(0,0,0,0.22) 0%,rgba(0,0,0,0.08) 32%,transparent 62%),repeating-linear-gradient(96deg,rgba(255,230,190,0.018) 0px,rgba(255,230,190,0.018) 1px,transparent 1px,transparent 5px);opacity:0.55;mix-blend-mode:screen;}
 
 .masthead{position:relative;z-index:2;padding:3rem 2.5rem 2rem 5.8rem;transition:padding 0.3s,opacity 0.2s;overflow:hidden;}
 .masthead-body{transition:max-height 0.3s ease,opacity 0.3s ease;max-height:260px;opacity:1;overflow:hidden;}
@@ -167,9 +169,7 @@ body.rehearse-focus .dline.rehearse-target{opacity:1;}
 .dline.hl-on[data-c="B"] .spkr,.dline.hl-on[data-c="B"] .dtxt{color:var(--hl-y-ink);}
 .dline.hl-on[data-c="瑪莉"] .spkr,.dline.hl-on[data-c="瑪莉"] .dtxt{color:var(--hl-m-ink);}
 
-body.cue-mode .dline.focus-target{
-  cursor:pointer;
-}
+body.cue-mode .dline.focus-target{cursor:pointer;}
 body.cue-mode .dline.focus-target .dtxt{color:transparent;text-shadow:0 0 10px rgba(100,80,40,0.5);user-select:none;transition:color 0.4s cubic-bezier(0.4,0,0.2,1),text-shadow 0.4s cubic-bezier(0.4,0,0.2,1);}
 body.cue-mode .dline.focus-target.hl-on .dtxt{text-shadow:0 0 10px rgba(80,60,20,0.6);}
 body.dark.cue-mode .dline.focus-target .dtxt{text-shadow:0 0 10px rgba(200,180,140,0.4);}
@@ -259,12 +259,14 @@ body{padding:0;}
 .settings-panel{top:44px;}
 #onboardBtn{display:none;}
 .script-select{max-width:calc(100vw - 110px);}
-.paper{margin:0;box-shadow:0 4px 20px rgba(0,0,0,0.4);border-radius:0;}
+.paper{margin:0;box-shadow:0 4px 20px rgba(0,0,0,0.4);border-radius:0;filter:none!important;}
+.onboard-card{filter:none!important;}
 .paper::before{display:none;}
 .masthead{padding:1.6rem 1.2rem 1.2rem 1.2rem;}
 .main-title{font-size:1.5rem;letter-spacing:0.2em;text-indent:0.2em;}
 .script-body,.lecture-body{padding:1.3rem 1.2rem 3rem 1.2rem;}
-.dtxt{max-width:100%;}
+.dline-main{min-width:0;}
+.dtxt{max-width:100%;min-width:0;word-break:break-word;overflow-wrap:anywhere;}
 .lnum{display:none;}
 .note-wrap{padding-left:0;}
 footer{padding:0.5rem 0.8rem;}
@@ -281,34 +283,7 @@ footer{padding:0.5rem 0.8rem;}
 .countdown-box.cd-onair{background:#4a1a1a!important;}
 .countdown-box.cd-ended{background:#1e3a4a!important;}
 
-/* ===== Mobile Safari Fix：修正手機無法顯示長腳本，例如「七個朋友」 ===== */
 
-/*
-  原因：
-  .paper 原本使用 filter:url(#paper-noise);
-  在手機 Safari / WebView 上，當內容很長、DOM 很多時，
-  SVG filter 容易造成整個紙張區塊空白或不渲染。
-*/
-@media(max-width:600px){
-  .paper,
-  .onboard-card{
-    filter:none!important;
-  }
-
-  /*
-    防止長台詞在手機 flex layout 裡撐爆寬度，
-    導致內容被擠出畫面或渲染異常。
-  */
-  .dline-main{
-    min-width:0;
-  }
-
-  .dtxt{
-    min-width:0;
-    word-break:break-word;
-    overflow-wrap:anywhere;
-  }
-}
 
 
 </style>
@@ -408,6 +383,7 @@ footer{padding:0.5rem 0.8rem;}
 </div>
 
 <div class="paper" id="paper">
+  <div class="paper-texture" aria-hidden="true"></div>
   <div class="masthead" id="masthead">
     <div class="page-num" id="pageNum"></div>
     <div class="eyebrow" id="eyebrow">劇本 · Script Reading Copy</div>
