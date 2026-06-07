@@ -99,7 +99,8 @@ background-repeat:no-repeat;background-position:right 0.5rem center;transition:a
 .hl-btn-group .pbtn[data-hl="葉子"].on,.hl-btn-group .pbtn[data-hl="美英"].on,.hl-btn-group .pbtn[data-hl="欣潔"].on,.hl-btn-group .pbtn[data-hl="雨晴"].on,.hl-btn-group .pbtn[data-hl="B"].on{background:rgba(42,144,80,0.12);color:#40b868;border-color:rgba(42,144,80,0.35);}
 .hl-btn-group .pbtn[data-hl="瑪莉"].on{background:rgba(128,64,192,0.12);color:#b070e8;border-color:rgba(128,64,192,0.35);}
 
-.paper{max-width:660px;margin:2rem auto 0;background:var(--paper-bg);position:relative;box-shadow:0 2px 4px rgba(0,0,0,0.14),0 8px 24px rgba(0,0,0,0.28),0 28px 70px rgba(0,0,0,0.32);filter:url(#paper-noise);transition:background 0.6s cubic-bezier(0.4,0,0.2,1);}
+.paper{
+max-width:660px;margin:2rem auto 0;background:var(--paper-bg);position:relative;box-shadow:0 2px 4px rgba(0,0,0,0.14),0 8px 24px rgba(0,0,0,0.28),0 28px 70px rgba(0,0,0,0.32);transition:background 0.6s cubic-bezier(0.4,0,0.2,1);}
 .paper::before{content:'';position:absolute;left:5.2rem;top:0;bottom:0;width:1px;background:var(--margin-rule);pointer-events:none;z-index:1;}
 .paper::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(180deg,transparent 0,transparent 37px,var(--ruled-line) 37px,var(--ruled-line) 38px);pointer-events:none;z-index:0;}
 
@@ -166,7 +167,9 @@ body.rehearse-focus .dline.rehearse-target{opacity:1;}
 .dline.hl-on[data-c="B"] .spkr,.dline.hl-on[data-c="B"] .dtxt{color:var(--hl-y-ink);}
 .dline.hl-on[data-c="瑪莉"] .spkr,.dline.hl-on[data-c="瑪莉"] .dtxt{color:var(--hl-m-ink);}
 
-body.cue-mode .dline:not(.focus-target) body.cue-mode .dline.focus-target body.cue-mode .dline.focus-target{cursor:pointer;}
+body.cue-mode .dline.focus-target{
+  cursor:pointer;
+}
 body.cue-mode .dline.focus-target .dtxt{color:transparent;text-shadow:0 0 10px rgba(100,80,40,0.5);user-select:none;transition:color 0.4s cubic-bezier(0.4,0,0.2,1),text-shadow 0.4s cubic-bezier(0.4,0,0.2,1);}
 body.cue-mode .dline.focus-target.hl-on .dtxt{text-shadow:0 0 10px rgba(80,60,20,0.6);}
 body.dark.cue-mode .dline.focus-target .dtxt{text-shadow:0 0 10px rgba(200,180,140,0.4);}
@@ -278,7 +281,34 @@ footer{padding:0.5rem 0.8rem;}
 .countdown-box.cd-onair{background:#4a1a1a!important;}
 .countdown-box.cd-ended{background:#1e3a4a!important;}
 
+/* ===== Mobile Safari Fix：修正手機無法顯示長腳本，例如「七個朋友」 ===== */
 
+/*
+  原因：
+  .paper 原本使用 filter:url(#paper-noise);
+  在手機 Safari / WebView 上，當內容很長、DOM 很多時，
+  SVG filter 容易造成整個紙張區塊空白或不渲染。
+*/
+@media(max-width:600px){
+  .paper,
+  .onboard-card{
+    filter:none!important;
+  }
+
+  /*
+    防止長台詞在手機 flex layout 裡撐爆寬度，
+    導致內容被擠出畫面或渲染異常。
+  */
+  .dline-main{
+    min-width:0;
+  }
+
+  .dtxt{
+    min-width:0;
+    word-break:break-word;
+    overflow-wrap:anywhere;
+  }
+}
 
 
 </style>
