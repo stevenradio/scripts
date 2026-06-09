@@ -245,7 +245,7 @@ body.hide-notes .note-wrap{display:none;}
 @keyframes hintpop{0%{opacity:0;transform:translateX(-50%) translateY(6px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}70%{opacity:1}100%{opacity:0}}
 .switch-toast{position:fixed;left:50%;bottom:3.2rem;transform:translateX(-50%) translateY(8px);background:var(--ink);color:var(--paper-bg);font-family:'Noto Sans TC',sans-serif;font-size:0.68rem;font-weight:300;letter-spacing:0.08em;padding:0.45rem 1rem;border-radius:20px;z-index:520;opacity:0;pointer-events:none;transition:opacity 0.22s ease,transform 0.22s ease;}
 .switch-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.ui-tooltip{position:absolute;background:#f5efe3;color:#1a1714;border:1.5px solid #1a1714;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;font-weight:400;letter-spacing:0.04em;padding:0.5rem 0.9rem;border-radius:6px;white-space:nowrap;z-index:450;pointer-events:none;top:calc(100% + 10px);box-shadow:0 3px 12px rgba(0,0,0,0.25);}
+.ui-tooltip{position:absolute;background:#f5efe3;color:#1a1714;border:1.5px solid #1a1714;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;font-weight:400;letter-spacing:0.04em;padding:0.5rem 0.9rem;border-radius:6px;white-space:nowrap;z-index:450;pointer-events:none;top:calc(100% + 10px);right:0;box-shadow:0 3px 12px rgba(0,0,0,0.25);}
 .ui-tooltip::after{content:'';position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:12px;height:7px;background:#f5efe3;clip-path:polygon(50% 0%,0% 100%,100% 100%);}
 .ui-tooltip::before{content:'';position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:14px;height:8px;background:#1a1714;clip-path:polygon(50% 0%,0% 100%,100% 100%);}
 .ui-tooltip.tip-right{left:auto;right:0;}
@@ -637,8 +637,14 @@ var OPENING_QUOTES=['表演是一種在舞台上或透過鏡頭傳達自然又�
 function dismissOpening(){var el=document.getElementById('opening');if(!el)return;el.style.transition='opacity 0.5s';el.style.opacity='0';el.style.pointerEvents='none';setTimeout(function(){if(el)el.style.display='none';},500);try{localStorage.setItem('opening-ts',Date.now());localStorage.setItem('opening-ver','20260608');}catch(e){}try{showInterfaceTips();}catch(e){}}
 function runOpening(){var el=document.getElementById('opening'),qEl=document.getElementById('openingQuote');if(!el||!qEl)return;var recent=[];try{recent=JSON.parse(sessionStorage.getItem('recent-quotes')||'[]');}catch(e){}var pool=OPENING_QUOTES.filter(function(_,i){return!recent.includes(i);});var candidates=pool.length?pool:OPENING_QUOTES;var idx=Math.floor(Math.random()*candidates.length);var quote=candidates[idx];var globalIdx=OPENING_QUOTES.indexOf(quote);recent.push(globalIdx);if(recent.length>4)recent.shift();try{sessionStorage.setItem('recent-quotes',JSON.stringify(recent));}catch(e){}var parts=quote.split('，');if(parts.length>1){qEl.innerHTML=parts.map(function(p){return'<span style="display:block">'+p+'</span>';}).join('');}else{qEl.textContent=quote;}var duration=4800;try{var now=Date.now();var last=parseInt(localStorage.getItem('opening-ts')||'0');var ver=localStorage.getItem('opening-ver');if(ver==='20260608'&&now-last<3600000){duration=0;dismissOpening();return;}else{duration=ver==='20260608'?2900:4800;}}catch(e){}setTimeout(dismissOpening,duration);}
 
+var _tipsShown=false;
 function showInterfaceTips(){
-  try{if(localStorage.getItem('tips-v3'))return;localStorage.setItem('tips-v3','1');}catch(e){}
+  if(_tipsShown)return;_tipsShown=true;
+  try{if(localStorage.getItem('tips-v3'))return;}catch(e){}
+  var FD=300;
+  var TIPSTYLE='background:#f5efe3;color:#1a1714;border:1.5px solid #1a1714;font-family:\'Noto Sans TC\',sans-serif;font-size:0.78rem;font-weight:400;letter-spacing:0.04em;padding:0.5rem 0.9rem;border-radius:6px;white-space:nowrap;z-index:500;box-shadow:0 3px 12px rgba(0,0,0,0.25);pointer-events:none;opacity:0;transform:translateY(-6px);transition:opacity '+FD+'ms ease,transform '+FD+'ms ease;';
+  var ARROWOUT='position:absolute;top:-8px;left:14px;width:13px;height:8px;background:#1a1714;clip-path:polygon(50% 0%,0% 100%,100% 100%);display:block;';
+  var ARROWIN='position:absolute;top:-6px;left:15px;width:11px;height:6px;background:#f5efe3;clip-path:polygon(50% 0%,0% 100%,100% 100%);display:block;';
   var tips=[
     {anchor:'scriptSelect',text:'點此切換劇本',fixed:true},
     {anchor:'darkBtn',text:'切換深色模式',fixed:false},
@@ -652,16 +658,21 @@ function showInterfaceTips(){
     if(!anchor){setTimeout(next,200);return;}
     var tip=document.createElement('div');
     if(t.fixed){
-      tip.style.cssText='position:fixed;top:54px;left:1rem;background:#f5efe3;color:#2a2520;border:1px solid rgba(26,23,20,0.15);font-family:\'Noto Sans TC\',sans-serif;font-size:0.75rem;font-weight:400;letter-spacing:0.04em;padding:0.45rem 0.85rem;border-radius:6px;white-space:nowrap;z-index:500;box-shadow:0 2px 8px rgba(0,0,0,0.1);pointer-events:none;';
-      tip.innerHTML=t.text+'<span style="position:absolute;top:-7px;left:14px;width:12px;height:7px;background:rgba(26,23,20,0.15);clip-path:polygon(50% 0%,0% 100%,100% 100%);display:block;"></span><span style="position:absolute;top:-5px;left:15.5px;width:9px;height:5px;background:#f5efe3;clip-path:polygon(50% 0%,0% 100%,100% 100%);display:block;"></span>';
+      tip.style.cssText='position:fixed;top:54px;left:1rem;'+TIPSTYLE;
+      tip.innerHTML=t.text+'<span style="'+ARROWOUT+'"></span><span style="'+ARROWIN+'"></span>';
       document.body.appendChild(tip);
     } else {
-      tip.className='ui-tooltip'+(t.cls?' '+t.cls:'');
+      tip.className='ui-tooltip';
+      tip.style.cssText+='opacity:0;transform:translateY(-6px);transition:opacity '+FD+'ms ease,transform '+FD+'ms ease;';
       tip.textContent=t.text;
       anchor.style.position='relative';
       anchor.appendChild(tip);
     }
-    setTimeout(function(){tip.remove();setTimeout(next,200);},1500);
+    setTimeout(function(){tip.style.opacity='1';tip.style.transform='translateY(0)';},16);
+    setTimeout(function(){
+      tip.style.opacity='0';tip.style.transform='translateY(-6px)';
+      setTimeout(function(){tip.remove();setTimeout(next,300);},FD);
+    },1500);
   }
   setTimeout(next,500);
 }
