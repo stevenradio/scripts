@@ -15,7 +15,9 @@
 <meta name="apple-mobile-web-app-title" content="幼芳戲劇">
 <meta name="theme-color" content="#f2ece0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1a1714" media="(prefers-color-scheme: dark)">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&family=Special+Elite&display=swap" rel="stylesheet">
 <style>
 :root{
 --desk:#1e1b17;--paper-bg:#f2ece0;--margin-rule:rgba(185,70,70,0.22);
@@ -218,7 +220,7 @@ body.hide-notes .note-wrap{display:none;}
 .lec-h1:first-child{margin-top:0;}
 .lec-p{font-family:'Noto Serif TC',serif;font-weight:300;font-size:1rem;color:var(--ink);line-height:2;margin-bottom:0.6rem;}
 .lec-item{display:flex;gap:1.2rem;padding:0.45rem 0;align-items:baseline;}
-.lec-key{font-family:'Noto Serif TC',serif;font-weight:700;font-size:1rem;color:var(--ink);flex-shrink:0;min-width:3.8rem;letter-spacing:0.04em;}
+.lec-key{font-family:'Noto Serif TC',serif;font-weight:500;font-size:1rem;color:var(--ink);flex-shrink:0;min-width:3.8rem;letter-spacing:0.04em;}
 .lec-val{font-family:'Noto Serif TC',serif;font-weight:300;font-size:1rem;color:var(--ink);line-height:1.85;}
 .lec-author{font-family:'Noto Sans TC',sans-serif;font-size:0.9rem;font-weight:400;color:var(--ink-2);letter-spacing:0.15em;margin-bottom:1.2rem;}
 
@@ -245,12 +247,7 @@ body.hide-notes .note-wrap{display:none;}
 @keyframes hintpop{0%{opacity:0;transform:translateX(-50%) translateY(6px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}70%{opacity:1}100%{opacity:0}}
 .switch-toast{position:fixed;left:50%;bottom:3.2rem;transform:translateX(-50%) translateY(8px);background:var(--ink);color:var(--paper-bg);font-family:'Noto Sans TC',sans-serif;font-size:0.68rem;font-weight:300;letter-spacing:0.08em;padding:0.45rem 1rem;border-radius:20px;z-index:520;opacity:0;pointer-events:none;transition:opacity 0.22s ease,transform 0.22s ease;}
 .switch-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.ui-tooltip{position:absolute;background:#f5efe3;color:#1a1714;border:1.5px solid #1a1714;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;font-weight:400;letter-spacing:0.04em;padding:0.5rem 0.9rem;border-radius:6px;white-space:nowrap;z-index:450;pointer-events:none;top:calc(100% + 10px);right:0;box-shadow:0 3px 12px rgba(0,0,0,0.25);}
-.ui-tooltip::after{content:'';position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:12px;height:7px;background:#f5efe3;clip-path:polygon(50% 0%,0% 100%,100% 100%);}
-.ui-tooltip::before{content:'';position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:14px;height:8px;background:#1a1714;clip-path:polygon(50% 0%,0% 100%,100% 100%);}
-.ui-tooltip.tip-right{left:auto;right:0;}
-.ui-tooltip.tip-right::before{left:auto;right:11px;transform:none;}
-.ui-tooltip.tip-right::after{left:auto;right:12px;transform:none;}
+.ui-tooltip{position:absolute;background:#f5efe3;color:#1a1714;border:1px solid rgba(26,23,20,0.2);font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;font-weight:400;letter-spacing:0.04em;padding:0.5rem 0.9rem;border-radius:6px;white-space:nowrap;z-index:450;pointer-events:none;top:calc(100% + 10px);right:0;box-shadow:0 2px 10px rgba(0,0,0,0.12);}
 
 .fader{position:relative;width:1.6rem;height:2.4rem;cursor:pointer;background:none;border:none;padding:0;display:inline-flex;justify-content:center;}
 .fader .track{position:absolute;top:0.3rem;bottom:0.3rem;left:50%;transform:translateX(-50%);width:2px;background:var(--ink-4);border-radius:1px;}
@@ -642,9 +639,7 @@ function showInterfaceTips(){
   if(_tipsShown)return;_tipsShown=true;
   try{if(localStorage.getItem('tips-v3'))return;}catch(e){}
   var FD=300;
-  var TIPSTYLE='background:#f5efe3;color:#1a1714;border:1.5px solid #1a1714;font-family:\'Noto Sans TC\',sans-serif;font-size:0.78rem;font-weight:400;letter-spacing:0.04em;padding:0.5rem 0.9rem;border-radius:6px;white-space:nowrap;z-index:500;box-shadow:0 3px 12px rgba(0,0,0,0.25);pointer-events:none;opacity:0;transform:translateY(-6px);transition:opacity '+FD+'ms ease,transform '+FD+'ms ease;';
-  var ARROWOUT='position:absolute;top:-8px;left:14px;width:13px;height:8px;background:#1a1714;clip-path:polygon(50% 0%,0% 100%,100% 100%);display:block;';
-  var ARROWIN='position:absolute;top:-6px;left:15px;width:11px;height:6px;background:#f5efe3;clip-path:polygon(50% 0%,0% 100%,100% 100%);display:block;';
+  var TIPSTYLE='background:#f5efe3;color:#1a1714;border:1px solid rgba(26,23,20,0.2);font-family:\'Noto Sans TC\',sans-serif;font-size:0.78rem;font-weight:400;letter-spacing:0.04em;padding:0.5rem 0.9rem;border-radius:6px;white-space:nowrap;z-index:500;box-shadow:0 2px 10px rgba(0,0,0,0.12);pointer-events:none;opacity:0;transform:translateY(-6px);transition:opacity '+FD+'ms ease,transform '+FD+'ms ease;';
   var tips=[
     {anchor:'scriptSelect',text:'點此切換劇本',fixed:true},
     {anchor:'darkBtn',text:'切換深色模式',fixed:false},
@@ -659,12 +654,13 @@ function showInterfaceTips(){
     var tip=document.createElement('div');
     if(t.fixed){
       tip.style.cssText='position:fixed;top:54px;left:1rem;'+TIPSTYLE;
-      tip.innerHTML=t.text+'<span style="'+ARROWOUT+'"></span><span style="'+ARROWIN+'"></span>';
+      tip.textContent=t.text;
       document.body.appendChild(tip);
     } else {
+      var arrowRight=t.anchor==='darkBtn'?'12px':'8px';
       tip.className='ui-tooltip';
       tip.style.cssText+='opacity:0;transform:translateY(-6px);transition:opacity '+FD+'ms ease,transform '+FD+'ms ease;';
-      tip.textContent=t.text;
+      tip.innerHTML=t.text;
       anchor.style.position='relative';
       anchor.appendChild(tip);
     }
