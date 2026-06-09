@@ -384,7 +384,6 @@ body.dark
   }catch(e){}
 })();
 </script>
-<script>window.onerror=function(m,s,l,c,e){var d=document.createElement('div');d.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#b94040;color:#fff;font-size:11px;padding:8px;z-index:99999;font-family:monospace;';d.textContent='ERR: '+m+' @'+l+':'+c;document.body.appendChild(d);};</script>
 </head>
 <body>
 
@@ -638,32 +637,34 @@ var OPENING_QUOTES=['表演是一種在舞台上或透過鏡頭傳達自然又�
 function dismissOpening(){var el=document.getElementById('opening');if(!el)return;el.style.transition='opacity 0.5s';el.style.opacity='0';el.style.pointerEvents='none';setTimeout(function(){if(el)el.style.display='none';},500);try{localStorage.setItem('opening-ts',Date.now());localStorage.setItem('opening-ver','20260608');}catch(e){}try{showInterfaceTips();}catch(e){}}
 function runOpening(){var el=document.getElementById('opening'),qEl=document.getElementById('openingQuote');if(!el||!qEl)return;var recent=[];try{recent=JSON.parse(sessionStorage.getItem('recent-quotes')||'[]');}catch(e){}var pool=OPENING_QUOTES.filter(function(_,i){return!recent.includes(i);});var candidates=pool.length?pool:OPENING_QUOTES;var idx=Math.floor(Math.random()*candidates.length);var quote=candidates[idx];var globalIdx=OPENING_QUOTES.indexOf(quote);recent.push(globalIdx);if(recent.length>4)recent.shift();try{sessionStorage.setItem('recent-quotes',JSON.stringify(recent));}catch(e){}var parts=quote.split('，');if(parts.length>1){qEl.innerHTML=parts.map(function(p){return'<span style="display:block">'+p+'</span>';}).join('');}else{qEl.textContent=quote;}var duration=4800;try{var now=Date.now();var last=parseInt(localStorage.getItem('opening-ts')||'0');var ver=localStorage.getItem('opening-ver');if(ver==='20260608'&&now-last<3600000){duration=0;dismissOpening();return;}else{duration=ver==='20260608'?2900:4800;}}catch(e){}setTimeout(dismissOpening,duration);}
 
-function showInterfaceTips(){try{if(localStorage.getItem('tips-v3'))return;}catch(e){}
-var SD=2200,FD=350,GAP=200,delay=0;
-function showTip(anchorId,text,cls,isScript){
-  var anchor=document.getElementById(anchorId);if(!anchor)return;
-  setTimeout(function(){
+function showInterfaceTips(){
+  try{if(localStorage.getItem('tips-v3'))return;}catch(e){}
+  var tips=[
+    {anchor:'scriptSelect',text:'點此切換劇本',fixed:true},
+    {anchor:'darkBtn',text:'切換深色模式',fixed:false},
+    {anchor:'settingsToggle',text:'開啟功能設定',fixed:false}
+  ];
+  var idx=0;
+  function next(){
+    if(idx>=tips.length){try{localStorage.setItem('tips-v3','1');}catch(e){}return;}
+    var t=tips[idx++];
+    var anchor=document.getElementById(t.anchor);
+    if(!anchor){setTimeout(next,200);return;}
     var tip=document.createElement('div');
-    if(isScript){
-      tip.style.cssText='position:fixed;top:54px;left:1rem;background:#f5efe3;color:#1a1714;border:1.5px solid #1a1714;font-family:\'Noto Sans TC\',sans-serif;font-size:0.78rem;font-weight:400;letter-spacing:0.04em;padding:0.5rem 0.9rem;border-radius:6px;white-space:nowrap;z-index:500;opacity:0;box-shadow:0 3px 12px rgba(0,0,0,0.25);transition:opacity '+FD+'ms ease,transform '+FD+'ms ease;transform:translateY(-4px);pointer-events:none;';
-      tip.innerHTML=text+'<span style="position:absolute;top:-8px;left:14px;width:13px;height:8px;background:#1a1714;clip-path:polygon(50% 0%,0% 100%,100% 100%);display:block;"></span><span style="position:absolute;top:-6px;left:15px;width:11px;height:6px;background:#f5efe3;clip-path:polygon(50% 0%,0% 100%,100% 100%);display:block;"></span>';
+    if(t.fixed){
+      tip.style.cssText='position:fixed;top:54px;left:1rem;background:#f5efe3;color:#2a2520;border:1px solid rgba(26,23,20,0.15);font-family:\'Noto Sans TC\',sans-serif;font-size:0.75rem;font-weight:400;letter-spacing:0.04em;padding:0.45rem 0.85rem;border-radius:6px;white-space:nowrap;z-index:500;box-shadow:0 2px 8px rgba(0,0,0,0.1);pointer-events:none;';
+      tip.innerHTML=t.text+'<span style="position:absolute;top:-7px;left:14px;width:12px;height:7px;background:rgba(26,23,20,0.15);clip-path:polygon(50% 0%,0% 100%,100% 100%);display:block;"></span><span style="position:absolute;top:-5px;left:15.5px;width:9px;height:5px;background:#f5efe3;clip-path:polygon(50% 0%,0% 100%,100% 100%);display:block;"></span>';
       document.body.appendChild(tip);
     } else {
-      tip.className='ui-tooltip'+(cls?' '+cls:'');
-      tip.textContent=text;
-      tip.style.cssText='opacity:0;transition:opacity '+FD+'ms ease,transform '+FD+'ms ease;transform:translateY(-4px);';
+      tip.className='ui-tooltip'+(t.cls?' '+t.cls:'');
+      tip.textContent=t.text;
       anchor.style.position='relative';
       anchor.appendChild(tip);
     }
-    requestAnimationFrame(function(){requestAnimationFrame(function(){tip.style.opacity='1';tip.style.transform='translateY(0)';});});
-    setTimeout(function(){tip.style.opacity='0';tip.style.transform='translateY(-4px)';setTimeout(function(){tip.remove();},FD);},SD);
-  },delay);
-  delay+=SD+GAP;
+    setTimeout(function(){tip.remove();setTimeout(next,200);},1500);
+  }
+  setTimeout(next,500);
 }
-showTip('scriptSelect','點此切換劇本','',true);
-showTip('darkBtn','切換深色模式','tip-right',false);
-showTip('settingsToggle','開啟功能設定','tip-right',false);
-setTimeout(function(){try{localStorage.setItem('tips-v3','1');}catch(e){}},delay+FD);}
 
 function initSelect(){
   var sel = document.getElementById('scriptSelect');
