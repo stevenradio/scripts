@@ -69,8 +69,6 @@ body.lecture-mode .topbar::after{background:transparent!important;}
 .mode-status .ms-text{display:inline-block;}
 .mode-status.ms-anim .ms-text{animation:ms-in 0.28s ease both;}
 .mode-status.ms-anim .ms-dot{animation:ms-dot-in 0.28s ease both;}
-}
-}
 body.read-mode .mode-status{display:none;}
 body.rehearse-active .mode-status{--ms-color:#6b6240;}
 body.cue-active .mode-status{--ms-color:#8a4a3c;}
@@ -272,6 +270,36 @@ body.cue-active #cueRow{opacity:1;pointer-events:auto;}
 body.rehearse-active #rehearseRow{opacity:1;pointer-events:auto;}
 .svg-defs{position:absolute;width:0;height:0;overflow:hidden;}
 
+.synopsis-box{margin:0 2.5rem 1.6rem 5.8rem;border-left:2px solid var(--ink-4);padding:0.1rem 0 0.1rem 1rem;}
+.synopsis-toggle{background:none;border:none;cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.62rem;letter-spacing:0.12em;color:var(--ink-3);padding:0.3rem 0;display:flex;align-items:center;gap:0.35rem;}
+.synopsis-toggle:hover{color:var(--ink-2);}
+.synopsis-toggle .syn-arrow{display:inline-block;transition:transform 0.18s;}
+.synopsis-toggle.open .syn-arrow{transform:rotate(90deg);}
+.synopsis-body{overflow:hidden;max-height:0;transition:max-height 0.28s ease;}
+.synopsis-body.open{max-height:640px;}
+.synopsis-p{font-family:'Noto Serif TC',serif;font-weight:300;font-size:0.82rem;color:var(--ink-2);line-height:1.9;padding:0.5rem 0;}
+
+.stage-hidden{display:none!important;}
+
+.video-box{margin:0 2.5rem 1.6rem 5.8rem;border-left:2px solid var(--ink-4);padding:0.1rem 0 0.1rem 1rem;}
+.video-toggle{background:none;border:none;cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.62rem;letter-spacing:0.12em;color:var(--ink-3);padding:0.3rem 0;display:flex;align-items:center;gap:0.35rem;}
+.video-toggle:hover{color:var(--ink-2);}
+.video-toggle .syn-arrow{display:inline-block;transition:transform 0.18s;}
+.video-toggle.open .syn-arrow{transform:rotate(90deg);}
+.video-body{overflow:hidden;max-height:0;transition:max-height 0.3s ease;}
+.video-body.open{max-height:1400px;}
+.video-item{padding:0.7rem 0;}
+.video-item-label{font-family:'Noto Sans TC',sans-serif;font-size:0.58rem;font-weight:400;color:var(--ink-3);letter-spacing:0.1em;margin-bottom:0.4rem;}
+.video-frame-wrap{position:relative;width:100%;padding-bottom:56.25%;height:0;background:#000;}
+.video-frame-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;}
+.video-note{font-family:'Noto Sans TC',sans-serif;font-size:0.54rem;font-weight:300;color:var(--ink-4);letter-spacing:0.04em;margin-top:0.35rem;}
+
+.track-badge{display:inline-block;font-family:'Noto Sans TC',sans-serif;font-size:0.48rem;font-weight:400;letter-spacing:0.18em;color:var(--ink-3);border:1px solid var(--ink-4);border-radius:20px;padding:0.12rem 0.55rem;margin-left:0.6rem;vertical-align:middle;opacity:0.75;}
+
+@media(max-width:600px){
+.synopsis-box,.video-box{margin:0 1.2rem 1.2rem 1.2rem;}
+}
+
 @media(prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;animation-delay:0ms!important;transition-duration:0.01ms!important;}}
 @media(max-width:600px){
 body{padding:0;}
@@ -318,27 +346,10 @@ footer{padding:0.5rem 0.8rem;}
 .footprint-mark:active{transform:scale(0.9);}
 body.dark .footprint-mark{color:#8a8070;opacity:0.95;}
 .fp-entry:active{opacity:1;}
-body.dark 
- 5%{opacity:0.9;} 10%{opacity:0.1;} 15%{opacity:1;}
-  20%{opacity:0.2;} 25%{opacity:1;} 30%{opacity:0.4;} 35%{opacity:1;}
-  100%{opacity:1;}
-}
 
 /* ===== 排練足跡 ===== */
 @keyframes fp-in{from{opacity:0;}to{opacity:1;}}
 @keyframes fp-out{from{opacity:1;}to{opacity:0;}}
-
-  8%  {opacity:1;}
-  12% {opacity:0;}
-  20% {opacity:1;}
-  24% {opacity:0;}
-  30% {opacity:0.6;}
-  34% {opacity:0;}
-  42% {opacity:1;}
-  46% {opacity:0.3;}
-  52% {opacity:1;}
-  100%{opacity:1;}
-}
 /* 頁尾鼓勵語 */
 .fp-quote{font-family:'Noto Sans TC',-apple-system,sans-serif;font-size:0.56rem;font-weight:300;color:var(--ink-4);letter-spacing:0.12em;cursor:pointer;display:inline-block;opacity:0.55;}
 
@@ -447,6 +458,15 @@ body.dark
       <select class="cue-select" id="cueSelect" onchange="setCueChar(this.value)"><option value="off">選擇角色</option></select>
       <span class="row-note" id="cueSummary"></span>
     </div>
+    <div class="setting-row" id="stageRow" style="display:none;">
+      <span class="row-label">階段</span>
+      <div class="btn-group" id="stageBtnGroup">
+        <button class="pbtn on" data-stage="all" onclick="setStageFilter('all')">全部</button>
+        <button class="pbtn" data-stage="1" onclick="setStageFilter('1')">第一階段</button>
+        <button class="pbtn" data-stage="2" onclick="setStageFilter('2')">第二階段</button>
+      </div>
+      <span class="row-note">依教學階段篩選台詞</span>
+    </div>
     <div class="panel-sep"></div>
     <div class="setting-row">
       <span class="row-label">螢光筆</span>
@@ -489,7 +509,7 @@ body.dark
 </footer>
 <script>
 var SCRIPTS=[
-{id:'lecture1',title:'關於表演',week:'Week 1 · 4/11',subtitle:'課堂講義',type:'lecture',author:'陳幼芳',chars:[],
+{id:'lecture1',title:'關於表演',week:'Week 1 · 4/11',subtitle:'課堂講義',type:'lecture',author:'陳幼芳',track:'master',chars:[],
 sections:[
 {h1:'什麼是表演',p:['表演是一種在舞台上或透過鏡頭傳達自然又具有創造力的生活，其目的讓是要觀眾感受到真實的感動。']},
 {h1:'如何成為一個好的表演者',items:[
@@ -509,7 +529,7 @@ sections:[
 {h1:'活動肢體練習',p:['讓身體接收多種不同的練習，豐富肢體語言讓不同的角色有不同的身體姿態。']},
 {h1:'即興練習',p:['如何在沒有劇本、沒有預設情緒、沒有先行排演的狀況之下，去尋找最直接最自然的反應。','真正的聆聽，真實的思考，感覺演員之間的互動。']}
 ]},
-{id:'qiaoqiao',title:'悄悄佔據你',week:'Week 2 · 4/18',subtitle:'特力家居 2012 微電影　第三話＿填滿',
+{id:'qiaoqiao',title:'悄悄佔據你',week:'Week 2 · 4/18',subtitle:'特力家居 2012 微電影　第三話＿填滿',track:'master',
 chars:[{name:'花姐',role:'主管'},{name:'欣潔',role:'員工'}],
 data:[
 {t:'l',c:'花姐',s:'欣潔阿，還沒走阿？'},
@@ -542,13 +562,13 @@ data:[
 {t:'l',c:'欣潔',s:'謝謝妳，花姐⋯⋯我其實⋯⋯。'},
 {t:'l',c:'花姐',s:'（慧點的眼神）不必說了，快回去吧，別忘了我是過來人。'}
 ]},
-{id:'biaoqing',title:'表演課練習（表情）',week:'Week 6 · 5/16',subtitle:'表演課練習腳本',
+{id:'biaoqing',title:'表演課練習（表情）',week:'Week 6 · 5/16',subtitle:'表演課練習腳本',track:'master',
 chars:[{name:'雨晴',role:'獨白'}],
 data:[
 {t:'l',c:'雨晴',s:'那好吧，就請你看清楚，合約裡寫得清清楚楚，雙方用的印，必須是含有公司註冊號的公司用章，才算正式的合約，這份合約裡公司章，是個廢章，所以這份合約根本不成立，若你真要追究也只能找我們黛黛經理⋯⋯'},
 {t:'l',c:'雨晴',s:'對了！我聽說可口可樂好像也是貴公司底下長期配合的廠商，我想應該不會是有人在玩什麼雙面設計的手段吧！如果是這樣我們公司也不同意讓人當棋子要，有必要就走法律嘛，我們公司也要討回一個公道！不知道淇總有甚麼看法？'}
 ]},
-{id:'movie101',title:'電影演技小教室',week:'Week 6 · 5/16',subtitle:'助教課外教學',
+{id:'movie101',title:'電影演技小教室',week:'Week 6 · 5/16',subtitle:'助教課外教學',track:'master',
 chars:[{name:'A',role:'角色 A'},{name:'B',role:'角色 B'}],
 data:[
 {t:'l',c:'A',s:'怎樣？'},
@@ -571,7 +591,7 @@ data:[
 {t:'l',c:'B',s:'對，他也可能說的很對。'},
 {t:'l',c:'A',s:'對，他說的對。'}
 ]},
-{id:'qijie',title:'七個朋友',week:'Week 7 · 6/6',subtitle:'對戲閱讀版',
+{id:'qijie',title:'七個朋友',week:'Week 7 · 6/6',subtitle:'對戲閱讀版',track:'master',
 chars:[{name:'結人',role:'買方 / 作家'},{name:'葉子',role:'房仲朋友'},{name:'瑪莉',role:'經紀人'}],
 data:[
 {t:'l',c:'結人',s:'我去找你簽約就可以了，還麻煩妳跑這一趟。'},
@@ -610,7 +630,7 @@ data:[
 {t:'l',c:'葉子',s:'我跟他合不來，我看，你換個經紀人吧！不然、就乾脆換掉我這個朋友算了。'},
 {t:'l',c:'結人',s:'啊？'}
 ]},
-{id:'fengtan',title:'翻糖花園',week:'Week 10 · 6/13',subtitle:'表演練習',
+{id:'fengtan',title:'翻糖花園',week:'Week 10 · 6/13',subtitle:'表演練習',track:'master',
 chars:[{name:'希煥',role:'男主角'},{name:'美英',role:'閨蜜'}],
 data:[
 {t:'l',c:'希煥',s:'怎麼是你在做蛋糕？米恩呢？'},
@@ -621,12 +641,101 @@ data:[
 {t:'l',c:'美英',s:'（越說越激動）可是因為你，她做的蛋糕第一次被客人嫌難吃，因為你，她第一次丟下蛋糕店，因為你，她被迫對不起她爸爸，你怎麼還有臉來找她？',note:{label:'老師筆記',text:'<strong>這一段越來越激動，要用斷句製造爆發感：</strong><br>「可是因為你（呼吸）她做的蛋糕第一次被客人嫌難吃因為你（呼吸）她第一次丟下蛋糕店因為你（呼吸）她被迫對不起她爸爸你怎麼還有臉來找她呀！」<br><br>每一個「因為你」之後都要換氣，像控訴一樣，節奏越來越快越來越緊。'}},
 {t:'l',c:'希煥',s:'對不起！'},
 {t:'l',c:'美英',s:'（失望）我們大家是那麼的喜歡你信任你……你簡直比顏瀚祥那傢伙還可惡，假裝是我們的朋友，卻笑嘻嘻的背叛我們！（傷心）本來還以為可以把米恩交給你……沒想到你卻……（哽咽說不下去）我廖美英真的是瞎了狗眼看錯了你！（下定決心）這一次我不會再給你機會傷害米恩（冷漠），現在請你離開。',note:{label:'老師筆記',text:'說「假裝是我們的朋友」後<strong>帶一個自嘲的笑</strong>——不是崩潰，是那種咬著牙、帶苦笑的懊悔。<br><br>「我廖美英真的是瞎了狗眼看錯了你」——<strong>結尾拉長：「你——一！」</strong>多一個音，像用力收尾，製造張力與終結感。<br><br><strong>帶咬牙切齒的感覺</strong>，像是在嘲笑自己當初太蠢，情緒是複雜的，不是單純憤怒。'}}
+]},
+{id:'danshui',title:'淡水小鎮',week:'Week 2-4 · 8/8-8/22',subtitle:'表演練習',track:'advanced',
+video:{label:'老師示範影片',items:[{note:'完整示範',embedUrl:'https://www.youtube.com/embed/mweIIPRyok4'}]},
+chars:[{name:'陳太太',role:'鎮民'},{name:'艾太太',role:'鎮民'}],
+data:[
+{t:'l',c:'陳太太',s:'今年的豌豆長得真好！',note:{label:'老師筆記',text:'整段對戲雙方要有<strong>眼神交流</strong>。陳太太每次開口前盡量留一個斷點——例如手上正在剝豌豆，動作先停下來，停個一拍再講話。'}},
+{t:'l',c:'艾太太',s:'我要把這些醃起來，小莉她說，她最討厭吃這個。（小雞叫聲，沉默）'},
+{t:'l',c:'陳太太',s:'秀英，有件事情，我一定要跟你講，不然我快憋死了！',note:{label:'老師筆記',text:'第一階段的<strong>亮相很重要</strong>：先看著對方、手放下之後，才開口講這句話，不要邊做動作邊講。'}},
+{t:'l',c:'艾太太',s:'什麼事啦？'},
+{t:'l',c:'陳太太',s:'欸，多給我一點！上個禮拜，是不是有個從台北來的舊貨商來找妳？'},
+{t:'l',c:'艾太太',s:'沒有啊！'},
+{t:'l',c:'陳太太',s:'他來找我，我以為他來看病的，他站在門口，東張西望，秀英，你知道嗎？他出多少錢，買我家裏那個五斗櫃？不知道……六千四百塊耶！',note:{label:'老師筆記',text:'陳太太不是貪財的人，她只是有個想出去看世界的夢想。講到「六千四百塊」時，重點是<strong>驚訝有這個價值</strong>、想到能滿足少女時期的心願，不是很想要錢就賣掉的感覺。說「六千四百塊」時<strong>手勢比「四」</strong>。'}},
+{t:'l',c:'艾太太',s:'這麼多啊！？'},
+{t:'l',c:'陳太太',s:'真的，那個櫃子，我都不知道要把它擱在那裏，差點還把他送給劉太太耶！',note:{label:'老師筆記',text:'講到「真的」時，比「四」的手<strong>收回左側</strong>，增加舞台效果。'}},
+{t:'l',c:'艾太太',s:'那你賣他了？'},
+{t:'l',c:'陳太太',s:'我不知道。'},
+{t:'l',c:'艾太太',s:'你不知道？欸！六千多塊耶的事情耶，你是在想什麼？'},
+{t:'l',c:'陳太太',s:'如果我有辦法拿這個錢，讓我先生好好出去的玩一玩，我就會賣，秀英，你知道嗎？在我還是小女孩的時候，我就有一個心願，坐船到很遠很遠的地方，哪裡都好。日本什麼的……'},
+{t:'l',c:'艾太太',s:'陳醫生怎麼說？'},
+{t:'l',c:'陳太太',s:'你知道他最懶了，他說，老太婆，哪裡都別去了吧，去了國外，只會讓你覺得我們淡水很不好，還是規規矩矩的吧！',note:{label:'老師筆記',text:'這段是陳太太模仿她先生（陳醫師），可以拿扇子當道具演繹。語調比較大聲、誇張、大剌剌，也比較低沉、有男人味。演繹的時候<strong>面向觀眾</strong>，不用再看向對方。'}},
+{t:'l',c:'艾太太',s:'我跟你講，你只要一直跟他講，說你想要去就可以啦！'},
+{t:'l',c:'陳太太',s:'我不知道耶，我總覺得，人活著的時候，至少有一次，去一個不講國語，不聽國語，甚至，可以不用國語來想事情的地方，有那麼一次，一次就夠了！',note:{label:'老師筆記',text:'這段最重要。「不講國語」「不聽國語」「甚至可以不用國語」每一層都要先<strong>吸一口氣</strong>，情緒一層一層堆疊、越來越高，表現出越來越嚮往、期待的感覺。到「一次就夠了」時，整個人要像<strong>洩氣的皮球一樣縮起來</strong>，帶著很嚮往的口氣說出這句話，不是洩氣的語氣。'}},
+{t:'l',c:'艾太太',s:'啊妳講台語就好啦！'},
+{t:'l',c:'陳太太',s:'哎唷，那不一樣的啦！',note:{label:'老師筆記',text:'Ending：先面向觀眾，保持非常期待的笑容，接著<strong>瞬間變臉</strong>——整張臉先垮下來，再轉頭看向艾太太，然後才開口說這句話。'}}
+]},
+{id:'kaicuomen',title:'開錯門中門',week:'Week 5起 · 8/29～',subtitle:'大綱＋對戲練習',track:'advanced',stages:true,
+synopsis:['《開錯門中門》是一個發生在五星級飯店套房的故事，一名來自未來2027年的應召女郎波波在極度恐慌的狀態下躲進兩個房間之間的分隔門（Communication Door），啟動了穿越時空的機制。她來到2007年遇到瑞蓮──富商魏德的第二任老婆，波波把她意外從魏德那裡得知的所有秘辛告訴瑞蓮，並預示瑞蓮在不久之後就要被魏德的合夥人郝安推下樓身亡的事。得知自己將要死亡的瑞蓮雖然因此心慌，但她沒有馬上逃跑，反而更主動地介入試圖扭轉命運，她利用波波穿越時空的同一個方法來到1987年，先是千方百計地拯救富商的第一任老婆小潔，然後回到2007年，在故事結束之前，瑞蓮積極的人生態度，更是拯救了那名來自未來的少女波波的人生。','《開錯門中門》以天馬行空的想像力，讓六位主角在不同的時空裡相遇，隨即開展一個處處驚險卻又「絕處逢生」的劇情。這齣戲第一版的演出，是在 1996 年，很快的，十年過去了，而這齣戲卻一點不顯過時，劇中人物、情節現在看來依然生鮮熱辣。相信，即便再過十年，這個作品依然有它超越時空的永恆價值。'],
+video:{label:'老師示範影片',items:[{note:'第一階段（3:45–6:13）',embedUrl:'https://www.youtube.com/embed/dcVvTt8Exuo?start=225&end=373'},{note:'第二階段（6:13 之後）',embedUrl:'https://www.youtube.com/embed/dcVvTt8Exuo?start=373'}]},
+chars:[{name:'瑞蓮',role:'魏德第二任妻子'},{name:'波波',role:'2027年應召女郎'}],
+data:[
+{t:'l',c:'瑞蓮',s:'我想，發生的事情都可以用邏輯來解釋。',stage:1},
+{t:'l',c:'波波',s:'（懷疑地）什麼啊',stage:1},
+{t:'l',c:'瑞蓮',s:'即使，這些事是完全不合邏輯的。',stage:1},
+{t:'l',c:'波波',s:'我已經被搞迷糊了。（舉起酒杯）乾杯吧！',stage:1},
+{t:'l',c:'瑞蓮',s:'好好好，乾杯（她們喝酒，瑞蓮開始轉入正題）首先我要告訴你的是，我到過隔壁房間了。',stage:1},
+{t:'l',c:'波波',s:'他在那裡嗎？你看到他了嗎？',stage:1},
+{t:'l',c:'瑞蓮',s:'郝安？不，我沒看到他，我倒是看到我先生。',stage:1},
+{t:'l',c:'波波',s:'他還好吧？他身體怎麼樣？',stage:1},
+{t:'l',c:'瑞蓮',s:'很好，事實上是太好了，簡直是黃金年代。',stage:1},
+{t:'l',c:'波波',s:'那他一定是請了很高明的大夫，我剛剛看到他的時候，他已經快死了。',stage:1},
+{t:'l',c:'瑞蓮',s:'佩佩，你告訴我一件事，你說他幾歲？',stage:1},
+{t:'l',c:'波波',s:'70？75 吧？',stage:1},
+{t:'l',c:'瑞蓮',s:'有沒有可能更年輕一點？',stage:1},
+{t:'l',c:'波波',s:'我不這麼覺得。',stage:1},
+{t:'l',c:'瑞蓮',s:'他有沒有可能二十出頭？',stage:1},
+{t:'l',c:'波波',s:'二十出頭？除非他的童年被虐待的很慘！……這是怎麼回事啊？',stage:1},
+{t:'l',c:'瑞蓮',s:'我想我看到的魏德……不是你看到的那個魏德。',stage:1},
+{t:'l',c:'波波',s:'不一樣？',stage:1},
+{t:'l',c:'瑞蓮',s:'不一樣，也不是我認識的那個魏德。',stage:1},
+{t:'l',c:'波波',s:'（指著瑞蓮的杯子）你喝了不少，對吧？',stage:1},
+{t:'l',c:'瑞蓮',s:'你還要嗎？',stage:1},
+{t:'l',c:'波波',s:'不要了！我想我們兩個人起碼要有一個人保持清醒。',stage:1},
+{t:'l',c:'瑞蓮',s:'佩佩啊！你記不記得今天的日期嗎？',stage:1},
+{t:'l',c:'波波',s:'（努力回想）7 月 13 日星期二。',stage:1},
+{t:'l',c:'瑞蓮',s:'星期二？',stage:1},
+{t:'l',c:'波波',s:'對呀。',stage:1},
+{t:'l',c:'瑞蓮',s:'哪一年？（小心翼翼）',stage:1},
+{t:'l',c:'波波',s:'2027 年啊！',stage:1},
+{t:'l',c:'瑞蓮',s:'（反抽一口氣）2027？',stage:2},
+{t:'l',c:'波波',s:'你怎麼了？你看起來很驚訝耶！',stage:2},
+{t:'l',c:'瑞蓮',s:'（她起來走進臥室）2027 年，你等一下，等等。',stage:2},
+{t:'l',c:'波波',s:'（自言自語）這是怎麼回事啊？我都被搞迷糊了！（瑞蓮帶著晚報回來，她把它丟給波波）',stage:2},
+{t:'l',c:'瑞蓮',s:'你看看。你看看。',stage:2},
+{t:'l',c:'波波',s:'這真是一個好主意，有人想殺我，另外一個快死掉，還有人偷走我住的地方好讓我坐在這裡看報紙？',stage:2},
+{t:'l',c:'瑞蓮',s:'你不要看，你只要看日期。日期，你看！',stage:2},
+{t:'l',c:'瑞蓮',s:'2007 年，對嗎？',stage:2},
+{t:'l',c:'波波',s:'對呀，2007？我還只是個小嬰兒……（很誠實）其實那一年我已經五歲了，不要告訴別人哦，我看過這種廣告的嘛，你可以要他們印出你出生那天的報紙，對不對？（波波對這份報紙起了興趣，她開始瀏覽服裝版，然後大笑了起來）你看這個！？他們以前就是這麼穿的，好土喔，還威尼斯咧，五年前就沉掉了。',stage:2},
+{t:'l',c:'瑞蓮',s:'那不是重點……天啊！威尼斯真的會沉掉？',stage:2},
+{t:'l',c:'波波',s:'拜託！你不知道嗎？這麼大的事情，妳怎麼會不記得？',stage:2},
+{t:'l',c:'瑞蓮',s:'什麼我不記得，我根本就不知道，這就是重點啊！',stage:2},
+{t:'l',c:'瑞蓮',s:'（很大聲）佩佩，這是今天的報紙。',stage:2},
+{t:'l',c:'波波',s:'什麼？',stage:2},
+{t:'l',c:'瑞蓮',s:'這是今天的報紙，這是今天的新聞，今天的日期在這裡：2007 年 7 月 13 日星期五。這就是我現在所處的時代，我是魏德的第二任妻子，根據你的說法，我已經被謀殺了……。更奇怪的是，十分鐘前，我才看過小潔，可是根據你的說法，她也是被謀殺的。',stage:2},
+{t:'l',c:'波波',s:'（看了她一秒鐘）你已經死了？',stage:2},
+{t:'l',c:'瑞蓮',s:'應該算是吧。',stage:2},
+{t:'l',c:'波波',s:'（放下她的杯子）我要走了。',stage:2},
+{t:'l',c:'瑞蓮',s:'等等。',stage:2},
+{t:'l',c:'波波',s:'不要，事情越來越詭異……',stage:2},
+{t:'l',c:'瑞蓮',s:'佩佩，難道你還你不明白嗎？這一切都跟時間有關的。',stage:2},
+{t:'l',c:'波波',s:'時間？對對對，該是我回家的時間了。',stage:2},
+{t:'l',c:'瑞蓮',s:'佩佩，你不能回家！難道你看不出來嗎這個──他們叫這什麼來著？對對對──時光倒流。我們來自不同的時代，你是 2027 年，我是 2007 年，至於小潔──她在度蜜月──那是幾年呢？對對對，1987 年？是的，這樣算起來，我們各自相隔 20 年，穿越時光，我們被聯結在一起，你，我和她。',stage:2},
+{t:'l',c:'波波',s:'（楞住）你，我和她？',stage:2},
+{t:'l',c:'瑞蓮',s:'對！',stage:2},
+{t:'l',c:'波波',s:'我們為什麼要被連結在一起啊，是什麼東西把我們連結在一起？',stage:2},
+{t:'l',c:'瑞蓮',s:'我不知道，我不知道，也許是……也許是……也許是……郝安？',stage:2},
+{t:'l',c:'波波',s:'郝安？',stage:2},
+{t:'l',c:'瑞蓮',s:'也許他殺了我們三個。',stage:2},
+{t:'s',s:'一陣沉默，波波突然尖叫了起來，瑞蓮突然拿起報紙捲起把波波的頭，波波終於安靜。',stage:2},
+{t:'l',c:'波波',s:'（平靜下來）我很抱歉。',stage:2},
+{t:'l',c:'瑞蓮',s:'這樣子好多了。',stage:2}
 ]}
 ];
 
-var currentScriptId=SCRIPTS[0].id;
-try{var last=localStorage.getItem('last-script');if(last&&SCRIPTS.find(function(s){return s.id===last;}))currentScriptId=last;}catch(e){}
-var darkOn=false,hlChars=new Set(),currentMode='read',cueChar='off',rehearseChar='off',fs=21,allNotesExpanded=false;
+var currentScriptId='kaicuomen'; // 暫時固定停在《開錯門中門》（進階班現正訓練此劇本），之後請 Claude 改回依 last-script 記憶
+var darkOn=false,hlChars=new Set(),currentMode='read',cueChar='off',rehearseChar='off',fs=21,allNotesExpanded=false,currentStage='all';
 try{var savedFs=localStorage.getItem('fs');if(savedFs)fs=parseInt(savedFs);}catch(e){}
 
 var OPENING_QUOTES=['表演是一種在舞台上或透過鏡頭傳達自然又具有創造力的生活','其目的讓是要觀眾感受到真實的感動','隨時觀察週遭的人、事、物，豐富記憶盒','鍛鍊開發聲音、肢體的可能性','認真的態度、專注力和想像力、創造力','每一次有觀眾的表演，累積經驗','客觀的檢查每一次的表演','內在情緒藉著聲音清楚傳達','節奏速度幫助情緒的變化，增加表演樣貌','真正的聆聽，真實的思考，感覺演員之間的互動','如何在沒有劇本、沒有預設情緒的狀況之下，去尋找最直接最自然的反應','讓身體接收多種不同的練習，豐富肢體語言','清楚說話：咬字、嘴型，讓詞意徹底表達','擴大聲音表情，增加角色趣味性'];
@@ -675,20 +784,24 @@ function showInterfaceTips(){
 
 function initSelect(){
   var sel = document.getElementById('scriptSelect');
-  var html = '';
+  var groups = {master:{label:'專業班',html:''},advanced:{label:'進階班',html:''}};
   for (var i = 0; i < SCRIPTS.length; i++) {
     var sc = SCRIPTS[i];
     var raw = sc.week || '';
-    var m = raw.match(/Week\s*(\d+)/i);
+    var m = raw.match(/Week\s*([\d\-]+)/i);
     var wNum = m ? ('W' + m[1]) : ('W' + (i + 1));
     var isSel = (sc.id === currentScriptId) ? ' selected' : '';
-    html += '<option value="' + sc.id + '"' + isSel + '>' + wNum + ' ' + sc.title + '</option>';
+    var trk = sc.track === 'advanced' ? 'advanced' : 'master';
+    groups[trk].html += '<option value="' + sc.id + '"' + isSel + '>' + wNum + ' ' + sc.title + '</option>';
   }
+  var html = '';
+  if (groups.master.html) html += '<optgroup label="' + groups.master.label + '">' + groups.master.html + '</optgroup>';
+  if (groups.advanced.html) html += '<optgroup label="' + groups.advanced.label + '">' + groups.advanced.html + '</optgroup>';
   sel.innerHTML = html;
 }
 function showSwitchToast(text){var toast=document.getElementById('switchToast');if(!toast){toast=document.createElement('div');toast.id='switchToast';toast.className='switch-toast';document.body.appendChild(toast);}toast.textContent=text;toast.classList.add('show');clearTimeout(toast._timer);toast._timer=setTimeout(function(){toast.classList.remove('show');},1600);}
 
-function switchScript(id){saveScroll();saveHlState();var sc=SCRIPTS.find(function(s){return s.id===id;});if(!sc){console.warn('找不到劇本 id:',id);var wrap=document.getElementById('script');var mh=document.querySelector('.masthead');if(wrap){wrap.style.opacity='1';wrap.className='script-body';wrap.innerHTML='<div style="font-family:sans-serif;color:var(--ink-3);padding:2rem 0;">找不到這份劇本，請重新選擇。</div>';}if(mh)mh.style.opacity='1';return;}currentScriptId=id;try{localStorage.setItem('last-script',id);}catch(e){}hlChars.clear();cueChar='off';rehearseChar='off';allNotesExpanded=false;currentMode='read';document.body.classList.remove('masthead-collapsed','cue-mode','focus-mode','hide-action','cue-active','rehearse-active','rehearse-focus','lecture-mode','hide-notes');document.querySelectorAll('.dline').forEach(function(l){l.classList.remove('focus-target','rehearse-target','hl-on','cue-revealed');});var mt=document.getElementById('mastheadToggle');if(mt){mt.textContent='收合 ▴';mt.style.display='';}var nb=document.getElementById('noteBtn');if(nb)nb.classList.remove('on');var eb=document.getElementById('expandNotesBtn');if(eb)eb.classList.remove('on');var cs=document.getElementById('cueSelect');if(cs){cs.value='off';cs.classList.remove('active-cue');}var rs=document.getElementById('rehearseSelect');if(rs)rs.value='off';var wrap=document.getElementById('script');var masthead=document.querySelector('.masthead');if(wrap){wrap.style.transition='opacity 0.15s';wrap.style.opacity='0';}if(masthead){masthead.style.transition='opacity 0.15s';masthead.style.opacity='0';}setTimeout(function(){buildScript(sc);
+function switchScript(id){saveScroll();saveHlState();var sc=SCRIPTS.find(function(s){return s.id===id;});if(!sc){console.warn('找不到劇本 id:',id);var wrap=document.getElementById('script');var mh=document.querySelector('.masthead');if(wrap){wrap.style.opacity='1';wrap.className='script-body';wrap.innerHTML='<div style="font-family:sans-serif;color:var(--ink-3);padding:2rem 0;">找不到這份劇本，請重新選擇。</div>';}if(mh)mh.style.opacity='1';return;}currentScriptId=id;try{localStorage.setItem('last-script',id);}catch(e){}hlChars.clear();cueChar='off';rehearseChar='off';allNotesExpanded=false;currentMode='read';currentStage='all';document.body.classList.remove('masthead-collapsed','cue-mode','focus-mode','hide-action','cue-active','rehearse-active','rehearse-focus','lecture-mode','hide-notes');document.querySelectorAll('.dline').forEach(function(l){l.classList.remove('focus-target','rehearse-target','hl-on','cue-revealed');});document.querySelectorAll('.stage-hidden').forEach(function(l){l.classList.remove('stage-hidden');});var mt=document.getElementById('mastheadToggle');if(mt){mt.textContent='收合 ▴';mt.style.display='';}var nb=document.getElementById('noteBtn');if(nb)nb.classList.remove('on');var eb=document.getElementById('expandNotesBtn');if(eb)eb.classList.remove('on');var cs=document.getElementById('cueSelect');if(cs){cs.value='off';cs.classList.remove('active-cue');}var rs=document.getElementById('rehearseSelect');if(rs)rs.value='off';var wrap=document.getElementById('script');var masthead=document.querySelector('.masthead');if(wrap){wrap.style.transition='opacity 0.15s';wrap.style.opacity='0';}if(masthead){masthead.style.transition='opacity 0.15s';masthead.style.opacity='0';}setTimeout(function(){buildScript(sc);
 (function(){
   var paper=document.getElementById('paper');
   if(!paper)return;
@@ -699,10 +812,10 @@ function switchScript(id){saveScroll();saveHlState();var sc=SCRIPTS.find(functio
 })();buildSettings(sc);restoreHlState(id);restoreScroll(id);updateFooter();showSwitchToast('已切換至 '+sc.title);if(wrap)wrap.style.opacity='1';if(masthead)masthead.style.opacity='1';},150);}
 
 function charIdx(sc,name){for(var i=0;i<sc.chars.length;i++){if(sc.chars[i].name===name)return i;}return 0;}
-function buildScript(sc){if(!sc){console.warn('buildScript: sc is undefined');return;}var wrap=document.getElementById('script');var mhead=document.querySelector('.masthead');requestAnimationFrame(function(){if(wrap){wrap.style.opacity='1';wrap.style.transition='opacity 0.2s';}if(mhead){mhead.style.opacity='1';mhead.style.transition='opacity 0.2s';}});document.getElementById('mainTitle').textContent=sc.title;if(typeof startCountdown==='function')startCountdown();document.getElementById('pageNum').textContent=sc.week;var eyebrow=document.getElementById('eyebrow');var datePart=sc.week?(sc.week.split('·')[1]||'').trim():'';eyebrow.textContent='';var sel=document.getElementById('scriptSelect');if(sel)sel.value=sc.id;document.body.classList.toggle('lecture-mode',sc.type==='lecture');var cb=document.getElementById('castBlock');var helper=document.getElementById('mastheadHelper');if(sc.type==='lecture'||!sc.chars||sc.chars.length===0){cb.innerHTML=sc.author?'<div class="lec-author">撰寫人：'+sc.author+'</div>':'';var mt=document.getElementById('mastheadToggle');if(mt)mt.style.display='none';if(helper)helper.style.display='none';}else{var mt=document.getElementById('mastheadToggle');if(mt)mt.style.display='';if(helper)helper.style.display='';cb.innerHTML=sc.chars.map(function(ch,i){var barVar=i===0?'var(--hl-j-bar)':i===1?'var(--hl-y-bar)':'var(--hl-m-bar)';return'<div class="cast-item"><span class="cast-role">'+ch.role+'</span><span class="cast-name">'+ch.name+'<span class="csw" id="csw-'+ch.name+'" style="background:'+barVar+'"></span></span><div class="cast-quickstart"><button class="qs-btn" id="qs-rehearse-'+ch.name+'" onclick="quickRehearse(\''+ch.name+'\')">排練</button><button class="qs-btn" id="qs-cue-'+ch.name+'" onclick="quickCue(\''+ch.name+'\')">背詞</button></div></div>';}).join('');try{if(!localStorage.getItem('qs-v2')){setTimeout(function(){document.querySelectorAll('.qs-btn').forEach(function(b){b.classList.add('pulse');});setTimeout(function(){document.querySelectorAll('.qs-btn').forEach(function(b){b.classList.remove('pulse');});},2500);localStorage.setItem('qs-v2','1');},800);}}catch(e){}}var scriptWrap=document.getElementById('script');scriptWrap.innerHTML='';if(sc.type==='lecture'){scriptWrap.className='lecture-body';sc.sections.forEach(function(sec,i){var div=document.createElement('div');div.className='lec-section';div.style.animationDelay=i*30+'ms';var html='';if(sec.h1)html+='<div class="lec-h1">'+sec.h1+'</div>';if(sec.h2)html+='<div class="lec-h2">'+sec.h2+'</div>';if(sec.p)html+=sec.p.map(function(t){return'<div class="lec-p">'+t+'</div>';}).join('');if(sec.items)html+=sec.items.map(function(it){return'<div class="lec-item"><span class="lec-key">'+it.k+'</span><span class="lec-val">'+it.v+'</span></div>';}).join('');div.innerHTML=html;scriptWrap.appendChild(div);});var endEl=document.createElement('div');endEl.className='script-end';endEl.innerHTML='<span class="script-end-text">講義結束</span>';scriptWrap.appendChild(endEl);return;}scriptWrap.className='script-body';var n=0,prevChar=null;sc.data.forEach(function(d,i){if(d.t==='s'){var el=document.createElement('div');el.className='sline';el.style.animationDelay=i*8+'ms';el.innerHTML='<span class="stxt">'+d.s+'</span>';scriptWrap.appendChild(el);}else{n++;var wrapper=document.createElement('div');var el=document.createElement('div');el.className='dline';if(prevChar!==null&&d.c!==prevChar)el.classList.add('role-change');if(d.s&&d.s.length>80)el.classList.add('long-line');prevChar=d.c;el.dataset.c=d.c;el.dataset.idx=i;el.style.animationDelay=i*8+'ms';el.addEventListener('click',function(){if(currentMode==='cue'&&el.classList.contains('focus-target')){el.classList.add('cue-revealed');if(navigator.vibrate)navigator.vibrate(12);clearTimeout(el._cueTimer);el._cueTimer=setTimeout(function(){el.classList.remove('cue-revealed');},2000);}});var noteId='note-'+i;var rawTxt=d.s.replace(/（([^）]+)）/g,'<span class="acting-hint">（$1）</span>');el.innerHTML='<div class="dline-main"><span class="lnum">'+String(n).padStart(2,'0')+'</span><span class="spkr spkr-'+charIdx(sc,d.c)+'">'+d.c+'</span><span class="colon">：</span><span class="dtxt">'+rawTxt+'</span></div>'+(d.note?'<span class="note-dot" data-note-id="'+noteId+'"></span>':'');wrapper.appendChild(el);if(d.note){var dot=el.querySelector('.note-dot');if(dot){dot.addEventListener('click',function(e){e.stopPropagation();toggleNote(noteId);});}var nw=document.createElement('div');nw.className='note-wrap';nw.style.animationDelay=i*8+'ms';nw.innerHTML='<div class="note-card"><button class="note-toggle" onclick="toggleNote(\''+noteId+'\')" id="ntbtn-'+noteId+'"><span class="nt-arrow">▶</span> '+d.note.label+'</button><div class="note-body" id="'+noteId+'"><div class="note-text" style="margin-top:0.4rem">'+d.note.text+'</div></div></div>';wrapper.appendChild(nw);}scriptWrap.appendChild(wrapper);}});var endEl=document.createElement('div');endEl.className='script-end';endEl.innerHTML='<span class="fp-quote" id="fpEndBtn" onclick="neonEnd(this)">'+getFpQuote()+'</span><div class="script-end-rule"></div>';scriptWrap.appendChild(endEl);var _fq=scriptWrap.querySelector('#fpEndBtn');if(_fq){var _cjk=/[一-鿿]/.test(_fq.textContent);_fq.style.fontSize='0.56rem';_fq.style.fontWeight='300';_fq.style.letterSpacing=_cjk?'0.14em':'0.1em';_fq.style.opacity='0.45';_fq.style.fontStyle=_cjk?'normal':'italic';}
+function buildScript(sc){if(!sc){console.warn('buildScript: sc is undefined');return;}var wrap=document.getElementById('script');var mhead=document.querySelector('.masthead');requestAnimationFrame(function(){if(wrap){wrap.style.opacity='1';wrap.style.transition='opacity 0.2s';}if(mhead){mhead.style.opacity='1';mhead.style.transition='opacity 0.2s';}});document.getElementById('mainTitle').textContent=sc.title;if(typeof startCountdown==='function')startCountdown();document.getElementById('pageNum').textContent=sc.week;var eyebrow=document.getElementById('eyebrow');var datePart=sc.week?(sc.week.split('·')[1]||'').trim():'';eyebrow.textContent=sc.track==='advanced'?'陳幼芳進階表演班 · Script Reading Copy':'果陀劇場大師學堂 · Script Reading Copy';var sel=document.getElementById('scriptSelect');if(sel)sel.value=sc.id;document.body.classList.toggle('lecture-mode',sc.type==='lecture');var cb=document.getElementById('castBlock');var helper=document.getElementById('mastheadHelper');if(sc.type==='lecture'||!sc.chars||sc.chars.length===0){cb.innerHTML=sc.author?'<div class="lec-author">撰寫人：'+sc.author+'</div>':'';var mt=document.getElementById('mastheadToggle');if(mt)mt.style.display='none';if(helper)helper.style.display='none';}else{var mt=document.getElementById('mastheadToggle');if(mt)mt.style.display='';if(helper)helper.style.display='';cb.innerHTML=sc.chars.map(function(ch,i){var barVar=i===0?'var(--hl-j-bar)':i===1?'var(--hl-y-bar)':'var(--hl-m-bar)';return'<div class="cast-item"><span class="cast-role">'+ch.role+'</span><span class="cast-name">'+ch.name+'<span class="csw" id="csw-'+ch.name+'" style="background:'+barVar+'"></span></span><div class="cast-quickstart"><button class="qs-btn" id="qs-rehearse-'+ch.name+'" onclick="quickRehearse(\''+ch.name+'\')">排練</button><button class="qs-btn" id="qs-cue-'+ch.name+'" onclick="quickCue(\''+ch.name+'\')">背詞</button></div></div>';}).join('');try{if(!localStorage.getItem('qs-v2')){setTimeout(function(){document.querySelectorAll('.qs-btn').forEach(function(b){b.classList.add('pulse');});setTimeout(function(){document.querySelectorAll('.qs-btn').forEach(function(b){b.classList.remove('pulse');});},2500);localStorage.setItem('qs-v2','1');},800);}}catch(e){}}var scriptWrap=document.getElementById('script');scriptWrap.innerHTML='';if(sc.type==='lecture'){scriptWrap.className='lecture-body';sc.sections.forEach(function(sec,i){var div=document.createElement('div');div.className='lec-section';div.style.animationDelay=i*30+'ms';var html='';if(sec.h1)html+='<div class="lec-h1">'+sec.h1+'</div>';if(sec.h2)html+='<div class="lec-h2">'+sec.h2+'</div>';if(sec.p)html+=sec.p.map(function(t){return'<div class="lec-p">'+t+'</div>';}).join('');if(sec.items)html+=sec.items.map(function(it){return'<div class="lec-item"><span class="lec-key">'+it.k+'</span><span class="lec-val">'+it.v+'</span></div>';}).join('');div.innerHTML=html;scriptWrap.appendChild(div);});var endEl=document.createElement('div');endEl.className='script-end';endEl.innerHTML='<span class="script-end-text">講義結束</span>';scriptWrap.appendChild(endEl);return;}scriptWrap.className='script-body';if(sc.synopsis&&sc.synopsis.length){var synBox=document.createElement('div');synBox.className='synopsis-box';synBox.innerHTML='<button class="synopsis-toggle" id="synToggle" onclick="toggleSynopsis()"><span class="syn-arrow">▶</span> 故事大綱</button><div class="synopsis-body" id="synBody">'+sc.synopsis.map(function(p){return'<div class="synopsis-p">'+p+'</div>';}).join('')+'</div>';scriptWrap.appendChild(synBox);}if(sc.video&&sc.video.items&&sc.video.items.length){var vidBox=document.createElement('div');vidBox.className='video-box';var vidItemsHtml=sc.video.items.map(function(v){return'<div class="video-item"><div class="video-item-label">'+v.note+'</div><div class="video-frame-wrap"><iframe src="'+v.embedUrl+'" title="示範影片" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div></div>';}).join('');vidBox.innerHTML='<button class="video-toggle" id="vidToggle" onclick="toggleVideo()"><span class="syn-arrow">▶</span> '+(sc.video.label||'示範影片')+'</button><div class="video-body" id="vidBody">'+vidItemsHtml+'<div class="video-note">若影片無法播放，可能是老師的 YouTube 分享設定不允許嵌入，屆時可改用連結開啟。</div></div>';scriptWrap.appendChild(vidBox);}var n=0,prevChar=null;sc.data.forEach(function(d,i){if(d.t==='s'){var el=document.createElement('div');el.className='sline';el.dataset.stageLine=d.stage||'';el.style.animationDelay=i*8+'ms';el.innerHTML='<span class="stxt">'+d.s+'</span>';scriptWrap.appendChild(el);}else{n++;var wrapper=document.createElement('div');var el=document.createElement('div');el.className='dline';if(prevChar!==null&&d.c!==prevChar)el.classList.add('role-change');if(d.s&&d.s.length>80)el.classList.add('long-line');prevChar=d.c;el.dataset.c=d.c;el.dataset.idx=i;el.dataset.stageLine=d.stage||'';el.style.animationDelay=i*8+'ms';el.addEventListener('click',function(){if(currentMode==='cue'&&el.classList.contains('focus-target')){el.classList.add('cue-revealed');if(navigator.vibrate)navigator.vibrate(12);clearTimeout(el._cueTimer);el._cueTimer=setTimeout(function(){el.classList.remove('cue-revealed');},2000);}});var noteId='note-'+i;var rawTxt=d.s.replace(/（([^）]+)）/g,'<span class="acting-hint">（$1）</span>');el.innerHTML='<div class="dline-main"><span class="lnum">'+String(n).padStart(2,'0')+'</span><span class="spkr spkr-'+charIdx(sc,d.c)+'">'+d.c+'</span><span class="colon">：</span><span class="dtxt">'+rawTxt+'</span></div>'+(d.note?'<span class="note-dot" data-note-id="'+noteId+'"></span>':'');wrapper.appendChild(el);if(d.note){var dot=el.querySelector('.note-dot');if(dot){dot.addEventListener('click',function(e){e.stopPropagation();toggleNote(noteId);});}var nw=document.createElement('div');nw.className='note-wrap';nw.style.animationDelay=i*8+'ms';nw.innerHTML='<div class="note-card"><button class="note-toggle" onclick="toggleNote(\''+noteId+'\')" id="ntbtn-'+noteId+'"><span class="nt-arrow">▶</span> '+d.note.label+'</button><div class="note-body" id="'+noteId+'"><div class="note-text" style="margin-top:0.4rem">'+d.note.text+'</div></div></div>';wrapper.appendChild(nw);}scriptWrap.appendChild(wrapper);}});var endEl=document.createElement('div');endEl.className='script-end';endEl.innerHTML='<span class="fp-quote" id="fpEndBtn" onclick="neonEnd(this)">'+getFpQuote()+'</span><div class="script-end-rule"></div>';scriptWrap.appendChild(endEl);var _fq=scriptWrap.querySelector('#fpEndBtn');if(_fq){var _cjk=/[一-鿿]/.test(_fq.textContent);_fq.style.fontSize='0.56rem';_fq.style.fontWeight='300';_fq.style.letterSpacing=_cjk?'0.14em':'0.1em';_fq.style.opacity='0.45';_fq.style.fontStyle=_cjk?'normal':'italic';}
 }
 
-function buildSettings(sc){if(!sc)return;var isScript=sc.type!=='lecture'&&sc.chars&&sc.chars.length>0;var chars=isScript?sc.chars:[];var rsel=document.getElementById('rehearseSelect');rsel.innerHTML='<option value="off">選擇角色</option>'+chars.map(function(ch){return'<option value="'+ch.name+'">'+ch.name+'</option>';}).join('');rsel.value='off';var csel=document.getElementById('cueSelect');csel.innerHTML='<option value="off">選擇角色</option>'+chars.map(function(ch){return'<option value="'+ch.name+'">'+ch.name+'</option>';}).join('');csel.value='off';csel.classList.remove('active-cue');var hlg=document.getElementById('hlBtnGroup');hlg.innerHTML=chars.length?chars.map(function(ch){return'<button class="pbtn" data-hl="'+ch.name+'" onclick="toggleHl(\''+ch.name+'\')">'+ch.name+'</button>';}).join(''):'<span style="font-size:0.58rem;color:var(--tb-text);letter-spacing:0.06em;">講義模式不適用</span>';rehearseChar='off';cueChar='off';setMode('read',true);updateCueSummary();}
+function buildSettings(sc){if(!sc)return;var isScript=sc.type!=='lecture'&&sc.chars&&sc.chars.length>0;var chars=isScript?sc.chars:[];var rsel=document.getElementById('rehearseSelect');rsel.innerHTML='<option value="off">選擇角色</option>'+chars.map(function(ch){return'<option value="'+ch.name+'">'+ch.name+'</option>';}).join('');rsel.value='off';var csel=document.getElementById('cueSelect');csel.innerHTML='<option value="off">選擇角色</option>'+chars.map(function(ch){return'<option value="'+ch.name+'">'+ch.name+'</option>';}).join('');csel.value='off';csel.classList.remove('active-cue');var hlg=document.getElementById('hlBtnGroup');hlg.innerHTML=chars.length?chars.map(function(ch){return'<button class="pbtn" data-hl="'+ch.name+'" onclick="toggleHl(\''+ch.name+'\')">'+ch.name+'</button>';}).join(''):'<span style="font-size:0.58rem;color:var(--tb-text);letter-spacing:0.06em;">講義模式不適用</span>';rehearseChar='off';cueChar='off';var stageRow=document.getElementById('stageRow');if(stageRow)stageRow.style.display=sc.stages?'':'none';currentStage='all';document.querySelectorAll('#stageBtnGroup .pbtn').forEach(function(b){b.classList.toggle('on',b.dataset.stage==='all');});setMode('read',true);updateCueSummary();}
 
 function setMode(mode,force){if(mode===currentMode&&!force)return;currentMode=mode;document.body.classList.remove('cue-mode','focus-mode','hide-action','cue-active','rehearse-active','rehearse-focus');document.querySelectorAll('.dline').forEach(function(l){l.classList.remove('focus-target','rehearse-target','hl-on','cue-revealed');});document.querySelectorAll('.mode-btn').forEach(function(b){b.classList.toggle('on',b.dataset.mode===mode);});document.body.classList.toggle('cue-active',mode==='cue');document.body.classList.toggle('rehearse-active',mode==='rehearse');document.body.classList.toggle('read-mode',mode==='read');var notes={read:'全部顯示',rehearse:'聚焦角色，隱藏動作',cue:'遮住自己的台詞'};var mn=document.getElementById('modeNote');if(mn)mn.textContent=notes[mode]||'';if(mode==='read'){applyHlChars();}else if(mode==='rehearse'){document.body.classList.add('hide-action');applyHlChars();if(rehearseChar!=='off')applyRehearseChar(rehearseChar);}else if(mode==='cue'){document.body.classList.add('hide-action');applyHlChars();if(cueChar!=='off'){document.body.classList.add('focus-mode','cue-mode');document.querySelectorAll('.dline').forEach(function(l){l.classList.toggle('focus-target',l.dataset.c===cueChar);});}}updateCueSummary();updateFooter();}
 
@@ -808,6 +921,9 @@ function updateFooter(){updateModeStatus();var pills=[];if(currentMode==='rehear
 function toggleMasthead(){var collapsed=document.body.classList.toggle('masthead-collapsed');var btn=document.getElementById('mastheadToggle');if(btn)btn.textContent=collapsed?'展開 ▾':'收合 ▴';}
 function toggleExpandAllNotes(){allNotesExpanded=!allNotesExpanded;document.getElementById('expandNotesBtn').classList.toggle('on',allNotesExpanded);document.querySelectorAll('.note-body').forEach(function(b){b.classList.toggle('open',allNotesExpanded);});document.querySelectorAll('.note-toggle').forEach(function(b){b.classList.toggle('open',allNotesExpanded);});}
 function toggleNote(id){var body=document.getElementById(id);var btn=document.getElementById('ntbtn-'+id);if(!body||!btn)return;var open=body.classList.toggle('open');btn.classList.toggle('open',open);}
+function toggleSynopsis(){var body=document.getElementById('synBody');var btn=document.getElementById('synToggle');if(!body||!btn)return;var open=body.classList.toggle('open');btn.classList.toggle('open',open);}
+function toggleVideo(){var body=document.getElementById('vidBody');var btn=document.getElementById('vidToggle');if(!body||!btn)return;var open=body.classList.toggle('open');btn.classList.toggle('open',open);}
+function setStageFilter(val){currentStage=val;document.querySelectorAll('#stageBtnGroup .pbtn').forEach(function(b){b.classList.toggle('on',b.dataset.stage===val);});document.querySelectorAll('[data-stage-line]').forEach(function(l){var st=l.dataset.stageLine;l.classList.toggle('stage-hidden',val!=='all'&&st!==val);});}
 function toggleNotesUI(){var on=document.body.classList.toggle('hide-notes');document.getElementById('noteBtn').classList.toggle('on',on);}
 function togglePanel(){var panel=document.getElementById('settingsPanel');var btn=document.getElementById('settingsToggle');var overlay=document.getElementById('settingsOverlay');var open=panel.classList.toggle('open');btn.classList.toggle('on',open);if(overlay)overlay.classList.toggle('open',open);document.body.classList.toggle('settings-open',open);}
 function changeFs(d){fs=Math.min(26,Math.max(12,fs+d*2));document.documentElement.style.setProperty('--fs',fs+'px');try{localStorage.setItem('fs',fs);}catch(e){}}
