@@ -17,7 +17,7 @@
 <meta name="theme-color" content="#1a1714" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&family=Special+Elite&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root{
 --desk:#1e1b17;--paper-bg:#f2ece0;--margin-rule:rgba(185,70,70,0.22);
@@ -57,6 +57,7 @@ pointer-events:auto;cursor:pointer;}
 .opening-main{position:relative;display:inline-block;max-width:480px;width:100%;}
 .opening-quote{font-family:'Noto Serif TC',serif;font-weight:300;font-size:clamp(1rem,4vw,1.4rem);color:rgba(240,234,220,0.9);line-height:2;letter-spacing:0.12em;text-align:center;opacity:0;animation:quote-in 1s ease 0.3s forwards;}
 .opening-author{font-family:'Noto Serif TC',serif;font-weight:400;font-size:clamp(0.7rem,2.5vw,0.85rem);color:rgba(240,234,220,0.45);letter-spacing:0.2em;text-align:right;display:block;margin-top:2rem;opacity:0;animation:quote-in 1s ease 0.9s forwards;}
+.opening-credit{font-family:'Noto Serif TC',serif;font-weight:400;font-size:clamp(0.62rem,2.2vw,0.75rem);color:rgba(240,234,220,0.32);letter-spacing:0.14em;text-align:right;display:block;margin-top:0.6rem;opacity:0;animation:quote-in 1s ease 1s forwards;}
 .opening-godot{position:fixed;bottom:3rem;left:0;right:0;font-family:'Noto Sans TC',sans-serif;font-weight:300;font-size:0.58rem;color:rgba(240,234,220,0.22);letter-spacing:0.35em;white-space:nowrap;opacity:0;animation:quote-in 1s ease 1.1s forwards;text-align:center;}@keyframes quote-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 .topbar{position:sticky;top:0;z-index:400;background:var(--tb-bg);padding:0 max(1rem,env(safe-area-inset-right)) 0 max(1rem,env(safe-area-inset-left));display:flex;align-items:center;height:44px;gap:0.3rem;isolation:isolate;transition:background 0.6s cubic-bezier(0.4,0,0.2,1);}
@@ -69,6 +70,8 @@ body.lecture-mode .topbar::after{background:transparent!important;}
 .mode-status .ms-text{display:inline-block;}
 .mode-status.ms-anim .ms-text{animation:ms-in 0.28s ease both;}
 .mode-status.ms-anim .ms-dot{animation:ms-dot-in 0.28s ease both;}
+@keyframes ms-in{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:translateY(0);}}
+@keyframes ms-dot-in{from{transform:scaleY(0.3);opacity:0.3;}to{transform:scaleY(1);opacity:1;}}
 body.read-mode .mode-status{display:none;}
 body.rehearse-active .mode-status{--ms-color:#6b6240;}
 body.cue-active .mode-status{--ms-color:#8a4a3c;}
@@ -255,9 +258,10 @@ body.dark .pullcord .bead{background:#ffd97a;box-shadow:0 0 8px 3px rgba(255,217
 body.dark .pullcord::before{content:'';position:absolute;top:0.3rem;left:50%;transform:translateX(-50%);width:2.4rem;height:2.4rem;border-radius:50%;background:radial-gradient(circle,rgba(255,217,122,0.35) 0%,rgba(255,217,122,0) 70%);pointer-events:none;}
 .back-top{position:fixed;right:1.1rem;bottom:4.5rem;width:2.4rem;height:2.4rem;border-radius:50%;background:var(--tb-bg);border:1px solid var(--ink-4);color:var(--ink-3);font-size:1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;pointer-events:none;transition:opacity 0.3s ease;z-index:400;box-shadow:0 2px 10px rgba(0,0,0,0.2);}
 .back-top.show{opacity:0.9;pointer-events:auto;}
-footer{position:fixed;bottom:0;left:0;right:0;background:var(--tb-bg);border-top:1px solid transparent;padding:0 max(1.2rem,env(safe-area-inset-right)) env(safe-area-inset-bottom) max(1.2rem,env(safe-area-inset-left));display:flex;align-items:center;height:calc(30px + env(safe-area-inset-bottom));overflow:hidden;z-index:300;transition:height 0.2s ease,border-color 0.2s,background 0.3s;}
+footer{position:fixed;bottom:0;left:0;right:0;background:var(--tb-bg);border-top:1px solid transparent;padding:0 max(1.2rem,env(safe-area-inset-right)) env(safe-area-inset-bottom) max(1.2rem,env(safe-area-inset-left));display:flex;align-items:center;justify-content:space-between;gap:0.8rem;height:calc(30px + env(safe-area-inset-bottom));overflow:hidden;z-index:300;transition:height 0.2s ease,border-color 0.2s,background 0.3s;}
 footer.has-mode{border-top-color:var(--tb-border);}
-footer:not(.has-mode){display:none;}
+#fmode-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:1;min-width:0;}
+.footer-credit{font-family:'Noto Sans TC',sans-serif;font-size:0.5rem;font-weight:300;color:rgba(255,255,255,0.22);letter-spacing:0.04em;white-space:nowrap;flex-shrink:0;}
 #cueRow,#rehearseRow{opacity:0.4;transition:opacity 0.2s;pointer-events:none;}
 body.cue-active #cueRow{opacity:1;pointer-events:auto;}
 body.rehearse-active #rehearseRow{opacity:1;pointer-events:auto;}
@@ -298,19 +302,6 @@ body{padding:0;}
 .topbar{margin:0;}
 .settings-panel{top:44px;}
 #onboardBtn{display:none;}
-.mode-status{display:inline-flex;align-items:center;gap:0.35rem;margin:0 auto 0 0.7rem;background:none;border:none;cursor:pointer;padding:0.2rem 0.1rem;font-family:'Noto Sans TC',sans-serif;font-size:0.6rem;font-weight:400;letter-spacing:0.12em;white-space:nowrap;color:var(--ms-color,#9a9080);transition:color 0.3s ease;}
-.mode-status .ms-dot{width:2px;height:0.8rem;border-radius:1px;background:currentColor;flex-shrink:0;transition:background 0.3s ease,transform 0.3s ease;}
-.mode-status .ms-text{display:inline-block;}
-.mode-status.ms-anim .ms-text{animation:ms-in 0.28s ease both;}
-.mode-status.ms-anim .ms-dot{animation:ms-dot-in 0.28s ease both;}
-@keyframes ms-in{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:translateY(0);}}
-@keyframes ms-dot-in{from{transform:scaleY(0.3);opacity:0.3;}to{transform:scaleY(1);opacity:1;}}
-body.read-mode .mode-status{display:none;}
-body.rehearse-active .mode-status{--ms-color:#6b6240;}
-body.cue-active .mode-status{--ms-color:#8a4a3c;}
-
-body.dark.rehearse-active .mode-status{--ms-color:#a89a68;}
-body.dark.cue-active .mode-status{--ms-color:#c87a68;}
 .script-select{max-width:calc(100vw - 110px);}
 .paper{margin:0;box-shadow:0 4px 20px rgba(0,0,0,0.4);border-radius:0;}
 .paper::before{display:none;}
@@ -324,15 +315,19 @@ footer{padding:0.5rem 0.8rem;}
 }
 
 .main-title-wrap{display:flex;align-items:flex-end;gap:1.2rem;flex-wrap:nowrap;margin-bottom:2rem;width:100%;}
-.countdown-box{display:none;flex-direction:column;align-items:center;gap:0.15rem;margin-left:auto;background:#1a1714;border-radius:6px;padding:0.4rem 0.7rem;min-width:4.5rem;transition:background 0.6s ease;}
+.countdown-box{display:none;align-items:baseline;gap:0.6rem;margin-left:auto;border-left:2px solid var(--ink-4);padding:0.1rem 0 0.1rem 0.85rem;transition:border-color 0.5s ease;}
 .countdown-box.show{display:flex;}
-.countdown-label{font-family:'Noto Sans TC',sans-serif;font-size:0.46rem;font-weight:300;letter-spacing:0.22em;color:#7a7060;white-space:nowrap;transition:color 0.6s ease;}
-.countdown-time{font-family:'Special Elite',monospace;font-size:1rem;letter-spacing:0.08em;color:#c8c0b0;transition:color 0.6s ease,font-size 0.3s ease;}
+.countdown-label{font-family:'Noto Sans TC',sans-serif;font-size:0.46rem;font-weight:400;letter-spacing:0.18em;color:var(--ink-3);white-space:nowrap;transition:color 0.5s ease;}
+.countdown-time{font-family:'Noto Serif TC',serif;font-weight:500;font-size:0.9rem;letter-spacing:0.05em;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;transition:color 0.5s ease,font-size 0.3s ease;}
 .countdown-sep{display:none;}
-.countdown-box.cd-blue{background:#1e3a4a!important;}
-.countdown-box.cd-red{background:#4a1a1a!important;}
-.countdown-box.cd-onair{background:#4a1a1a!important;}
-.countdown-box.cd-ended{background:#1e3a4a!important;}
+.countdown-box.cd-blue{border-color:rgba(74,110,150,0.5);}
+.countdown-box.cd-blue .countdown-time{color:#4a7aa8;}
+.countdown-box.cd-red{border-color:rgba(180,70,60,0.5);}
+.countdown-box.cd-red .countdown-time{color:#b4463c;}
+.countdown-box.cd-onair{border-color:rgba(180,70,60,0.6);}
+.countdown-box.cd-onair .countdown-time{color:#b4463c;}
+.countdown-box.cd-ended{border-color:var(--ink-4);}
+.countdown-box.cd-ended .countdown-time{color:var(--ink-3);}
 
 .footprint-mark{display:block;margin:0.3rem auto 0;background:none;border:none;cursor:pointer;font-size:0.9rem;color:#9a8f7e;opacity:0.9;letter-spacing:0;padding:0.3rem 0.6rem;transition:opacity 0.3s,transform 0.3s;line-height:1;}
 .footprint-mark:active{transform:scale(0.9);}
@@ -391,6 +386,7 @@ body.dark .footprint-mark{color:#8a8070;opacity:0.95;}
   <div class="opening-main">
     <div class="opening-quote" id="openingQuote"></div>
     <span class="opening-author">陳幼芳</span>
+    <span class="opening-credit">made by 小吳 stevenradio with 🥃</span>
   </div>
   <div class="opening-godot">果陀劇場大師學堂</div>
 </div>
@@ -489,6 +485,7 @@ body.dark .footprint-mark{color:#8a8070;opacity:0.95;}
 
 <footer>
   <span id="fmode-text" style="font-family:'Noto Sans TC',sans-serif;font-size:0.52rem;font-weight:300;color:rgba(255,255,255,0.5);letter-spacing:0.08em;"></span>
+  <span class="footer-credit">made by 小吳 stevenradio with 🥃</span>
 </footer>
 <script>
 var SCRIPTS=[
@@ -614,6 +611,7 @@ data:[
 {t:'l',c:'結人',s:'啊？'}
 ]},
 {id:'fengtan',title:'翻糖花園',week:'Week 10 · 6/13',subtitle:'表演練習',track:'master',
+countdown:{start:[2026,5,13,19,0,0],end:[2026,5,13,21,30,0],label:'錄影倒計時',onairLabel:'錄影中 · On Air',endedLabel:'錄影已結束'},
 chars:[{name:'希煥',role:'男主角'},{name:'美英',role:'閨蜜'}],
 data:[
 {t:'l',c:'希煥',s:'怎麼是你在做蛋糕？米恩呢？'},
@@ -650,6 +648,7 @@ data:[
 {t:'l',c:'陳太太',s:'哎唷，那不一樣的啦！',note:{label:'老師筆記',text:'Ending：先面向觀眾，保持非常期待的笑容，接著<strong>瞬間變臉</strong>——整張臉先垮下來，再轉頭看向艾太太，然後才開口說這句話。'}}
 ]},
 {id:'kaicuomen1',title:'開錯門中門（上）',week:'Week 5起 · 8/29～',subtitle:'大綱＋對戲練習・第一部分',track:'advanced',
+countdown:{start:[2026,7,29,19,0,0],end:[2026,7,29,21,30,0],label:'驗收倒計時',onairLabel:'驗收中 · On Air',endedLabel:'驗收已結束'},
 synopsis:['《開錯門中門》是一個發生在五星級飯店套房的故事，一名來自未來2027年的應召女郎波波在極度恐慌的狀態下躲進兩個房間之間的分隔門（Communication Door），啟動了穿越時空的機制。她來到2007年遇到瑞蓮──富商魏德的第二任老婆，波波把她意外從魏德那裡得知的所有秘辛告訴瑞蓮，並預示瑞蓮在不久之後就要被魏德的合夥人郝安推下樓身亡的事。得知自己將要死亡的瑞蓮雖然因此心慌，但她沒有馬上逃跑，反而更主動地介入試圖扭轉命運，她利用波波穿越時空的同一個方法來到1987年，先是千方百計地拯救富商的第一任老婆小潔，然後回到2007年，在故事結束之前，瑞蓮積極的人生態度，更是拯救了那名來自未來的少女波波的人生。','《開錯門中門》以天馬行空的想像力，讓六位主角在不同的時空裡相遇，隨即開展一個處處驚險卻又「絕處逢生」的劇情。這齣戲第一版的演出，是在 1996 年，很快的，十年過去了，而這齣戲卻一點不顯過時，劇中人物、情節現在看來依然生鮮熱辣。相信，即便再過十年，這個作品依然有它超越時空的永恆價值。'],
 video:{label:'老師示範影片（3:45–6:13）',items:[{note:'第一部分',embedUrl:'https://www.youtube.com/embed/dcVvTt8Exuo?start=225&end=373'}]},
 chars:[{name:'瑞蓮',role:'魏德第二任妻子'},{name:'波波',role:'2027年應召女郎'}],
@@ -800,7 +799,7 @@ function switchScript(id){saveScroll();saveHlState();var sc=SCRIPTS.find(functio
 })();buildSettings(sc);restoreHlState(id);restoreScroll(id);updateFooter();showSwitchToast('已切換至 '+sc.title);if(wrap)wrap.style.opacity='1';if(masthead)masthead.style.opacity='1';},150);}
 
 function charIdx(sc,name){for(var i=0;i<sc.chars.length;i++){if(sc.chars[i].name===name)return i;}return 0;}
-function buildScript(sc){if(!sc){console.warn('buildScript: sc is undefined');return;}var wrap=document.getElementById('script');var mhead=document.querySelector('.masthead');requestAnimationFrame(function(){if(wrap){wrap.style.opacity='1';wrap.style.transition='opacity 0.2s';}if(mhead){mhead.style.opacity='1';mhead.style.transition='opacity 0.2s';}});document.getElementById('mainTitle').textContent=sc.title;if(typeof startCountdown==='function')startCountdown();document.getElementById('pageNum').textContent=sc.week;var eyebrow=document.getElementById('eyebrow');var datePart=sc.week?(sc.week.split('·')[1]||'').trim():'';eyebrow.textContent=sc.track==='advanced'?'陳幼芳進階表演班 · Script Reading Copy':'果陀劇場大師學堂 · Script Reading Copy';var sel=document.getElementById('scriptSelect');if(sel)sel.value=sc.id;document.body.classList.toggle('lecture-mode',sc.type==='lecture');var cb=document.getElementById('castBlock');var helper=document.getElementById('mastheadHelper');if(sc.type==='lecture'||!sc.chars||sc.chars.length===0){cb.innerHTML=sc.author?'<div class="lec-author">撰寫人：'+sc.author+'</div>':'';var mt=document.getElementById('mastheadToggle');if(mt)mt.style.display='none';if(helper)helper.style.display='none';}else{var mt=document.getElementById('mastheadToggle');if(mt)mt.style.display='';if(helper)helper.style.display='';cb.innerHTML=sc.chars.map(function(ch,i){var barVar=i===0?'var(--hl-j-bar)':i===1?'var(--hl-y-bar)':'var(--hl-m-bar)';return'<div class="cast-item"><span class="cast-role">'+ch.role+'</span><span class="cast-name">'+ch.name+'<span class="csw" id="csw-'+ch.name+'" style="background:'+barVar+'"></span></span><div class="cast-quickstart"><button class="qs-btn" id="qs-rehearse-'+ch.name+'" onclick="quickRehearse(\''+ch.name+'\')">排練</button><button class="qs-btn" id="qs-cue-'+ch.name+'" onclick="quickCue(\''+ch.name+'\')">背詞</button></div></div>';}).join('');try{if(!localStorage.getItem('qs-v2')){setTimeout(function(){document.querySelectorAll('.qs-btn').forEach(function(b){b.classList.add('pulse');});setTimeout(function(){document.querySelectorAll('.qs-btn').forEach(function(b){b.classList.remove('pulse');});},2500);localStorage.setItem('qs-v2','1');},800);}}catch(e){}}var scriptWrap=document.getElementById('script');scriptWrap.innerHTML='';if(sc.type==='lecture'){scriptWrap.className='lecture-body';sc.sections.forEach(function(sec,i){var div=document.createElement('div');div.className='lec-section';div.style.animationDelay=i*30+'ms';var html='';if(sec.h1)html+='<div class="lec-h1">'+sec.h1+'</div>';if(sec.h2)html+='<div class="lec-h2">'+sec.h2+'</div>';if(sec.p)html+=sec.p.map(function(t){return'<div class="lec-p">'+t+'</div>';}).join('');if(sec.items)html+=sec.items.map(function(it){return'<div class="lec-item"><span class="lec-key">'+it.k+'</span><span class="lec-val">'+it.v+'</span></div>';}).join('');div.innerHTML=html;scriptWrap.appendChild(div);});var endEl=document.createElement('div');endEl.className='script-end';endEl.innerHTML='<span class="script-end-text">講義結束</span>';scriptWrap.appendChild(endEl);return;}scriptWrap.className='script-body';if(sc.synopsis&&sc.synopsis.length){var synBox=document.createElement('div');synBox.className='synopsis-box';synBox.innerHTML='<button class="synopsis-toggle" id="synToggle" onclick="toggleSynopsis()"><span class="syn-arrow">▶</span> 故事大綱</button><div class="synopsis-body" id="synBody">'+sc.synopsis.map(function(p){return'<div class="synopsis-p">'+p+'</div>';}).join('')+'</div>';scriptWrap.appendChild(synBox);}if(sc.video&&sc.video.items&&sc.video.items.length){var vidBox=document.createElement('div');vidBox.className='video-box';var vidItemsHtml=sc.video.items.map(function(v){return'<div class="video-item"><div class="video-item-label">'+v.note+'</div><div class="video-frame-wrap"><iframe src="'+v.embedUrl+'" title="示範影片" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div></div>';}).join('');vidBox.innerHTML='<button class="video-toggle" id="vidToggle" onclick="toggleVideo()"><span class="syn-arrow">▶</span> '+(sc.video.label||'示範影片')+'</button><div class="video-body" id="vidBody">'+vidItemsHtml+'<div class="video-note">若影片無法播放，可能是老師的 YouTube 分享設定不允許嵌入，屆時可改用連結開啟。</div></div>';scriptWrap.appendChild(vidBox);}var n=0,prevChar=null;sc.data.forEach(function(d,i){if(d.t==='s'){var el=document.createElement('div');el.className='sline';el.style.animationDelay=i*8+'ms';el.innerHTML='<span class="stxt">'+d.s+'</span>';scriptWrap.appendChild(el);}else{n++;var wrapper=document.createElement('div');var el=document.createElement('div');el.className='dline hl-idx-'+charIdx(sc,d.c);if(prevChar!==null&&d.c!==prevChar)el.classList.add('role-change');if(d.s&&d.s.length>80)el.classList.add('long-line');prevChar=d.c;el.dataset.c=d.c;el.dataset.idx=i;el.style.animationDelay=i*8+'ms';el.addEventListener('click',function(){if(currentMode==='cue'&&el.classList.contains('focus-target')){el.classList.add('cue-revealed');if(navigator.vibrate)navigator.vibrate(12);clearTimeout(el._cueTimer);el._cueTimer=setTimeout(function(){el.classList.remove('cue-revealed');},2000);}});var noteId='note-'+i;var rawTxt=d.s.replace(/（([^）]+)）/g,'<span class="acting-hint">（$1）</span>');el.innerHTML='<div class="dline-main"><span class="lnum">'+String(n).padStart(2,'0')+'</span><span class="spkr spkr-'+charIdx(sc,d.c)+'">'+d.c+'</span><span class="colon">：</span><span class="dtxt">'+rawTxt+'</span></div>'+(d.note?'<span class="note-dot" data-note-id="'+noteId+'"></span>':'');wrapper.appendChild(el);if(d.note){var dot=el.querySelector('.note-dot');if(dot){dot.addEventListener('click',function(e){e.stopPropagation();toggleNote(noteId);});}var nw=document.createElement('div');nw.className='note-wrap';nw.style.animationDelay=i*8+'ms';nw.innerHTML='<div class="note-card"><button class="note-toggle" onclick="toggleNote(\''+noteId+'\')" id="ntbtn-'+noteId+'"><span class="nt-arrow">▶</span> '+d.note.label+'</button><div class="note-body" id="'+noteId+'"><div class="note-text" style="margin-top:0.4rem">'+d.note.text+'</div></div></div>';wrapper.appendChild(nw);}scriptWrap.appendChild(wrapper);}});var endEl=document.createElement('div');endEl.className='script-end';endEl.innerHTML='<span class="fp-quote" id="fpEndBtn" onclick="neonEnd(this)">'+getFpQuote()+'</span><div class="script-end-rule"></div>';scriptWrap.appendChild(endEl);var _fq=scriptWrap.querySelector('#fpEndBtn');if(_fq){var _cjk=/[一-鿿]/.test(_fq.textContent);_fq.style.fontSize='0.56rem';_fq.style.fontWeight='300';_fq.style.letterSpacing=_cjk?'0.14em':'0.1em';_fq.style.opacity='0.45';_fq.style.fontStyle=_cjk?'normal':'italic';}
+function buildScript(sc){if(!sc){console.warn('buildScript: sc is undefined');return;}var wrap=document.getElementById('script');var mhead=document.querySelector('.masthead');requestAnimationFrame(function(){if(wrap){wrap.style.opacity='1';wrap.style.transition='opacity 0.2s';}if(mhead){mhead.style.opacity='1';mhead.style.transition='opacity 0.2s';}});document.getElementById('mainTitle').textContent=sc.title;if(typeof startCountdown==='function')startCountdown();document.getElementById('pageNum').textContent=sc.week;var eyebrow=document.getElementById('eyebrow');var datePart=sc.week?(sc.week.split('·')[1]||'').trim():'';eyebrow.textContent=sc.track==='advanced'?'陳幼芳進階表演班 · Script Reading Copy':'果陀劇場大師學堂 · Script Reading Copy';var sel=document.getElementById('scriptSelect');if(sel)sel.value=sc.id;document.body.classList.toggle('lecture-mode',sc.type==='lecture');var cb=document.getElementById('castBlock');var helper=document.getElementById('mastheadHelper');if(sc.type==='lecture'||!sc.chars||sc.chars.length===0){cb.innerHTML=sc.author?'<div class="lec-author">撰寫人：'+sc.author+'</div>':'';var mt=document.getElementById('mastheadToggle');if(mt)mt.style.display='none';if(helper)helper.style.display='none';}else{var mt=document.getElementById('mastheadToggle');if(mt)mt.style.display='';if(helper)helper.style.display='';cb.innerHTML=sc.chars.map(function(ch,i){var barVar=i===0?'var(--hl-j-bar)':i===1?'var(--hl-y-bar)':'var(--hl-m-bar)';return'<div class="cast-item"><span class="cast-role">'+ch.role+'</span><span class="cast-name">'+ch.name+'<span class="csw" id="csw-'+ch.name+'" style="background:'+barVar+'"></span></span><div class="cast-quickstart"><button class="qs-btn" id="qs-rehearse-'+ch.name+'" onclick="quickRehearse(\''+ch.name+'\')">排練</button><button class="qs-btn" id="qs-cue-'+ch.name+'" onclick="quickCue(\''+ch.name+'\')">背詞</button></div></div>';}).join('');try{if(!localStorage.getItem('qs-v2')){setTimeout(function(){document.querySelectorAll('.qs-btn').forEach(function(b){b.classList.add('pulse');});setTimeout(function(){document.querySelectorAll('.qs-btn').forEach(function(b){b.classList.remove('pulse');});},2500);localStorage.setItem('qs-v2','1');},800);}}catch(e){}}var scriptWrap=document.getElementById('script');scriptWrap.innerHTML='';if(sc.type==='lecture'){scriptWrap.className='lecture-body';sc.sections.forEach(function(sec,i){var div=document.createElement('div');div.className='lec-section';div.style.animationDelay=i*30+'ms';var html='';if(sec.h1)html+='<div class="lec-h1">'+sec.h1+'</div>';if(sec.h2)html+='<div class="lec-h2">'+sec.h2+'</div>';if(sec.p)html+=sec.p.map(function(t){return'<div class="lec-p">'+t+'</div>';}).join('');if(sec.items)html+=sec.items.map(function(it){return'<div class="lec-item"><span class="lec-key">'+it.k+'</span><span class="lec-val">'+it.v+'</span></div>';}).join('');div.innerHTML=html;scriptWrap.appendChild(div);});var endEl=document.createElement('div');endEl.className='script-end';endEl.innerHTML='<span class="script-end-text">講義結束</span>';scriptWrap.appendChild(endEl);return;}scriptWrap.className='script-body';if(sc.synopsis&&sc.synopsis.length){var synBox=document.createElement('div');synBox.className='synopsis-box';synBox.innerHTML='<button class="synopsis-toggle" id="synToggle" onclick="toggleSynopsis()"><span class="syn-arrow">▶</span> 故事大綱</button><div class="synopsis-body" id="synBody">'+sc.synopsis.map(function(p){return'<div class="synopsis-p">'+p+'</div>';}).join('')+'</div>';scriptWrap.appendChild(synBox);}if(sc.video&&sc.video.items&&sc.video.items.length){var vidBox=document.createElement('div');vidBox.className='video-box';var vidItemsHtml=sc.video.items.map(function(v){return'<div class="video-item"><div class="video-item-label">'+v.note+'</div><div class="video-frame-wrap"><iframe data-src="'+v.embedUrl+'" title="示範影片" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div></div>';}).join('');vidBox.innerHTML='<button class="video-toggle" id="vidToggle" onclick="toggleVideo()"><span class="syn-arrow">▶</span> '+(sc.video.label||'示範影片')+'</button><div class="video-body" id="vidBody">'+vidItemsHtml+'<div class="video-note">若影片無法播放，可能是老師的 YouTube 分享設定不允許嵌入，屆時可改用連結開啟。</div></div>';scriptWrap.appendChild(vidBox);}var n=0,prevChar=null;sc.data.forEach(function(d,i){if(d.t==='s'){var el=document.createElement('div');el.className='sline';el.style.animationDelay=i*8+'ms';el.innerHTML='<span class="stxt">'+d.s+'</span>';scriptWrap.appendChild(el);}else{n++;var wrapper=document.createElement('div');var el=document.createElement('div');el.className='dline hl-idx-'+charIdx(sc,d.c);if(prevChar!==null&&d.c!==prevChar)el.classList.add('role-change');if(d.s&&d.s.length>80)el.classList.add('long-line');prevChar=d.c;el.dataset.c=d.c;el.dataset.idx=i;el.style.animationDelay=i*8+'ms';el.addEventListener('click',function(){if(currentMode==='cue'&&el.classList.contains('focus-target')){el.classList.add('cue-revealed');if(navigator.vibrate)navigator.vibrate(12);clearTimeout(el._cueTimer);el._cueTimer=setTimeout(function(){el.classList.remove('cue-revealed');},2000);}});var noteId='note-'+i;var rawTxt=d.s.replace(/（([^）]+)）/g,'<span class="acting-hint">（$1）</span>');el.innerHTML='<div class="dline-main"><span class="lnum">'+String(n).padStart(2,'0')+'</span><span class="spkr spkr-'+charIdx(sc,d.c)+'">'+d.c+'</span><span class="colon">：</span><span class="dtxt">'+rawTxt+'</span></div>'+(d.note?'<span class="note-dot" data-note-id="'+noteId+'"></span>':'');wrapper.appendChild(el);if(d.note){var dot=el.querySelector('.note-dot');if(dot){dot.addEventListener('click',function(e){e.stopPropagation();toggleNote(noteId);});}var nw=document.createElement('div');nw.className='note-wrap';nw.style.animationDelay=i*8+'ms';nw.innerHTML='<div class="note-card"><button class="note-toggle" onclick="toggleNote(\''+noteId+'\')" id="ntbtn-'+noteId+'"><span class="nt-arrow">▶</span> '+d.note.label+'</button><div class="note-body" id="'+noteId+'"><div class="note-text" style="margin-top:0.4rem">'+d.note.text+'</div></div></div>';wrapper.appendChild(nw);}scriptWrap.appendChild(wrapper);}});var endEl=document.createElement('div');endEl.className='script-end';endEl.innerHTML='<span class="fp-quote" id="fpEndBtn" onclick="neonEnd(this)">'+getFpQuote()+'</span><div class="script-end-rule"></div>';scriptWrap.appendChild(endEl);var _fq=scriptWrap.querySelector('#fpEndBtn');if(_fq){var _cjk=/[一-鿿]/.test(_fq.textContent);_fq.style.fontSize='0.56rem';_fq.style.fontWeight='300';_fq.style.letterSpacing=_cjk?'0.14em':'0.1em';_fq.style.opacity='0.45';_fq.style.fontStyle=_cjk?'normal':'italic';}
 }
 
 function buildSettings(sc){if(!sc)return;var isScript=sc.type!=='lecture'&&sc.chars&&sc.chars.length>0;var chars=isScript?sc.chars:[];var rsel=document.getElementById('rehearseSelect');rsel.innerHTML='<option value="off">選擇角色</option>'+chars.map(function(ch){return'<option value="'+ch.name+'">'+ch.name+'</option>';}).join('');rsel.value='off';var csel=document.getElementById('cueSelect');csel.innerHTML='<option value="off">選擇角色</option>'+chars.map(function(ch){return'<option value="'+ch.name+'">'+ch.name+'</option>';}).join('');csel.value='off';csel.classList.remove('active-cue');var hlg=document.getElementById('hlBtnGroup');hlg.innerHTML=chars.length?chars.map(function(ch,i){return'<button class="pbtn hl-idx-'+i+'" data-hl="'+ch.name+'" onclick="toggleHl(\''+ch.name+'\')">'+ch.name+'</button>';}).join(''):'<span style="font-size:0.58rem;color:var(--tb-text);letter-spacing:0.06em;">講義模式不適用</span>';rehearseChar='off';cueChar='off';setMode('read',true);updateCueSummary();}
@@ -910,7 +909,7 @@ function toggleMasthead(){var collapsed=document.body.classList.toggle('masthead
 function toggleExpandAllNotes(){allNotesExpanded=!allNotesExpanded;document.getElementById('expandNotesBtn').classList.toggle('on',allNotesExpanded);document.querySelectorAll('.note-body').forEach(function(b){b.classList.toggle('open',allNotesExpanded);});document.querySelectorAll('.note-toggle').forEach(function(b){b.classList.toggle('open',allNotesExpanded);});}
 function toggleNote(id){var body=document.getElementById(id);var btn=document.getElementById('ntbtn-'+id);if(!body||!btn)return;var open=body.classList.toggle('open');btn.classList.toggle('open',open);}
 function toggleSynopsis(){var body=document.getElementById('synBody');var btn=document.getElementById('synToggle');if(!body||!btn)return;var open=body.classList.toggle('open');btn.classList.toggle('open',open);}
-function toggleVideo(){var body=document.getElementById('vidBody');var btn=document.getElementById('vidToggle');if(!body||!btn)return;var open=body.classList.toggle('open');btn.classList.toggle('open',open);}
+function toggleVideo(){var body=document.getElementById('vidBody');var btn=document.getElementById('vidToggle');if(!body||!btn)return;var open=body.classList.toggle('open');btn.classList.toggle('open',open);if(open){body.querySelectorAll('iframe[data-src]').forEach(function(f){f.src=f.dataset.src;f.removeAttribute('data-src');});}}
 function toggleNotesUI(){var on=document.body.classList.toggle('hide-notes');document.getElementById('noteBtn').classList.toggle('on',on);}
 function togglePanel(){var panel=document.getElementById('settingsPanel');var btn=document.getElementById('settingsToggle');var overlay=document.getElementById('settingsOverlay');var open=panel.classList.toggle('open');btn.classList.toggle('on',open);if(overlay)overlay.classList.toggle('open',open);document.body.classList.toggle('settings-open',open);}
 function changeFs(d){fs=Math.min(26,Math.max(12,fs+d*2));document.documentElement.style.setProperty('--fs',fs+'px');try{localStorage.setItem('fs',fs);}catch(e){}}
@@ -932,15 +931,20 @@ window.addEventListener('scroll',function(){clearTimeout(scrollTimer);scrollTime
 window.addEventListener('beforeunload',function(){saveScroll();saveHlState();});
 
 
-// ===== 錄影倒計時 (翻糖花園專屬) =====
-var CLASS_START=new Date(2026,5,13,19,0,0).getTime();  // 6/13 19:00
-var CLASS_END=new Date(2026,5,13,21,30,0).getTime();   // 6/13 21:30
+// ===== 課堂倒計時（依腳本各自設定 countdown） =====
 var countdownTimer=null;
 function startCountdown(){
   var box=document.getElementById('countdownBox');
   if(!box)return;
   if(countdownTimer){clearInterval(countdownTimer);countdownTimer=null;}
-  if(currentScriptId!=='fengtan'){box.classList.remove('show');return;}
+  var sc=SCRIPTS.find(function(s){return s.id===currentScriptId;});
+  if(!sc||!sc.countdown){box.classList.remove('show');return;}
+  var cd=sc.countdown;
+  var CLASS_START=new Date(cd.start[0],cd.start[1],cd.start[2],cd.start[3],cd.start[4],cd.start[5]).getTime();
+  var CLASS_END=new Date(cd.end[0],cd.end[1],cd.end[2],cd.end[3],cd.end[4],cd.end[5]).getTime();
+  var label=cd.label||'倒計時';
+  var onairLabel=cd.onairLabel||'進行中 · On Air';
+  var endedLabel=cd.endedLabel||'已結束';
   function pad(n){return n<10?'0'+n:''+n;}
   function tick(){
     var now=Date.now();
@@ -962,29 +966,29 @@ function startCountdown(){
       box.classList.remove('cd-blue','cd-red','cd-onair','cd-ended');
       if(newState==='onair'){
         labelEl.textContent='';
-        timeEl.textContent='錄影中 · On Air';
-        timeEl.style.fontSize='1rem';
+        timeEl.textContent=onairLabel;
+        timeEl.style.fontSize='0.72rem';
         box.classList.add('cd-onair');
         box.classList.add('show');return;
       }else if(newState==='ended'){
         labelEl.textContent='';
-        timeEl.textContent='錄影已結束';
-        timeEl.style.fontSize='1rem';
+        timeEl.textContent=endedLabel;
+        timeEl.style.fontSize='0.72rem';
         box.classList.add('cd-ended');
         box.classList.add('show');
         if(countdownTimer){clearInterval(countdownTimer);countdownTimer=null;}
         return;
       }else if(newState==='red'){
-        labelEl.textContent='錄影倒計時';
-        timeEl.style.fontSize='1.1rem';
+        labelEl.textContent=label;
+        timeEl.style.fontSize='0.9rem';
         box.classList.add('cd-red');
       }else if(newState==='blue'){
-        labelEl.textContent='錄影倒計時';
-        timeEl.style.fontSize='1rem';
+        labelEl.textContent=label;
+        timeEl.style.fontSize='0.85rem';
         box.classList.add('cd-blue');
       }else{
-        labelEl.textContent='錄影倒計時';
-        timeEl.style.fontSize='1rem';
+        labelEl.textContent=label;
+        timeEl.style.fontSize='0.85rem';
       }
     }
     if(newState==='onair'||newState==='ended')return;
@@ -999,6 +1003,7 @@ function startCountdown(){
   tick();
   countdownTimer=setInterval(tick,1000);
 }
+
 
 // ===== 練習計時 (只算頁面在前景的時間) =====
 var practiceMs=0,lastTick=Date.now(),practiceTimer=null;
